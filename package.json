@@ -13,6 +13,7 @@
     "express": "^4.16.2",
     "express-ejs-extend": "0.0.1",
     "morgan": "~1.9.0",
+    "phaser": "^2.6.2",
     "serve-favicon": "~2.4.5"
   },
   "main": "app.js",
