@@ -20,13 +20,13 @@
     {
      "mapProp":"123"
     },
- "tileheight":16,
+ "tileheight":64,
  "tilesets":[
         {
          "firstgid":1,
-         "image":"super_mario.png",
-         "imageheight":64,
-         "imagewidth":176,
+         "image":"tileset.png",
+         "imageheight":256,
+         "imagewidth":704,
          "margin":0,
          "name":"SuperMarioBros-World1-1",
          "properties":
@@ -34,7 +34,7 @@
 
             },
          "spacing":0,
-         "tileheight":16,
+         "tileheight":64,
          "tileproperties":
             {
              "10":
@@ -42,9 +42,9 @@
                  "coin":"true"
                 }
             },
-         "tilewidth":16
+         "tilewidth":64
         }],
- "tilewidth":16,
+ "tilewidth":64,
  "version":1,
  "width":212
 }

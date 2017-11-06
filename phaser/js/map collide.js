@@ -4,7 +4,7 @@ var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'demo', { preload: preload, 
 function preload() {
 
     game.load.tilemap('mario', 'phaser/assets/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.image('tiles', 'phaser/assets/super_mario.png');
+    game.load.image('tiles', 'phaser/assets/tileset.png');
     game.load.image('player', 'phaser/assets/asuna.png');
 
 }
@@ -41,7 +41,7 @@ function create() {
     layer.resizeWorld();
 
     p = game.add.sprite(32, 32, 'player');
-    p.scale.setTo(0.35,0.35);
+    p.scale.setTo(1,1);
 
     game.physics.enable(p);
 
