@@ -1,10 +1,10 @@
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'demo', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(1200, 600, Phaser.CANVAS, 'demo', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 
     game.load.tilemap('mario', 'phaser/assets/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.image('tiles', 'phaser/assets/tileset.png');
+    game.load.image('tiles', 'phaser/assets/tileset_x32.png');
     game.load.image('player', 'phaser/assets/asuna.png');
 
 }
@@ -25,9 +25,7 @@ function create() {
 
     map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
 
-   // 14 = ? block
-     map.setCollisionBetween(14, 15);
-
+    map.setCollisionBetween(14, 15);
     map.setCollisionBetween(15, 16);
     map.setCollisionBetween(20, 25);
     map.setCollisionBetween(27, 29);
@@ -41,25 +39,26 @@ function create() {
     layer.resizeWorld();
 
     p = game.add.sprite(32, 32, 'player');
-    p.scale.setTo(1,1);
+    p.scale.setTo(0.5,0.5);
 
     game.physics.enable(p);
 
     game.physics.arcade.gravity.y = 250;
 
-    p.body.bounce.y = 0.0;
+    p.body.bounce.y = 0.00;
     p.body.linearDamping = 1;
     p.body.collideWorldBounds = true;
 
     game.camera.follow(p);
 
     cursors = game.input.keyboard.createCursorKeys();
-    wasd = {
-  up:game.input.keyboard.addKey(Phaser.Keyboard.W),
-  down:game.input.keyboard.addKey(Phaser.Keyboard.S),
-  left:game.input.keyboard.addKey(Phaser.Keyboard.A),
-  right:game.input.keyboard.addKey(Phaser.Keyboard.D),
-};
+    wasd=
+    {
+      up:game.input.keyboard.addKey(Phaser.Keyboard.W),
+      down:game.input.keyboard.addKey(Phaser.Keyboard.S),
+      left:game.input.keyboard.addKey(Phaser.Keyboard.A),
+      right:game.input.keyboard.addKey(Phaser.Keyboard.D),
+    };
 }
 
 function update() {
@@ -72,17 +71,17 @@ function update() {
     {
         if (p.body.onFloor())
         {
-            p.body.velocity.y = -200;
+            p.body.velocity.y = -300;
         }
     }
 
     if (cursors.left.isDown||wasd.left.isDown)
     {
-        p.body.velocity.x = -150;
+        p.body.velocity.x = -200;
     }
     else if (cursors.right.isDown||wasd.right.isDown)
     {
-        p.body.velocity.x = 150;
+        p.body.velocity.x = 200;
     }
 
 }
