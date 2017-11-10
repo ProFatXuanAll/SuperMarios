@@ -1,22 +1,22 @@
 
-var game = new Phaser.Game(1200, 600, Phaser.CANVAS, 'demo', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(1200, 480, Phaser.CANVAS, 'demo', { preload: preload, create: create, update: update, render: render });
 
-function preload() {
-
-    game.load.tilemap('mario', 'phaser/assets/super_mario.json', null, Phaser.Tilemap.TILED_JSON);
+function preload()
+{
+    game.load.tilemap('mario', 'phaser/assets/map1.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'phaser/assets/tileset_x32.png');
     game.load.image('player', 'phaser/assets/asuna.png');
-
 }
 
 var map;
 var tileset;
 var layer;
 var p;
+var box;
 var cursors;
 
-function create() {
-
+function create()
+{
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     game.stage.backgroundColor = '#787878';
@@ -34,11 +34,12 @@ function create() {
     layer = map.createLayer('World1');
 
     //  Un-comment this on to see the collision tiles
-    // layer.debug = true;
+     layer.debug = true;
 
     layer.resizeWorld();
 
     p = game.add.sprite(32, 32, 'player');
+
     p.scale.setTo(0.5,0.5);
 
     game.physics.enable(p);
@@ -46,6 +47,7 @@ function create() {
     game.physics.arcade.gravity.y = 250;
 
     p.body.bounce.y = 0.00;
+    p.body.gravity.y = 150;
     p.body.linearDamping = 1;
     p.body.collideWorldBounds = true;
 
@@ -61,10 +63,9 @@ function create() {
     };
 }
 
-function update() {
-
+function update()
+{
     game.physics.arcade.collide(p, layer);
-
     p.body.velocity.x = 0;
 
     if (cursors.up.isDown||wasd.up.isDown)
@@ -83,12 +84,11 @@ function update() {
     {
         p.body.velocity.x = 200;
     }
-
 }
 
-function render() {
-
+function render()
+{
     // game.debug.body(p);
-    game.debug.bodyInfo(p, 32, 320);
+    //game.debug.bodyInfo(p, 32, 320);
 
 }
