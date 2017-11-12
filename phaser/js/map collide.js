@@ -5,7 +5,7 @@ function preload()
 {
     game.load.tilemap('mario', 'phaser/assets/map1.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'phaser/assets/tileset_x32.png');
-    game.load.image('player', 'phaser/assets/asuna.png');
+    game.load.spritesheet('player', 'phaser/assets/mariox32.png',32,56);
 }
 
 var map;
@@ -14,6 +14,7 @@ var layer;
 var p;
 var box;
 var cursors;
+var facing = 'left';
 
 function create()
 {
@@ -40,17 +41,18 @@ function create()
 
     p = game.add.sprite(32, 32, 'player');
 
-    p.scale.setTo(0.5,0.5);
+    //p.scale.setTo(0.5,0.5);
 
     game.physics.enable(p);
 
-    game.physics.arcade.gravity.y = 250;
+    game.physics.arcade.gravity.y = 300;
 
     p.body.bounce.y = 0.00;
-    p.body.gravity.y = 150;
     p.body.linearDamping = 1;
     p.body.collideWorldBounds = true;
-
+    p.animations.add('left', [0, 1, 2, 3], 10, true);
+        p.animations.add('turn', [4], 20, true);
+    p.animations.add('right', [4, 5, 6, 7], 10, true);
     game.camera.follow(p);
 
     cursors = game.input.keyboard.createCursorKeys();
@@ -67,7 +69,6 @@ function update()
 {
     game.physics.arcade.collide(p, layer);
     p.body.velocity.x = 0;
-
     if (cursors.up.isDown||wasd.up.isDown)
     {
         if (p.body.onFloor())
@@ -79,10 +80,37 @@ function update()
     if (cursors.left.isDown||wasd.left.isDown)
     {
         p.body.velocity.x = -200;
+        if (facing != 'left')
+        {
+            p.animations.play('left');
+            facing = 'left';
+        }
     }
     else if (cursors.right.isDown||wasd.right.isDown)
     {
         p.body.velocity.x = 200;
+        if (facing != 'right')
+        {
+            p.animations.play('right');
+            facing = 'right';
+        }
+    }
+    else
+    {
+        if (facing != 'idle')
+        {
+            p.animations.stop();
+
+            if (facing == 'left')
+            {
+                p.frame = 0;
+            }
+            else
+            {
+                p.frame = 4;
+            }
+            facing = 'idle';
+        }
     }
 }
 
