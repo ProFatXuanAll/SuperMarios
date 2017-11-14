@@ -5,6 +5,7 @@ function preload()
 {
     game.load.tilemap('mario', 'phaser/assets/map1.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'phaser/assets/tileset_x32.png');
+    game.load.image('bg','phaser/assets/01.png');
     game.load.spritesheet('player', 'phaser/assets/mariox32.png',32,56);
 }
 
@@ -15,6 +16,7 @@ var p;
 var box;
 var cursors;
 var facing = 'left';
+var bg;
 
 function create()
 {
@@ -22,20 +24,18 @@ function create()
 
     game.stage.backgroundColor = '#787878';
 
+    bg=game.add.tileSprite(0,0,8000,600,'bg');
+    bg.fixedToCamera=true;
     map = game.add.tilemap('mario');
 
     map.addTilesetImage('SuperMarioBros-World1-1', 'tiles');
 
-    map.setCollisionBetween(14, 15);
-    map.setCollisionBetween(15, 16);
-    map.setCollisionBetween(20, 25);
-    map.setCollisionBetween(27, 29);
-    map.setCollision(40);
+    map.setCollision(18);
 
     layer = map.createLayer('World1');
 
     //  Un-comment this on to see the collision tiles
-     layer.debug = true;
+    // layer.debug = true;
 
     layer.resizeWorld();
 
