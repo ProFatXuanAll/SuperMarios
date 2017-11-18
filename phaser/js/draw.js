@@ -12,12 +12,19 @@ let Game = new Phaser.Game(
 );
 let map;
 let layer;
-let players = {};
 let bg;
+// players group
+let players = {};
+// monsters group
+let monsters;
+// items group
+let items;
+// interactive blocks group
+let interactiveBlocks;
 
 function playerSetup(playerName, x=0, y=0, controlable=false)
 {
-    function Player(character, cursor, x=0, y=0){
+    function Player(character, cursor, x=0, y=0,text){
         this.character = character;
         this.cursor = cursor;
         this.action = {
@@ -26,6 +33,8 @@ function playerSetup(playerName, x=0, y=0, controlable=false)
         };
         this.x = x;
         this.y = y;
+        let style = { font: "16px Arial", fill: "#000000", wordWrapWidth: character.width, align: "center"};
+        this.text=Game.add.text(x,y,playerName,style);
     }
 
     function SyncCursor(){
@@ -44,11 +53,11 @@ function playerSetup(playerName, x=0, y=0, controlable=false)
     Game.physics.enable(character);
     character.body.collideWorldBounds = true;
     // set up animations by Phaser engine
-    // add(name, frames, frameRate fps, loop)
     character.animations.add('left', Config.animation.left, Config.animation.frameRate, true);
     character.animations.add('idle', Config.animation.idle, Config.animation.frameRate, true);
     character.animations.add('right', Config.animation.right, Config.animation.frameRate, true);
     players[playerName] = new Player(character, cursor, x, y);
+    /*coin tileset collision and text debug*/
 }
 
 // load image and tilemap
@@ -83,15 +92,20 @@ function create()
         'bg');
     bg.fixedToCamera = true;
     map = Game.add.tilemap('mario');
-    layer = map.createLayer('World1');
-    layer.resizeWorld();
+    layer = map.createLayer('Solid');
     map.addTilesetImage('World', 'tileset');
+    layer.resizeWorld();
     map.setCollisionByExclusion(map.tilesets[0].tileProperties.collisionExclusion);
     playerSetup('self', 0, 0, true);
     Game.camera.follow(players.self.character);
 
     /* debug */
     playerSetup('Alice',100,20);
+    playerSetup('fuck',150,20);
+    layer.debug=true;
+    monsters = Game.add.group();
+    items = Game.add.group();
+    interactiveBlocks = Game.add.group();
 }
 
 function update()
@@ -103,13 +117,23 @@ function update()
         for(let other in players)
         {
             let otherCharacter = players[other].character;
-            Game.physics.arcade.collide(character, otherCharacter);
+            //Game.physics.arcade.collide(character, otherCharacter,function(){console.log("hello")});
+            Game.physics.arcade.overlap(character, otherCharacter, playerOverlap(character,otherCharacter));
         }
+        Game.physics.arcade.collide(character, layer);
     }
-    //console.log(map.tilesets[0].tileProperties[1]);
+
     for(let name in players)
     {
+        let character = players[name].character;
+        let text=players[name].text;
+        text.x = Math.floor(character.x);
+        text.y = Math.floor(character.y-character.height/3);
+        detectWorldBound(character);
 
+    }
+    for(let name in players)
+    {
         let character = players[name].character;
         let cursor = players[name].cursor;
         let action = players[name].action;
@@ -119,40 +143,28 @@ function update()
         velocity.x = Config.velocity.idle;
         if (cursor.up.isDown)
         {
-            //cursor.up.isDown = false;
             if (character.body.onFloor()) velocity.y = Config.velocity.up;
         }
         if(!character.body.onFloor()) velocity.y += Config.velocity.gravity;
         if(cursor.left.isDown)
         {
-            //cursor.left.isDown = false;
             velocity.x = Config.velocity.left;
-            if(action.facing != 'left')
-            {
-                character.animations.play('left');
-                action.facing = 'left';
-            }
+            character.animations.play('left');
+            action.facing = 'left';
         }
         else if (cursor.right.isDown)
         {
-            //cursor.right.isDown = false;
             velocity.x = Config.velocity.right;
-            if (action.facing != 'right')
-            {
-                character.animations.play('right');
-                action.facing = 'right';
-            }
+            character.animations.play('right');
+            action.facing = 'right';
         }
         else if (cursor.down.isDown)
         {
-            //cursor.down.isDown = false; 
             /*temperary unusable */
         }
         else
         {
-            character.animations.stop();
-            if (action.facing == 'left') character.frame = Config.frame.leftFrame;
-            else character.frame = Config.frame.rightFrame;
+            character.animations.play('idle');
             action.facing = 'idle';
         }
     }
@@ -160,9 +172,16 @@ function update()
 
 function render()
 {
+    /*debug*/
+    for(let name in players)
+    {
+        let character = players[name].character;
+            Game.debug.body(character);
+    }
+    Game.debug.body(map);
+    Game.debug.bodyInfo(players['Alice'], 32, 320);
+
 }
-
-
 
 window.addEventListener("keypress",function(e){
     switch (e.key)
@@ -173,7 +192,6 @@ window.addEventListener("keypress",function(e){
             fuck++;
             break;
         */
-
         case 'w':
             players.Alice.cursor.up.isDown = true;
             break;
@@ -186,7 +204,19 @@ window.addEventListener("keypress",function(e){
         case 'd':
             players.Alice.cursor.right.isDown = true;
             break;
-         
+        case 'i':
+            players.fuck.cursor.up.isDown = true;
+            break;
+        case 'j':
+            players.fuck.cursor.left.isDown = true;
+            break;
+        case 'k':
+            players.fuck.cursor.down.isDown = true;
+            break;
+        case 'l':
+            players.fuck.cursor.right.isDown = true;
+            break;
+
     }
 });
 
@@ -199,7 +229,6 @@ window.addEventListener("keyup", function(e){
             fuck++;
             break;
         */
-
         case 'w':
             players.Alice.cursor.up.isDown = false;
             break;
@@ -212,5 +241,35 @@ window.addEventListener("keyup", function(e){
         case 'd':
             players.Alice.cursor.right.isDown = false;
             break;
+        case 'i':
+            players.fuck.cursor.up.isDown = false;
+            break;
+        case 'j':
+            players.fuck.cursor.left.isDown = false;
+            break;
+        case 'k':
+            players.fuck.cursor.down.isDown = false;
+            break;
+        case 'l':
+            players.fuck.cursor.right.isDown = false;
+            break;
     }
 });
+
+/* player overlap test*/
+function playerOverlap(player,otherCharacter)
+{
+    if (player.body.touching.down){
+            player.body.velocity.y = -80;
+    }
+}
+function detectWorldBound(character)
+{
+    if(character.y>=400)
+    {
+        character.body.velocity.x=0;
+        character.body.velocity.y=0;
+        character.x=0;
+        character.y=0;
+    }
+}
