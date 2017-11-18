@@ -4,14 +4,21 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var https = require('https');
+var fs = require('fs');
 
 var home = require('./routes/home');
 var game = require('./routes/game');
-//var test = require('./routes/test');
 
 var app = express();
 
 var port=10000;
+
+//ssl setting
+const SERVER_CONFIG = {
+    key:  fs.readFileSync('ssl/private.key'),
+    cert: fs.readFileSync('ssl/certificate.crt')
+};
 
 // view engine setup
 app.engine('ejs', require('express-ejs-extend'));
@@ -25,8 +32,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use('/home',express.static(path.join(__dirname, 'public')));
-//app.use('/home/about',express.static(path.join(__dirname, 'public')));
 
 app.use('/home',home);
 app.use('/game',game);
@@ -52,4 +57,6 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-app.listen(port);
+//app.listen(port);
+https.createServer(SERVER_CONFIG, app)
+  .listen(port,function(){console.log("https done.");} );
