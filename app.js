@@ -5,12 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var about = require('./routes/about');
+var home = require('./routes/home');
+var game = require('./routes/game');
+//var test = require('./routes/test');
 
 var app = express();
 
-var port=300;
+var port=10000;
 
 // view engine setup
 app.engine('ejs', require('express-ejs-extend'));
@@ -24,10 +25,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/static',express.static(__dirname + '/public'));
+//app.use('/home',express.static(path.join(__dirname, 'public')));
+//app.use('/home/about',express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/about', about);
+app.use('/home',home);
+app.use('/game',game);
+app.use('/', function(req,res,next){ res.redirect('/home'); });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
