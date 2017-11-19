@@ -4,10 +4,10 @@ let Game = new Phaser.Game(
     Phaser.CANVAS,
     'demo',
     {
-    preload: preload,
-    create: create,
-    update: update,
-    render: render
+        preload: preload,
+        create: create,
+        update: update,
+        render: render
     }
 );
 let map;
@@ -16,7 +16,7 @@ let bg;
 // players group
 let players = {};
 // monsters group
-let monsters;
+let monsters = {};
 // items group
 let items;
 // interactive blocks group
@@ -33,7 +33,7 @@ function playerSetup(playerName, x=0, y=0, controlable=false)
         };
         this.x = x;
         this.y = y;
-        let style = { font: "16px Arial", fill: "#000000", wordWrapWidth: character.width, align: "center"};
+        let style = Config.font.style;
         this.text=Game.add.text(x,y,playerName,style);
     }
 
@@ -67,18 +67,34 @@ function preload()
         'mario',
         'phaser/assets/map.json',
         null,
-        Phaser.Tilemap.TILED_JSON);
+        Phaser.Tilemap.TILED_JSON
+    );
     Game.load.image(
         'tileset',
-        'phaser/assets/tileset_x32.png');
+        'phaser/assets/tilesetx32.png'
+    );
     Game.load.image(
         'bg',
-        'phaser/assets/nature.png');
+        'phaser/assets/nature.png'
+    );
     Game.load.spritesheet(
         'player',
         'phaser/assets/mariox32.png',
         Config.picture.mario.width,
-        Config.picture.mario.height);
+        Config.picture.mario.height
+    );
+    Game.load.spritesheet(
+        'goomba',
+        'phaser/assets/goomba.png',
+        32,
+        32
+    );
+    Game.load.spritesheet(
+        'spikeTurtle',
+        'phaser/assets/spikeTurtle.png',
+        32,
+        32
+    );
 }
 
 function create()
@@ -89,23 +105,55 @@ function create()
         Config.picture.background.y,
         Config.picture.background.width,
         Config.picture.background.height,
-        'bg');
+        'bg'
+    );
     bg.fixedToCamera = true;
     map = Game.add.tilemap('mario');
     layer = map.createLayer('Solid');
     map.addTilesetImage('World', 'tileset');
+    //????
     layer.resizeWorld();
     map.setCollisionByExclusion(map.tilesets[0].tileProperties.collisionExclusion);
     playerSetup('self', 0, 0, true);
     Game.camera.follow(players.self.character);
 
-    /* debug */
+    /*----------------- debug */
     playerSetup('Alice',100,20);
     playerSetup('fuck',150,20);
     layer.debug=true;
-    monsters = Game.add.group();
+    /*------------------ debug */
+    
+    monsters.goomba = Game.add.group();
+    monsters.spikeTurtle= Game.add.group();
+    
+    for(let monster in monsters)
+    {
+        monsters[monster].enableBody=true;
+        map.createFromTiles(42, null, 'goomba', 'Monster', monsters[monster]);
+        monsters[monster].callAll('animations.add', 'animations', 'walk', [0, 1], 2, true);
+        monsters[monster].callAll('animations.play', 'animations', 'walk');
+        monsters[monster].setAll('body.bounce.x', 1);
+        monsters[monster].setAll('body.velocity.x', -50);
+        monsters[monster].setAll('body.gravity.y', 500);
+    }
+    /* Add group */
+    //monsters = Game.add.group();
+    //goombas = Game.add.group();
+    //spikeTurtles= Game.add.group();
+    //monsters.add(goombas);
+    //monsters.add(spikeTurtles);
     items = Game.add.group();
     interactiveBlocks = Game.add.group();
+    /* spawn monsters from tiles */
+    /*
+    monsters.enableBody = true;
+    map.createFromTiles(42, null, 'goomba', 'Monster', goombas);
+    goombas.callAll('animations.add', 'animations', 'walk', [0, 1], 2, true);
+    goombas.callAll('animations.play', 'animations', 'walk');
+    monsters.setAll('body.bounce.x', 1);
+    monsters.setAll('body.velocity.x', -50);
+    monsters.setAll('body.gravity.y', 500);
+    */
 }
 
 function update()
@@ -121,8 +169,12 @@ function update()
             Game.physics.arcade.overlap(character, otherCharacter, playerOverlap(character,otherCharacter));
         }
         Game.physics.arcade.collide(character, layer);
+        for(let monster in monsters)
+        {
+            Game.physics.arcade.collide(monsters[monster], layer);
+            Game.physics.arcade.overlap(character, monsters[monster], goombaOverlap);
+        }
     }
-
     for(let name in players)
     {
         let character = players[name].character;
@@ -130,7 +182,6 @@ function update()
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
         detectWorldBound(character);
-
     }
     for(let name in players)
     {
@@ -179,8 +230,6 @@ function render()
             Game.debug.body(character);
     }
     Game.debug.body(map);
-    Game.debug.bodyInfo(players['Alice'], 32, 320);
-
 }
 
 window.addEventListener("keypress",function(e){
@@ -259,17 +308,51 @@ window.addEventListener("keyup", function(e){
 /* player overlap test*/
 function playerOverlap(player,otherCharacter)
 {
-    if (player.body.touching.down){
-            player.body.velocity.y = -80;
+    if (player.body.touching.down)
+    {
+            player.body.velocity.y = -120;
+            //playerDeath(otherCharacter);
     }
+    else if(player.body.touching.left)
+    {
+        //someone do something.
+    }
+}
+function goombaOverlap(character,monster)
+{
+    if (character.body.touching.down) {
+        monster.animations.stop();
+        monster.frame = 2;
+        monster.body.enable = false;
+        character.body.velocity.y = -80;
+        Game.time.events.add(Phaser.Timer.SECOND, function() {
+            monster.kill();
+        });
+    } else {
+        playerDeath(character);
+      }    
+}
+function spikeTurtleOverlap(character,monster)
+{
+    playerDeath(character);
 }
 function detectWorldBound(character)
 {
-    if(character.y>=400)
+    if(character.y+character.height>=map.width)
     {
-        character.body.velocity.x=0;
-        character.body.velocity.y=0;
-        character.x=0;
-        character.y=0;
+        playerDeath(character);
     }
+}
+function playerDeath(character)
+{
+    character.body.velocity.x=0;
+    character.body.velocity.y=0;
+    character.x=0;
+    character.y=0;
+    character.body.enable=false;
+    character.visible=false;
+    Game.time.events.add(Phaser.Timer.SECOND * 1.5, function() {
+        character.body.enable=true;
+        character.visible = true;
+    });
 }

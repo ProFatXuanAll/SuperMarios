@@ -27,6 +27,13 @@ let Config = {
             y:0
         }
     },
+    font:{
+        style:{
+            font: "16px Arial",
+            fill: "#000000",
+            align: "center"
+        }
+    },
     animation:{
         left:[0,1,2,3],
         idle:[4],
