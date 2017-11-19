@@ -1,3 +1,4 @@
+var express =require('express');
 var app = require('express')();
 var http =require('http').Server(app);
 var path = require('path');
@@ -8,10 +9,10 @@ var app =express();
 var port =8050;
 var io =require('socket.io')(app);*/
 
-app.get('/',function (req,res) {
-    res.sendFile(__dirname +'/test.html');
+app.use(express.static(__dirname + '/public'));
+app.use('/',function (req,res) {
+    res.sendFile('public/test.html',{ root: __dirname });
 });
-
 io.on('connection',function(socket){
     console.log('a user connected');
     socket.on('login',function(){
