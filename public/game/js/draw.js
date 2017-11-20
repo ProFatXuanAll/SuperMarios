@@ -65,33 +65,33 @@ function preload()
 {
     Game.load.tilemap(
         'mario',
-        'phaser/assets/map.json',
+        '/game/assets/map.json',
         null,
         Phaser.Tilemap.TILED_JSON
     );
     Game.load.image(
         'tileset',
-        'phaser/assets/tilesetx32.png'
+        '/game/assets/tilesetx32.png'
     );
     Game.load.image(
         'bg',
-        'phaser/assets/nature.png'
+        '/game/assets/nature.png'
     );
     Game.load.spritesheet(
         'player',
-        'phaser/assets/mariox32.png',
+        '/game/assets/mariox32.png',
         Config.picture.mario.width,
         Config.picture.mario.height
     );
     Game.load.spritesheet(
         'goomba',
-        'phaser/assets/goomba.png',
+        '/game/assets/goomba.png',
         32,
         32
     );
     Game.load.spritesheet(
         'spikeTurtle',
-        'phaser/assets/spikeTurtle.png',
+        '/game/assets/spikeTurtle.png',
         32,
         32
     );

@@ -6,13 +6,14 @@ router.get('/', UrlSetting, function(req, res, next) {
 });
 
 router.get('/about', UrlSetting, function(req, res, next) {
-  res.render('home/about');
+    res.render('home/about');
 });
 
 function UrlSetting(req,res,next){
     res.locals = {
-        homeindex: '/home',
-        homeabout: '/home/about',
+        index: '/home',
+        about: '/home/about',
+        game:  '/game',
         title: 'SuperMarios'
     };
     next();

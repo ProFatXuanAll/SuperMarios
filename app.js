@@ -12,13 +12,13 @@ var game = require('./routes/game');
 
 var app = express();
 
-var port=10000;
+var port = 10000;
 
 //ssl setting
-const SERVER_CONFIG = {
+/*const SERVER_CONFIG = {
     key:  fs.readFileSync('ssl/private.key'),
     cert: fs.readFileSync('ssl/certificate.crt')
-};
+};*/
 
 // view engine setup
 app.engine('ejs', require('express-ejs-extend'));
@@ -57,6 +57,6 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-//app.listen(port);
-https.createServer(SERVER_CONFIG, app)
-  .listen(port,function(){console.log("https done.");} );
+app.listen(port);
+/*https.createServer(SERVER_CONFIG, app)
+  .listen(port,function(){console.log("https done.");} );*/
