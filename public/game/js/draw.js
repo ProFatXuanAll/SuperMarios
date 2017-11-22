@@ -10,17 +10,12 @@ let Game = new Phaser.Game(
         render: render
     }
 );
-let map;
-let layer;
-let bg;
+
+// map of the game
+let Map;
+
 // players group
 let players = {};
-// monsters group
-let monsters = {};
-// items group
-let items;
-// interactive blocks group
-let interactiveBlocks;
 
 function playerSetup(playerName, x=0, y=0, controlable=false)
 {
@@ -86,74 +81,128 @@ function preload()
     Game.load.spritesheet(
         'goomba',
         '/game/assets/goomba.png',
-        32,
-        32
+        32, // config
+        32 // config
     );
     Game.load.spritesheet(
         'spikeTurtle',
         '/game/assets/spikeTurtle.png',
-        32,
-        32
+        32,  // config
+        32  // config
     );
+    // add promise make sure pictures loaded
 }
 
 function create()
 {
+    function MapSetup()
+    {
+        function MonsterSetup(MonsterList, tileMap)
+        {
+            self = this;
+            MonsterList.forEach(function(monster){
+                self[monster.spriteName] = Game.add.group();
+                self[monster.spriteName].enableBody = true;
+                tileMap.createFromTiles(monster.tileNumber, null, monster.spriteName, 'Monster', self[monster.spriteName]);
+                self[monster.spriteName].callAll(
+                    'animations.add',
+                    'animations',
+                    monster.animation.name,
+                    monster.animation.frame,
+                    monster.animation.frame_rate,
+                    true
+                );
+                self[monster.spriteName].callAll('animations.play', 'animations', monster.animation.name);
+                self[monster.spriteName].setAll('body.velocity.x', monster.velocity.x);
+                self[monster.spriteName].setAll('body.gravity.y', monster.gravity.y);
+            });
+        }
+        // add background
+        this.background = Game.add.tileSprite(
+            Config.picture.background.x,
+            Config.picture.background.y,
+            Config.picture.background.width,
+            Config.picture.background.height,
+            'bg' // add config
+        );
+        // background camera fixed to center
+        this.background.fixedToCamera = true;
+
+        // add tile map (previous defined map.json)
+        this.tileMap = Game.add.tilemap('mario');        
+        // load image --??
+        this.tileMap.addTilesetImage('World', 'tileset');
+
+        // add layer
+        this.solidBlocks = this.tileMap.createLayer('Solid');
+        // ????
+        this.solidBlocks.resizeWorld();
+
+        // add items
+        this.items = Game.add.group();
+
+        // add interactive blocks
+        this.activeBlocks = Game.add.group();
+        
+        // enable collision on tile map
+        this.tileMap.setCollisionByExclusion(this.tileMap.tilesets[0].tileProperties.collisionExclusion);
+
+        // add monsters
+        this.monsters = new MonsterSetup([
+            {
+                tileNumber: 42,
+                spriteName: 'goomba',
+                animation: {
+                    name: 'walk',
+                    frame: [0, 1],
+                    frame_rate: 2
+                },
+                velocity: {
+                    x: -50,
+                    y: 0
+                },
+                gravity: {
+                    x: 0,
+                    y: 500
+                }
+            },
+            {
+                tileNumber: 41,
+                spriteName: 'spikeTurtle',
+                animation: {
+                    name: 'walk',
+                    frame: [0, 1],
+                    frame_rate: 2
+                },
+                velocity: {
+                    x: -50,
+                    y: 0
+                },
+                gravity: {
+                    x: 0,
+                    y: 500
+                }
+            },
+        ],
+        this.tileMap);
+        console.log(this.monsters);
+    }
+
     Game.physics.startSystem(Phaser.Physics.ARCADE);
-    bg = Game.add.tileSprite(
-        Config.picture.background.x,
-        Config.picture.background.y,
-        Config.picture.background.width,
-        Config.picture.background.height,
-        'bg'
-    );
-    bg.fixedToCamera = true;
-    map = Game.add.tilemap('mario');
-    layer = map.createLayer('Solid');
-    map.addTilesetImage('World', 'tileset');
-    //????
-    layer.resizeWorld();
-    map.setCollisionByExclusion(map.tilesets[0].tileProperties.collisionExclusion);
+
+    Map = new MapSetup();
+
+    // create player for client
     playerSetup('self', 0, 0, true);
+
+    // main camera follow main character
     Game.camera.follow(players.self.character);
 
     /*----------------- debug */
     playerSetup('Alice',100,20);
     playerSetup('fuck',150,20);
-    layer.debug=true;
+    Map.solidBlocks.debug = true;
     /*------------------ debug */
-    
-    monsters.goomba = Game.add.group();
-    monsters.spikeTurtle= Game.add.group();
-    
-    for(let monster in monsters)
-    {
-        monsters[monster].enableBody=true;
-        map.createFromTiles(42, null, 'goomba', 'Monster', monsters[monster]);
-        monsters[monster].callAll('animations.add', 'animations', 'walk', [0, 1], 2, true);
-        monsters[monster].callAll('animations.play', 'animations', 'walk');
-        monsters[monster].setAll('body.bounce.x', 1);
-        monsters[monster].setAll('body.velocity.x', -50);
-        monsters[monster].setAll('body.gravity.y', 500);
-    }
-    /* Add group */
-    //monsters = Game.add.group();
-    //goombas = Game.add.group();
-    //spikeTurtles= Game.add.group();
-    //monsters.add(goombas);
-    //monsters.add(spikeTurtles);
-    items = Game.add.group();
-    interactiveBlocks = Game.add.group();
-    /* spawn monsters from tiles */
-    /*
-    monsters.enableBody = true;
-    map.createFromTiles(42, null, 'goomba', 'Monster', goombas);
-    goombas.callAll('animations.add', 'animations', 'walk', [0, 1], 2, true);
-    goombas.callAll('animations.play', 'animations', 'walk');
-    monsters.setAll('body.bounce.x', 1);
-    monsters.setAll('body.velocity.x', -50);
-    monsters.setAll('body.gravity.y', 500);
-    */
 }
 
 function update()
@@ -161,18 +210,18 @@ function update()
     for(let name in players)
     {
         let character = players[name].character;
-        Game.physics.arcade.collide(character, layer);
+        Game.physics.arcade.collide(character, Map.solidBlocks);
         for(let other in players)
         {
             let otherCharacter = players[other].character;
             //Game.physics.arcade.collide(character, otherCharacter,function(){console.log("hello")});
             Game.physics.arcade.overlap(character, otherCharacter, playerOverlap(character,otherCharacter));
         }
-        Game.physics.arcade.collide(character, layer);
-        for(let monster in monsters)
+        Game.physics.arcade.collide(character, Map.solidBlocks);
+        for(let monster in Map.monsters)
         {
-            Game.physics.arcade.collide(monsters[monster], layer);
-            Game.physics.arcade.overlap(character, monsters[monster], goombaOverlap);
+            Game.physics.arcade.collide(Map.monsters[monster], Map.solidBlocks);
+            Game.physics.arcade.overlap(character, Map.monsters[monster], goombaOverlap);
         }
     }
     for(let name in players)
@@ -229,7 +278,7 @@ function render()
         let character = players[name].character;
             Game.debug.body(character);
     }
-    Game.debug.body(map);
+    //Game.debug.body(Map.solidBlocks);
 }
 
 window.addEventListener("keypress",function(e){
@@ -338,7 +387,7 @@ function spikeTurtleOverlap(character,monster)
 }
 function detectWorldBound(character)
 {
-    if(character.y+character.height>=map.width)
+    if(character.y+character.height>=Map.width)
     {
         playerDeath(character);
     }
