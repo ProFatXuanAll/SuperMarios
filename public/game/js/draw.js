@@ -17,44 +17,6 @@ let Map;
 // players group
 let players = {};
 
-function playerSetup(playerName, x=0, y=0, controlable=false)
-{
-    function Player(character, cursor, x=0, y=0,text){
-        this.character = character;
-        this.cursor = cursor;
-        this.action = {
-              facing: 'idle',
-              attack: 'none'
-        };
-        this.x = x;
-        this.y = y;
-        let style = Config.font.style;
-        this.text=Game.add.text(x,y,playerName,style);
-    }
-
-    function SyncCursor(){
-        this.up = {isDown: false};
-        this.down = {isDown: false};
-        this.left = {isDown: false};
-        this.right = {isDown: false};
-    }
-
-    let character = Game.add.sprite(x, y, 'player');
-    let cursor;
-    if(controlable)
-        cursor = Game.input.keyboard.createCursorKeys();
-    else
-        cursor = new SyncCursor();
-    Game.physics.enable(character);
-    character.body.collideWorldBounds = true;
-    // set up animations by Phaser engine
-    character.animations.add('left', Config.animation.left, Config.animation.frameRate, true);
-    character.animations.add('idle', Config.animation.idle, Config.animation.frameRate, true);
-    character.animations.add('right', Config.animation.right, Config.animation.frameRate, true);
-    players[playerName] = new Player(character, cursor, x, y);
-    /*coin tileset collision and text debug*/
-}
-
 // load image and tilemap
 function preload()
 {
@@ -79,16 +41,16 @@ function preload()
         Config.picture.mario.height
     );
     Game.load.spritesheet(
-        'goomba',
-        '/game/assets/goomba.png',
-        32, // config
-        32 // config
+        Monster.goomba.spriteName,
+        Monster.goomba.path,
+        Monster.goomba.picture.width,
+        Monster.goomba.picture.height
     );
     Game.load.spritesheet(
-        'spikeTurtle',
-        '/game/assets/spikeTurtle.png',
-        32,  // config
-        32  // config
+        Monster.spikeTurtle.spriteName,
+        Monster.spikeTurtle.path,
+        Monster.spikeTurtle.picture.width,
+        Monster.spikeTurtle.picture.height,
     );
     // add promise make sure pictures loaded
 }
@@ -149,43 +111,10 @@ function create()
 
         // add monsters
         this.monsters = new MonsterSetup([
-            {
-                tileNumber: 42,
-                spriteName: 'goomba',
-                animation: {
-                    name: 'walk',
-                    frame: [0, 1],
-                    frame_rate: 2
-                },
-                velocity: {
-                    x: -50,
-                    y: 0
-                },
-                gravity: {
-                    x: 0,
-                    y: 500
-                }
-            },
-            {
-                tileNumber: 41,
-                spriteName: 'spikeTurtle',
-                animation: {
-                    name: 'walk',
-                    frame: [0, 1],
-                    frame_rate: 2
-                },
-                velocity: {
-                    x: -50,
-                    y: 0
-                },
-                gravity: {
-                    x: 0,
-                    y: 500
-                }
-            },
+            Monster.goomba,
+            Monster.spikeTurtle
         ],
         this.tileMap);
-        console.log(this.monsters);
     }
 
     Game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -203,6 +132,45 @@ function create()
     playerSetup('fuck',150,20);
     Map.solidBlocks.debug = true;
     /*------------------ debug */
+}
+function playerSetup(playerName, x=0, y=0, controlable=false)
+{
+    function Player(character, cursor, x=0, y=0,text)
+    {
+        this.character = character;
+        this.cursor = cursor;
+        this.action = {
+              facing: 'idle',
+              attack: 'none'
+        };
+        this.x = x;
+        this.y = y;
+        let style = Config.font.style;
+        this.text=Game.add.text(x,y,playerName,style);
+    }
+
+    function SyncCursor()
+    {
+        this.up = {isDown: false};
+        this.down = {isDown: false};
+        this.left = {isDown: false};
+        this.right = {isDown: false};
+    }
+
+    let character = Game.add.sprite(x, y, 'player');
+    let cursor;
+    if(controlable)
+        cursor = Game.input.keyboard.createCursorKeys();
+    else
+        cursor = new SyncCursor();
+    Game.physics.enable(character);
+    character.body.collideWorldBounds = true;
+    // set up animations by Phaser engine
+    character.animations.add('left', Config.animation.left, Config.animation.frameRate, true);
+    character.animations.add('idle', Config.animation.idle, Config.animation.frameRate, true);
+    character.animations.add('right', Config.animation.right, Config.animation.frameRate, true);
+    players[playerName] = new Player(character, cursor, x, y);
+    /*coin tileset collision and text debug*/
 }
 
 function update()
