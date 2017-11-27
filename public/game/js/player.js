@@ -12,6 +12,15 @@ let Player = {
             height: 56,
             src: '/game/assets/mariox32.png'
         },
+        velocity: {
+            left: -200,
+            right: 200,
+            up: -600,
+            idle: 0
+        },
+        gravity: 20,
+        width: 32,
+        height: 56
     }
 };
 
@@ -43,5 +52,5 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
     };
     this.x = x;
     this.y = y;
-    this.text = GameEngine.add.text(x, y, playerName, Config.font.style);
+    this.text = GameEngine.add.text(x, y, playerName, Config.font.Arial);
 }

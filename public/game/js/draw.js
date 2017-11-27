@@ -28,38 +28,72 @@ Game.engine = new Phaser.Game(
 // load image and tilemap
 function preload()
 {
+    // future version: load all map at once
+    /*for(let i = 0; i < Map.structure.length; ++i)
+    {
+        Game.engine.load.tilemap(
+            Map.structure[i].name,
+            Map.structure[i].src,
+            null, 
+            Phaser.Tilemap.TILED_JSON
+        );
+    }*/
     Game.engine.load.tilemap(
-        'mario',
-        '/game/assets/map.json',
+        Map.structure[0].name,
+        Map.structure[0].src,
         null,
         Phaser.Tilemap.TILED_JSON
     );
+    // future version: load all tileset at once
+    /*for(let i = 0; i < Map.tileset.length; ++i)
+    {
+        Game.engine.load.image(
+            Map.tileset[i].name,
+            Map.tileset[i].src
+        );
+    }*/
     Game.engine.load.image(
-        'tileset',
-        '/game/assets/tilesetx32.png'
+        Map.tileset[0].name,
+        Map.tileset[0].src
     );
+    // future version: load all background at once
+    /*for(let i = 0; i < Map.background.length; ++i)
+    {
+        Game.engine.load.image(
+            Map.background[i].name,
+            Map.background[i].src
+        );
+    }*/
     Game.engine.load.image(
-        'bg',
-        '/game/assets/nature.png'
+        Map.background[0].name,
+        Map.background[0].src
     );
+    // future version: load all player spritesheet at once
+    /*for(let playerType in Player)
+    {
+        Game.engine.load.spritesheet(
+            Player[playerType].spriteName,
+            Player[playerType].picture.src,
+            Player[playerType].picture.width,
+            Player[playerType].picture.height
+        );
+    }*/
     Game.engine.load.spritesheet(
         Player.mario.spriteName,
         Player.mario.picture.src,
         Player.mario.picture.width,
         Player.mario.picture.height
     );
-    Game.engine.load.spritesheet(
-        Monster.goomba.spriteName,
-        Monster.goomba.picture.src,
-        Monster.goomba.picture.width,
-        Monster.goomba.picture.height
-    );
-    Game.engine.load.spritesheet(
-        Monster.spikeTurtle.spriteName,
-        Monster.spikeTurtle.picture.src,
-        Monster.spikeTurtle.picture.width,
-        Monster.spikeTurtle.picture.height,
-    );
+    // load all monster spritesheet
+    for(let monsterType in Monster)
+    {
+        Game.engine.load.spritesheet(
+            Monster[monsterType].spriteName,
+            Monster[monsterType].picture.src,
+            Monster[monsterType].picture.width,
+            Monster[monsterType].picture.height
+        );
+    }
     // add promise make sure pictures loaded
 }
 
@@ -68,16 +102,18 @@ function create()
     Game.engine.physics.startSystem(Phaser.Physics.ARCADE);
 
     // create map
-    Game.map = new MapSetup(Game.engine);
+    Game.map = new MapSetup(
+        Game.engine,
+        Map.structure[0],
+        Map.tileset[0],
+        Map.background[0]
+    );
 
     // create monster
     Game.monsters = new MonsterSetup(
         Game.engine,
-        [
-            Monster.goomba,
-            Monster.spikeTurtle
-        ],
-        Game.map.tileMap
+        Game.map,
+        Map.structure[0]
     );
 
     Game.players = {};
@@ -110,7 +146,7 @@ function create()
         150,
         20
     );
-    Game.map.solidBlocks.debug = true;
+    Game.map.solid.debug = true;
     /*------------------ debug */
 }
 
@@ -119,17 +155,17 @@ function update()
     for(let name in Game.players)
     {
         let character = Game.players[name].character;
-        Game.engine.physics.arcade.collide(character, Game.map.solidBlocks);
+        Game.engine.physics.arcade.collide(character, Game.map.solid);
         for(let other in Game.players)
         {
             let otherCharacter = Game.players[other].character;
             //Game.engine.physics.arcade.collide(character, otherCharacter,function(){console.log("hello")});
             Game.engine.physics.arcade.overlap(character, otherCharacter, playerOverlap(character,otherCharacter));
         }
-        Game.engine.physics.arcade.collide(character, Game.map.solidBlocks);
+        Game.engine.physics.arcade.collide(character, Game.map.solid);
         for(let monster in Game.monsters)
         {
-            Game.engine.physics.arcade.collide(Game.monsters[monster], Game.map.solidBlocks);
+            Game.engine.physics.arcade.collide(Game.monsters[monster], Game.map.solid);
             Game.engine.physics.arcade.overlap(character, Game.monsters[monster], goombaOverlap);
         }
     }
@@ -147,23 +183,24 @@ function update()
         let cursor = Game.players[name].cursor;
         let action = Game.players[name].action;
         let velocity = character.body.velocity;
+        let playerType = Game.players[name].playerType;
 
         // stop moving to left or right
-        velocity.x = Config.velocity.idle;
+        velocity.x = playerType.velocity.idle;
         if (cursor.up.isDown)
         {
-            if (character.body.onFloor()) velocity.y = Config.velocity.up;
+            if (character.body.onFloor()) velocity.y = playerType.velocity.up;
         }
-        if(!character.body.onFloor()) velocity.y += Config.velocity.gravity;
+        if(!character.body.onFloor()) velocity.y += playerType.gravity;
         if(cursor.left.isDown)
         {
-            velocity.x = Config.velocity.left;
+            velocity.x = playerType.velocity.left;
             character.animations.play('left');
             action.facing = 'left';
         }
         else if (cursor.right.isDown)
         {
-            velocity.x = Config.velocity.right;
+            velocity.x = playerType.velocity.right;
             character.animations.play('right');
             action.facing = 'right';
         }
@@ -187,7 +224,7 @@ function render()
         let character = Game.players[name].character;
             Game.engine.debug.body(character);
     }
-    //Game.engine.debug.body(Game.map.solidBlocks);
+    //Game.engine.debug.body(Game.map.solid);
 }
 
 window.addEventListener("keypress",function(e){

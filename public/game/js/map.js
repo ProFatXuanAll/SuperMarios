@@ -1,47 +1,57 @@
 let Map = {
     structure: [
         {
-            name: 'World1',
-            src: '/game/assets/map.json'
+            name: 'World01',
+            src: '/game/assets/map.json',
+            layer: {
+                solid: 'Solid',
+                monster: 'Monster',
+                item: 'Item'
+            }
         }
     ],
     background: [
-    
+        {
+            name: 'Background01',
+            src: '/game/assets/nature.png',
+            width: 1920,
+            height: 1080,
+            x: 0,
+            y: 0
+        }
     ],
     tileset: [
-    
-    ],
+        {
+            name: 'TileSet01',
+            src: '/game/assets/tilesetx32.png'
+        }
+    ]
 }
 
-function MapSetup(GameEngine)
+function MapSetup(GameEngine, structure, tileset, background)
 {
     // add background
     this.background = GameEngine.add.tileSprite(
-        Config.picture.background.x,
-        Config.picture.background.y,
-        Config.picture.background.width,
-        Config.picture.background.height,
-        'bg' // add config
+        background.x,
+        background.y,
+        background.width,
+        background.height,
+        background.name
     );
     // background camera fixed to center
     this.background.fixedToCamera = true;
 
     // add tile map (previous defined map.json)
-    this.tileMap = GameEngine.add.tilemap('mario');        
-    // load image --??
-    this.tileMap.addTilesetImage('World', 'tileset');
+    this.tileMap = GameEngine.add.tilemap(structure.name);        
+    // load tile set for tile map
+    // can have multiple tile set for one map
+    this.tileMap.addTilesetImage('World', tileset.name);
 
-    // add layer
-    this.solidBlocks = this.tileMap.createLayer('Solid');
-    // ????
-    this.solidBlocks.resizeWorld();
+    // add solid block layer
+    this.solid = this.tileMap.createLayer(structure.layer.solid);
+    // new layer need resize world
+    this.solid.resizeWorld();
 
-    // add items
-    this.items = GameEngine.add.group();
-
-    // add interactive blocks
-    this.activeBlocks = GameEngine.add.group();
-    
     // enable collision on tile map
     this.tileMap.setCollisionByExclusion(this.tileMap.tilesets[0].tileProperties.collisionExclusion);
 }
