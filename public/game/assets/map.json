@@ -5,7 +5,7 @@
     "tilewidth": 32,
     "tilesets": [
     {
-        "image": "tilesetx32.png",
+        "image": "/game/assets/tilesetx32.png",
         "name": "World",
         "imageheight": 224,
         "imagewidth": 224,
