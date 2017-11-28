@@ -1,8 +1,16 @@
-<% extend('base') %>
-<div id="html_game_block"></div>
+{% extends "game/base.html" %}
 
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+<div id="html_game_block"></div>
+{% endblock %}
+
+{% block scripts %}
 <script src="/game/js/config.js"></script>
 <script src="/game/js/map.js"></script>
 <script src="/game/js/monster.js"></script>
 <script src="/game/js/player.js"></script>
 <script src="/game/js/draw.js"></script>
+{% endblock %}

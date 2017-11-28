@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
+    <title>{{ title }}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/home/css/main.css" />
@@ -12,16 +12,16 @@
       <h1><a href=""><img src="/home/images/icons/index.ico" alt="Super Marios"></a></h1>
       <nav>
           <ul>
-              <li><a href="<%= home %>">Home</a></li>
-              <li><a href="<%= about %>">About us</a></li>
-              <li><a href="<%= game %>">Play Game</a></li>
+              <li><a href="{{ home }}">Home</a></li>
+              <li><a href="{{ about }}">About us</a></li>
+              <li><a href="{{ game }}">Play Game</a></li>
               <!--<li><a href="#work">Who Is Us</a></li>
               <li><a href="#contact">Contact</a></li>-->
           </ul>
       </nav>
   </header>
 
-  <%- content %> 
+  {% block content %}{% endblock %}
 
   <footer id="footer">
 

@@ -1,0 +1,16 @@
+{% extends "game/base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+<form method="POST" action="">
+	account:<input type="text" name="account" placeholder="Your Account">
+	password:<input type="password" name="password" placeholder="Your Password">
+	<input type="submit" value="login">
+	<button><a href="{{ regist }}">register</a></button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

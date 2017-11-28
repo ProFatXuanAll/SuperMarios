@@ -1,45 +1,65 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var https = require('https');
-var fs = require('fs');
+// loading main framework `express`
+const express = require('express');
+const app = express();
 
-var home = require('./routes/home');
-var game = require('./routes/game');
+// loading template engine `nunjucks`
+const nunjucks = require('nunjucks');
 
-var app = express();
+// loading framework required modules
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
-var port = 10000;
+// loading URL routing module
+const home = require('./routes/home');
+const game = require('./routes/game');
 
-//ssl setting
+// setting server listening port
+const port = 10000;
+
+// setting SSL
 /*const SERVER_CONFIG = {
     key:  fs.readFileSync('ssl/private.key'),
     cert: fs.readFileSync('ssl/certificate.crt')
 };*/
 
-// view engine setup
-app.engine('ejs', require('express-ejs-extend'));
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// setting framework module `express`
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/home',home);
-app.use('/game',game);
+// setting template engine `nunjucks`
+nunjucks.configure(
+
+    // views path
+    path.join(__dirname, 'views'),
+
+    // detail setting
+    {
+        // auto html escape
+        autoescape: true,
+
+        // using express framework
+        express: app
+    }
+);
+
+// setting template files extentions to `.html`
+app.set('view engine', 'html');
+
+// setting URL routing module
+app.use('/home', home);
+app.use('/game', game);
 app.use('/', function(req,res,next){ res.redirect('/home'); });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -54,8 +74,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-module.exports = app;
 
 app.listen(port);
 /*https.createServer(SERVER_CONFIG, app)
