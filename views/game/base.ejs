@@ -4,7 +4,7 @@
   <title><%= title %></title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/game/css/main.css">
+  <link rel="stylesheet" href="/game/css/base.css">
   <link rel="icon" href="/home/images/icons/favoricon.ico">
 
   <!-- Scripts -->
@@ -14,19 +14,21 @@
 </head>
 <body>
 
-  <!--header>
-
-    <a href=""><img src="/home/images/icons/index.ico" alt="Super Marios"></a>
+  <header>
+    <h1><a href="<%= home %>"><img src="/home/images/icons/index.ico" alt="Super Marios"></a></h1>
     <nav>
       <ul>
-        <li>Home</li>
-        <li>Abouy us</li>
-        <li>Play Game</li>
+        <li><a href="<%= home %>">Home</a></li>
+        <li><a href="<%= game %>">Game</a></li>
+        <li><a href="<%= pedia %>">Pedia</a></li>
+        <li><a href="<%= login %>">Login</a></li>
       </ul>
     </nav>
-  </header-->
+  </header>
 
+  <div class="content">
   <%- content %> 
+  </div>
 
 </body>
 </html>

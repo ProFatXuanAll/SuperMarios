@@ -14,8 +14,8 @@ let Map = {
         {
             name: 'Background01',
             src: '/game/assets/nature.png',
-            width: 1920,
-            height: 1080,
+            width: '1920',
+            height: '1080',
             x: 0,
             y: 0
         }
@@ -43,6 +43,7 @@ function MapSetup(GameEngine, structure, tileset, background)
 
     // add tile map (previous defined map.json)
     this.tileMap = GameEngine.add.tilemap(structure.name);        
+
     // load tile set for tile map
     // can have multiple tile set for one map
     this.tileMap.addTilesetImage('World', tileset.name);

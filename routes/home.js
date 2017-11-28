@@ -11,7 +11,7 @@ router.get('/about', UrlSetting, function(req, res, next) {
 
 function UrlSetting(req,res,next){
     res.locals = {
-        index: '/home',
+        home: '/home',
         about: '/home/about',
         game:  '/game',
         title: 'SuperMarios'
