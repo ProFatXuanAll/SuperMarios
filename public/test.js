@@ -1,7 +1,7 @@
     //var username=prompt("請輸入使用者姓名")
     $(function () {
         var socket = io();
-        socket.emit('login');
+
         $('.sendmessage').on('click',function(e){
             //e.preventDefault();
             var d2 = new Date();
@@ -22,12 +22,17 @@
             $('#messages').append($('<li>').text(msg.word));
             $('#messages').append($('<li>').text(msg.time));
         });
-        socket.on('login',function(){
+        socket.on('login',function(msg){
             $('#messages').append($('<li>').text("some one login~~"));
+            $('#messages').append($('<li>').text(msg.name));
         });
 
         $('.click').on('click',function(){
             console.log('run');
+            socket.emit('login',
+            {
+                name:$('#name').val()
+            });
             $('.loginplace').fadeOut();
             $('.chatplace').show();
             //$('.loginplace').off('click');
