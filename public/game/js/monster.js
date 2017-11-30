@@ -3,8 +3,7 @@ let Monster = {
         tileNumber: 42,
         spriteName: 'goomba',
         animation: {
-            name: 'walk',
-            frame: [0, 1],
+            walk: [0, 1],
             frame_rate: 2
         },
         velocity: {
@@ -19,14 +18,63 @@ let Monster = {
             src: '/game/assets/goomba.png',
             width: 32,
             height: 32
+        },
+        overlap: function(character, monster){
+            console.log(character);
+            if (character.body.touching.down)
+            {
+                monster.animations.stop();
+                monster.frame = 2;
+                monster.body.enable = false;
+                character.body.velocity.y = -80;
+                Game.engine.time.events.add(Phaser.Timer.SECOND, function()
+                {
+                    monster.kill();
+                });
+            }
+            else playerDeath(character);
+        }
+    },
+    caveTurtle:{
+        tileNumber: 43,
+        spriteName: 'caveTurtle',
+        animation: {
+            walk: [0, 1],
+            frame_rate: 2
+        },
+        velocity: {
+            x: -50,
+            y: 0
+        },
+        gravity: {
+            x: 0,
+            y: 500
+        },
+        picture:{
+            src: '/game/assets/cave_turtle.png',
+            width: 32,
+            height: 32
+        },
+        overlap: function(character, monster){
+            if (character.body.touching.down)
+            {
+                monster.animations.stop();
+                monster.frame = 2;
+                monster.body.enable = false;
+                character.body.velocity.y = -80;
+                Game.engine.time.events.add(Phaser.Timer.SECOND, function()
+                {
+                    monster.kill();
+                });
+            }
+            else playerDeath(character);
         }
     },
     spikeTurtle:{
         tileNumber: 41,
         spriteName: 'spikeTurtle',
         animation: {
-            name: 'walk',
-            frame: [0, 1],
+            walk: [0, 1],
             frame_rate: 2
         },
         velocity: {
@@ -41,6 +89,10 @@ let Monster = {
             src: '/game/assets/spikeTurtle.png',
             width: 32,
             height: 32
+        },
+        overlap: function(character, monster){
+            console.log('death');
+            playerDeath(character);
         }
     },
 }
@@ -62,13 +114,14 @@ function MonsterSetup(GameEngine, map, structure)
         this[monsterType].callAll(
             'animations.add',
             'animations',
-            Monster[monsterType].animation.name,
-            Monster[monsterType].animation.frame,
+            'walk',
+            Monster[monsterType].animation.walk,
             Monster[monsterType].animation.frame_rate,
             true
         );
-        this[monsterType].callAll('animations.play', 'animations', Monster[monsterType].animation.name);
+        this[monsterType].callAll('animations.play', 'animations', 'walk');
         this[monsterType].setAll('body.velocity.x', Monster[monsterType].velocity.x);
         this[monsterType].setAll('body.gravity.y', Monster[monsterType].gravity.y);
+        this[monsterType].setAll('body.bounce.x', 1);
     }
 }

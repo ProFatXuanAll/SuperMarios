@@ -95,6 +95,10 @@ function preload()
         );
     }
     // add promise make sure pictures loaded
+
+    //gameplay bgm testing
+    Game.engine.load.audio('bgm', ['assets/2842_music1.wav']);
+
 }
 
 function create()
@@ -148,6 +152,10 @@ function create()
     );
     Game.map.solid.debug = true;
     /*------------------ debug */
+    //sound testing
+    music = Game.engine.add.audio('bgm');
+    
+        music.play();
 }
 
 function update()
@@ -159,19 +167,22 @@ function update()
         for(let other in Game.players)
         {
             let otherCharacter = Game.players[other].character;
-            //Game.engine.physics.arcade.collide(character, otherCharacter,function(){console.log("hello")});
-            Game.engine.physics.arcade.overlap(character, otherCharacter, playerOverlap(character,otherCharacter));
+            //Game.engine.physics.arcade.overlap(character, otherCharacter, playerOverlap(character,otherCharacter));
         }
-        Game.engine.physics.arcade.collide(character, Game.map.solid);
-        for(let monster in Game.monsters)
+        //Game.engine.physics.arcade.collide(character, Game.map.solid);
+        for(let monsterType in Game.monsters)
         {
-            Game.engine.physics.arcade.collide(Game.monsters[monster], Game.map.solid);
-            Game.engine.physics.arcade.overlap(character, Game.monsters[monster], goombaOverlap);
+            Game.engine.physics.arcade.collide(Game.monsters[monsterType], Game.map.solid);
+        
+            Game.engine.physics.arcade.overlap(
+                character,
+                Game.monsters[monsterType],
+                Monster[monsterType].overlap
+            );
         }
-    }
-    for(let name in Game.players)
-    {
-        let character = Game.players[name].character;
+
+        //set each player' title on head
+       // let character = Game.players[name].character;
         let text=Game.players[name].text;
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
@@ -267,12 +278,6 @@ window.addEventListener("keypress",function(e){
 window.addEventListener("keyup", function(e){
     switch (e.key)
     {
-        /* spawn event
-        case 'g':
-            playerSetup('Alice',10,20);
-            fuck++;
-            break;
-        */
         case 'w':
             Game.players.Alice.cursor.up.isDown = false;
             break;
@@ -313,30 +318,9 @@ function playerOverlap(player,otherCharacter)
         //someone do something.
     }
 }
-
-function goombaOverlap(character,monster)
-{
-    if (character.body.touching.down) {
-        monster.animations.stop();
-        monster.frame = 2;
-        monster.body.enable = false;
-        character.body.velocity.y = -80;
-        Game.engine.time.events.add(Phaser.Timer.SECOND, function() {
-            monster.kill();
-        });
-    } else {
-        playerDeath(character);
-      }    
-}
-
-function spikeTurtleOverlap(character,monster)
-{
-    playerDeath(character);
-}
-
 function detectWorldBound(character)
 {
-    if(character.y+character.height>=Game.map.width)
+    if(character.y+character.height>=Game.map.tileMap.width)
     {
         playerDeath(character);
     }
@@ -344,14 +328,16 @@ function detectWorldBound(character)
 
 function playerDeath(character)
 {
+    // need promise object
     character.body.velocity.x=0;
     character.body.velocity.y=0;
     character.x=0;
     character.y=0;
-    character.body.enable=false;
-    character.visible=false;
-    Game.engine.time.events.add(Phaser.Timer.SECOND * 1.5, function() {
-        character.body.enable=true;
+    character.body.enable = false;
+    character.visible = false;    
+    Game.engine.time.events.add(Phaser.Timer.SECOND, function()
+    {
+        character.body.enable = true;
         character.visible = true;
     });
 }
