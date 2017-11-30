@@ -1,4 +1,4 @@
-let Config = {
+const Config = {
     window: {
         // type stored in string
         width: '100%',
