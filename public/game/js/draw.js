@@ -102,6 +102,7 @@ function preload()
             Monster[monsterType].picture.height
         );
     }
+    Game.engine.load.audio('test','/game/assets/sounds/hit.wav');
     // add promise make sure pictures loaded
 }
 
@@ -162,6 +163,7 @@ function create()
     //sound testing
     //music = Game.engine.add.audio(Map.music[0].name);
     //music.play();
+    sfx=Game.engine.add.audio('test');
     /*------------------ debug */
 }
 
@@ -193,7 +195,7 @@ function update()
         let text=Game.players[name].text;
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
-        //detectWorldBound(character);
+        detectWorldBound(character);
     }
     for(let name in Game.players)
     {
@@ -318,7 +320,7 @@ function playerOverlap(player,otherCharacter)
     if (player.body.touching.down)
     {
             player.body.velocity.y = -120;
-            //playerDeath(otherCharacter);
+            playerDeath(otherCharacter);
     }
     else if(player.body.touching.left)
     {
@@ -327,9 +329,10 @@ function playerOverlap(player,otherCharacter)
 }
 function detectWorldBound(character)
 {
-    if(character.y+character.height>=Game.map.tileMap.width)
+    if(character.position.y+character.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
     {
         playerDeath(character);
+        sfx.play();
     }
 }
 
