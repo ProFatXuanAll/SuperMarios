@@ -186,7 +186,7 @@ function update()
         let text=Game.players[name].text;
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
-        detectWorldBound(character);
+        //detectWorldBound(character);
     }
     for(let name in Game.players)
     {

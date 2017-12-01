@@ -2,11 +2,11 @@ let Map = {
     structure: [
         {
             name: 'World01',
-            src: '/game/assets/map.json',
+            src: '/game/assets/map1.json',
             layer: {
-                solid: 'Solid',
-                monster: 'Monster',
-                item: 'Item'
+                solid: 'solidLayer',
+                monster: 'monsterLayer',
+                item: 'itemLayer'
             }
         }
     ],
@@ -46,7 +46,7 @@ function MapSetup(GameEngine, structure, tileset, background)
 
     // load tile set for tile map
     // can have multiple tile set for one map
-    this.tileMap.addTilesetImage('World', tileset.name);
+    this.tileMap.addTilesetImage('tileset', tileset.name);
 
     // add solid block layer
     this.solid = this.tileMap.createLayer(structure.layer.solid);
@@ -54,5 +54,6 @@ function MapSetup(GameEngine, structure, tileset, background)
     this.solid.resizeWorld();
 
     // enable collision on tile map
-    this.tileMap.setCollisionByExclusion(this.tileMap.tilesets[0].tileProperties.collisionExclusion);
+
+    this.tileMap.setCollisionByExclusion(this.tileMap.properties.collisionExclusion);
 }
