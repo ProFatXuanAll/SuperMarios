@@ -1,4 +1,4 @@
-let Monster = {
+const Monster = {
     goomba:{
         tileNumber: 42,
         spriteName: 'goomba',
@@ -15,7 +15,7 @@ let Monster = {
             y: 500
         },
         picture:{
-            src: '/game/assets/goomba.png',
+            src: '/game/assets/monster/image/goomba.png',
             width: 32,
             height: 32
         },
@@ -51,7 +51,7 @@ let Monster = {
             y: 500
         },
         picture:{
-            src: '/game/assets/cave_turtle.png',
+            src: '/game/assets/monster/image/cave_turtle.png',
             width: 32,
             height: 32
         },
@@ -86,7 +86,7 @@ let Monster = {
             y: 500
         },
         picture:{
-            src: '/game/assets/spikeTurtle.png',
+            src: '/game/assets/monster/image/spike_turtle.png',
             width: 32,
             height: 32
         },

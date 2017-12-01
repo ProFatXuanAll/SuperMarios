@@ -1,8 +1,8 @@
-let Map = {
+const Map = {
     structure: [
         {
-            name: 'World01',
-            src: '/game/assets/map1.json',
+            name: 'world01',
+            src: '/game/assets/map/json/map.json',
             layer: {
                 solid: 'solidLayer',
                 monster: 'monsterLayer',
@@ -12,8 +12,8 @@ let Map = {
     ],
     background: [
         {
-            name: 'Background01',
-            src: '/game/assets/nature.png',
+            name: 'background01',
+            src: '/game/assets/map/image/background/nature.png',
             width: '1920',
             height: '1080',
             x: 0,
@@ -22,13 +22,67 @@ let Map = {
     ],
     tileset: [
         {
-            name: 'TileSet01',
-            src: '/game/assets/tilesetx32.png'
+            name: 'tileset01',
+            src: '/game/assets/map/image/tileset/tilesetx32.png'
+        }
+    ],
+    music: [
+        {
+            name: 'castle',
+            src: ['/game/assets/map/music/castle.wav']
+        },
+        {
+            name: 'cave',
+            src: ['/game/assets/map/music/cave.wav']
+        },
+        {
+            name: 'field',
+            src: ['/game/assets/map/music/field.wav']
+        },
+        {
+            name: 'finalboss',
+            src: ['/game/assets/map/music/finalboss.wav']
+        },
+        {
+            name: 'finish',
+            src: ['/game/assets/map/music/finish.wav']
+        },
+        {
+            name: 'flyship',
+            src: ['/game/assets/map/music/flyship.wav']
+        },
+        {
+            name: 'ghosthouse',
+            src: ['/game/assets/map/music/ghosthouse.wav']
+        },
+        {
+            name: 'miniboss',
+            src: ['/game/assets/map/music/miniboss.wav']
+        },
+        {
+            name: 'rocky',
+            src: ['/game/assets/map/music/rocky.wav']
+        },
+        {
+            name: 'surprise',
+            src: ['/game/assets/map/music/surprise.wav']
+        },
+        {
+            name: 'timed',
+            src: ['/game/assets/map/music/timed.wav']
+        },
+        {
+            name: 'water',
+            src: ['/game/assets/map/music/water.wav']
+        },
+        {
+            name: 'worldmap',
+            src: ['/game/assets/map/music/worldmap.wav']
         }
     ]
 }
 
-function MapSetup(GameEngine, structure, tileset, background)
+function MapSetup(GameEngine, structure, tileset, background, music)
 {
     // add background
     this.background = GameEngine.add.tileSprite(
@@ -54,6 +108,13 @@ function MapSetup(GameEngine, structure, tileset, background)
     this.solid.resizeWorld();
 
     // enable collision on tile map
+<<<<<<< HEAD
 
     this.tileMap.setCollisionByExclusion(this.tileMap.properties.collisionExclusion);
+=======
+    this.tileMap.setCollisionByExclusion(this.tileMap.tilesets[0].tileProperties.collisionExclusion);
+
+    // add music
+    this.music = GameEngine.add.audio(music.name);
+>>>>>>> 282b02af04e0e80ac336f0117ffd1886bc260355
 }

@@ -1,4 +1,4 @@
-let Player = {
+const Player = {
     mario: {
         spriteName: 'Mario',
         animation: {
@@ -10,7 +10,7 @@ let Player = {
         picture: {
             width: 32,
             height: 56,
-            src: '/game/assets/mariox32.png'
+            src: '/game/assets/player/image/mariox32.png'
         },
         velocity: {
             left: -200,

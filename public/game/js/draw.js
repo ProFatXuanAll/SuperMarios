@@ -68,6 +68,14 @@ function preload()
         Map.background[0].name,
         Map.background[0].src
     );
+    // load all bgm
+    for(let i = 0; i < Map.music.length; ++i)
+    {
+        Game.engine.load.audio(
+            Map.music[i].name,
+            Map.music[i].src
+        );
+    }
     // future version: load all player spritesheet at once
     /*for(let playerType in Player)
     {
@@ -95,10 +103,6 @@ function preload()
         );
     }
     // add promise make sure pictures loaded
-
-    //gameplay bgm testing
-    Game.engine.load.audio('bgm', ['assets/2842_music1.wav']);
-
 }
 
 function create()
@@ -110,8 +114,12 @@ function create()
         Game.engine,
         Map.structure[0],
         Map.tileset[0],
-        Map.background[0]
+        Map.background[0],
+        Map.music[2]
     );
+
+    // start loop map music
+    Game.map.music.loopFull();
 
     // create monster
     Game.monsters = new MonsterSetup(
@@ -151,11 +159,10 @@ function create()
         20
     );
     Game.map.solid.debug = true;
-    /*------------------ debug */
     //sound testing
-    music = Game.engine.add.audio('bgm');
-    
-        music.play();
+    //music = Game.engine.add.audio(Map.music[0].name);
+    //music.play();
+    /*------------------ debug */
 }
 
 function update()
