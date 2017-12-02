@@ -6,7 +6,7 @@ const Map = {
             layer: {
                 solid: 'solidLayer',
                 monster: 'monsterLayer',
-                item: 'itemLayer'
+                item: 'itemLayer',
             },
             start:{
                 x:64,
@@ -104,14 +104,14 @@ function MapSetup(GameEngine, structure, tileset, background, music)
     this.background.fixedToCamera = true;
 
     // add tile map (previous defined map.json)
-    this.tileMap = GameEngine.add.tilemap(structure.name);        
-
+    this.tileMap = GameEngine.add.tilemap(structure.name);
     // load tile set for tile map
     // can have multiple tile set for one map
     this.tileMap.addTilesetImage('tileset', tileset.name);
 
     // add solid block layer
     this.solid = this.tileMap.createLayer(structure.layer.solid);
+    
     // new layer need resize world
     this.solid.resizeWorld();
 

@@ -35,7 +35,9 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
     }
 
     this.playerType = playerType;
+    this.currentType= playerType;
     this.character = GameEngine.add.sprite(x, y, this.playerType.spriteName);
+    this.character.currentvel
     this.cursor = controlable ? 
         GameEngine.input.keyboard.createCursorKeys() : new SyncCursor();
 

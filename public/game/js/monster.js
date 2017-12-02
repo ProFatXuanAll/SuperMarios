@@ -33,7 +33,7 @@ const Monster = {
                 });
             }
             else playerDeath(character);
-        }
+        },
     },
     caveTurtle:{
         tileNumber: 43,
@@ -94,6 +94,31 @@ const Monster = {
             playerDeath(character);
         }
     },
+    ironFlower:{
+        tileNumber: 35,
+        spriteName: 'ironFlower',
+        animation: {
+            walk: [0, 1],
+            frame_rate: 6
+        },
+        velocity: {
+            x: 0,
+            y: 0
+        },
+        gravity: {
+            x: 0,
+            y: 500
+        },
+        picture:{
+            src: '/game/assets/monster/image/iron_flower.png',
+            width: 32,
+            height: 32
+        },
+        overlap: function(character, monster){
+            playerDeath(character);
+        }
+    },
+
 }
 
 function MonsterSetup(GameEngine, map, structure)
