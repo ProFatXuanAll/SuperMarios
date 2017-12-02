@@ -22,20 +22,33 @@ app.use('/game',session({
 }));
 
 router.get('/', UrlSetting, function(req, res, next) {
-    res.render('game/index');
+    var sess = req.session;
+    if(sess.userName){
+        res.render('game/index',{ noLogin : false, userName : sess.userName, });
+    }
+    else req.redirect('/game/login');
 });
 
 router.get('/pedia', UrlSetting, function(req, res, next) {
-    res.render('game/pedia');
+    var sess = req.session;
+    if(sess.userName){
+        res.render('game/pedia',{ noLogin : false, userName : sess.userName, });
+    }
+    else res.render('game/pedia');
 });
 
 router.get('/login', UrlSetting, function(req, res, next) {
-    res.render('game/login',{error : false});
+    var sess = req.session;
+    if(sess.userName){
+        res.redirect('/game');
+    }
+    else res.render('game/login',{error : false});
 });
 
 router.post('/login', UrlSetting, function(req, res, next) {
     var act = req.body.account;
     var pwd = req.body.password;
+    var sess = req.session;
     model.user.findOne({ 'account' : act }, 'password', function(err,user){
         if(err || act == "" || user.password != pwd){
                 console.log('login error');
@@ -43,6 +56,7 @@ router.post('/login', UrlSetting, function(req, res, next) {
         }
         else{
             console.log('login success');
+            sess.userName = act;
             res.render('game/redirect',{
                 fromLogin : true,
                 fromRegist : false,
@@ -53,7 +67,11 @@ router.post('/login', UrlSetting, function(req, res, next) {
 });
 
 router.get('/regist', UrlSetting, function(req, res, next) {
-    res.render('game/regist',{ error : false });
+    var sess = req.session;
+    if(sess.userName){
+        res.redirect('/game');
+    }
+    else res.render('game/regist',{ error : false });
 });
 
 router.post('/regist', UrlSetting, function(req, res, next) {
@@ -88,7 +106,9 @@ function UrlSetting(req,res,next){
         game: '/game',
         pedia: '/game/pedia',
         login: '/game/login',
-        regist: '/game/regist'
+        regist: '/game/regist',
+        user : '/game/user',
+        noLogin : true,
     };
     next();
 }
