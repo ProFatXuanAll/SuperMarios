@@ -101,6 +101,7 @@ function preload()
             Monster[monsterType].picture.width,
             Monster[monsterType].picture.height
         );
+        Game.engine.load.audio(Monster[monsterType].death.name,Monster[monsterType].death.src);
     }
     for(let itemType in Items)
     {
@@ -176,11 +177,10 @@ function create()
     Game.map.solid.debug = true;
     //sound testing
     //music = Game.engine.add.audio(Map.music[0].name);
-    sfx=Game.engine.add.audio('death');
+    deathsound=Game.engine.add.audio('death');
     resizeGame();
     /*------------------ debug */
 
-    Game.engine.time.events.loop(Phaser.Timer.SECOND*10,MonsterRespawn);
 }
 
 function update()
@@ -205,6 +205,10 @@ function update()
                 Game.monsters[monsterType],
                 Monster[monsterType].overlap
             );
+            for(let i=0;i<Game.monsters[monsterType].length;i++)
+            {
+                detectWorldBoundm(Game.monsters[monsterType].children[i]);
+            }
         }
         for(let itemType in Game.items)
         {
@@ -277,12 +281,6 @@ function render()
 window.addEventListener("keypress",function(e){
     switch (e.key)
     {
-        /* spawn event
-        case 'g':
-            playerSetup('Alice',10,20);
-            fuck++;
-            break;
-        */
         case 'w':
             Game.players.Alice.cursor.up.isDown = true;
             break;
@@ -374,6 +372,22 @@ function detectWorldBound(character)
         character.position.x=Game.map.tileMap.width*Game.map.tileMap.tileWidth-character.width;
     }
 }
+
+function detectWorldBoundm(monster)
+{
+    if(monster.position.y+monster.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
+    {
+        Monster.goomba.respawn(monster);        
+    }
+    if(monster.position.x<=0)
+    {
+        Monster.goomba.respawn(monster);        
+    }
+    if(monster.position.x+monster.width>=Game.map.tileMap.width*Game.map.tileMap.tileWidth)
+    {
+        Monster.goomba.respawn(monster);        
+    }
+}
 function detectFinished(character)
 {
     if(character.position.y>=Map.structure[0].finish.y&&character.position.x>=Map.structure[0].finish.x)
@@ -388,7 +402,8 @@ function playerDeath(character)
     character.animations.stop();
     character.frame=1;    
     character.immovable = true;
-    character.body.moves=false;    
+    character.body.moves=false;
+
     Game.engine.time.events.add(Phaser.Timer.SECOND, function()
     {
         character.body.velocity.x=0;
@@ -399,7 +414,7 @@ function playerDeath(character)
         character.immovable = false;
         character.animations.play();
     });
-    sfx.play();
+    deathsound.play();
 }
 
 function resizeGame() {
