@@ -1,26 +1,36 @@
-$(function () {
+/*$(function () {
     var socket = io();
     var playerlist={};
-    $('.loginclick').on('click',function(){
-        radomname=Math.random().toString();
-        x= Math.floor(Math.random() * (150 - 90 + 1)) + 90; 
-        socket.emit('login',
-        {
-            name:radomname,
-            x:x
-            time: new Date()
-        });
-    });
 
+    radomname=Math.random().toString();
+    x= Math.floor(Math.random() * (150 - 90 + 1)) + 90;
+    $('.loginclick').on('click',function(){
+        socket.emit('login',
+                {
+                    name:radomname,
+                    x:x,
+                    time: new Date()
+                });
+        Game.players[radomname]=new PlayerSetup(
+                Game.engine,
+                radomname,
+                Player.mario,
+                x,
+                20,
+                true
+                );
+        
+    //Game.engine.camera.follow(Game.players[radomname].character);
+    });
     socket.on('newplayer',function(data){
         playerlist[data.name]={};
         Game.players[data.name]=new PlayerSetup(
-            Game.engine,
-            data.name,
-            Player.mario,
-            120,
-            20
-            );
+                Game.engine,
+                data.name,
+                Player.mario,
+                120,
+                20
+                );
     });
 
     socket.on('login',function(data){
@@ -28,12 +38,12 @@ $(function () {
         for(let p in playerlist)
         {
             Game.players[playerlist[p].name]=new PlayerSetup(
-                Game.engine,
-                playerlist[p].name,
-                Player.mario,
-                playerlist[p].x,
-                playerlist[p]
-                );
+                    Game.engine,
+                    playerlist[p].name,
+                    Player.mario,
+                    playerlist[p].x,
+                    playerlist[p].y
+                    );
         }
         console.log(playerlist);
 
@@ -41,4 +51,4 @@ $(function () {
     socket.on('return', function(data){
         console.log(data.time);
     });
-});
+});*/

@@ -1,28 +1,33 @@
 let Game = {};
 
+var socket=io();
+var playerlist={};
+
+    var radomname=Math.random().toString();
+    var radomx=Math.floor(Math.random()*(150-90+1))+90;
 Game.engine = new Phaser.Game(
 
-    // game window width
-    Config.window.width,
+        // game window width
+        Config.window.width,
 
-    // game window height
-    Config.window.height,
+        // game window height
+        Config.window.height,
 
-    // phaser draw engine
-    Phaser.CANVAS,
+        // phaser draw engine
+        Phaser.CANVAS,
 
-    // html tag id
-    Config.html.main,
+        // html tag id
+        Config.html.main,
 
-    // phaser state object
-    // state order: preload -> create-> update -> render
-    // keep looping between update and render states
-    {
-        preload: preload,
-        create: create,
-        update: update,
-        render: render
-    }
+        // phaser state object
+        // state order: preload -> create-> update -> render
+        // keep looping between update and render states
+        {
+            preload: preload,
+            create: create,
+            update: update,
+            render: render
+        }
 );
 
 // load image and tilemap
@@ -30,77 +35,77 @@ function preload()
 {
     // future version: load all map at once
     /*for(let i = 0; i < Map.structure.length; ++i)
-    {
-        Game.engine.load.tilemap(
-            Map.structure[i].name,
-            Map.structure[i].src,
-            null, 
-            Phaser.Tilemap.TILED_JSON
-        );
-    }*/
+      {
+      Game.engine.load.tilemap(
+      Map.structure[i].name,
+      Map.structure[i].src,
+      null, 
+      Phaser.Tilemap.TILED_JSON
+      );
+      }*/
     Game.engine.load.tilemap(
-        Map.structure[0].name,
-        Map.structure[0].src,
-        null,
-        Phaser.Tilemap.TILED_JSON
-    );
+            Map.structure[0].name,
+            Map.structure[0].src,
+            null,
+            Phaser.Tilemap.TILED_JSON
+            );
     // future version: load all tileset at once
     /*for(let i = 0; i < Map.tileset.length; ++i)
-    {
-        Game.engine.load.image(
-            Map.tileset[i].name,
-            Map.tileset[i].src
-        );
-    }*/
+      {
+      Game.engine.load.image(
+      Map.tileset[i].name,
+      Map.tileset[i].src
+      );
+      }*/
     Game.engine.load.image(
-        Map.tileset[0].name,
-        Map.tileset[0].src
-    );
+            Map.tileset[0].name,
+            Map.tileset[0].src
+            );
     // future version: load all background at once
     /*for(let i = 0; i < Map.background.length; ++i)
-    {
-        Game.engine.load.image(
-            Map.background[i].name,
-            Map.background[i].src
-        );
-    }*/
+      {
+      Game.engine.load.image(
+      Map.background[i].name,
+      Map.background[i].src
+      );
+      }*/
     Game.engine.load.image(
-        Map.background[0].name,
-        Map.background[0].src
-    );
+            Map.background[0].name,
+            Map.background[0].src
+            );
     // load all bgm
     for(let i = 0; i < Map.music.length; ++i)
     {
         Game.engine.load.audio(
-            Map.music[i].name,
-            Map.music[i].src
-        );
+                Map.music[i].name,
+                Map.music[i].src
+                );
     }
     // future version: load all player spritesheet at once
     /*for(let playerType in Player)
-    {
-        Game.engine.load.spritesheet(
-            Player[playerType].spriteName,
-            Player[playerType].picture.src,
-            Player[playerType].picture.width,
-            Player[playerType].picture.height
-        );
-    }*/
+      {
+      Game.engine.load.spritesheet(
+      Player[playerType].spriteName,
+      Player[playerType].picture.src,
+      Player[playerType].picture.width,
+      Player[playerType].picture.height
+      );
+      }*/
     Game.engine.load.spritesheet(
-        Player.mario.spriteName,
-        Player.mario.picture.src,
-        Player.mario.picture.width,
-        Player.mario.picture.height
-    );
+            Player.mario.spriteName,
+            Player.mario.picture.src,
+            Player.mario.picture.width,
+            Player.mario.picture.height
+            );
     // load all monster spritesheet
     for(let monsterType in Monster)
     {
         Game.engine.load.spritesheet(
-            Monster[monsterType].spriteName,
-            Monster[monsterType].picture.src,
-            Monster[monsterType].picture.width,
-            Monster[monsterType].picture.height
-        );
+                Monster[monsterType].spriteName,
+                Monster[monsterType].picture.src,
+                Monster[monsterType].picture.width,
+                Monster[monsterType].picture.height
+                );
     }
     // add promise make sure pictures loaded
 }
@@ -111,53 +116,98 @@ function create()
 
     // create map
     Game.map = new MapSetup(
-        Game.engine,
-        Map.structure[0],
-        Map.tileset[0],
-        Map.background[0],
-        Map.music[2]
-    );
+            Game.engine,
+            Map.structure[0],
+            Map.tileset[0],
+            Map.background[0],
+            Map.music[2]
+            );
 
     // start loop map music
     Game.map.music.loopFull();
 
     // create monster
     Game.monsters = new MonsterSetup(
-        Game.engine,
-        Game.map,
-        Map.structure[0]
-    );
+            Game.engine,
+            Game.map,
+            Map.structure[0]
+            );
+
 
     Game.players = {};
+    $('.loginclick').on('click',function(){
+        socket.emit('login',
+                {
+                    name:radomname,
+                    x:radomx
+                });
 
+        Game.players['self'] = new PlayerSetup(
+                Game.engine,
+                radomname,
+                Player.mario,
+                0,
+                0,
+                true
+                );
+
+        Game.engine.camera.follow(Game.players.self.character);
+    });
+    socket.on('newplayer',function(data){
+        playerlist[data.name]={};
+        Game.players[data.name]=new PlayerSetup(
+                Game.engine,
+                data.name,
+                Player.mario,
+                120,
+                20
+                );
+    });
+    socket.on('login',function(data){
+        playerlist=JSON.parse(data.listdata);
+        for(let cyclep in playerlist)
+        {
+            if(radomname!=playerlist[cyclep].name)
+            {
+                Game.players[playerlist[cyclep].name]=new PlayerSetup(
+                        Game.engine,
+                        playerlist[cyclep].name,
+                        Player.mario,
+                        playerlist[cyclep].x,
+                        playerlist[cyclep].y
+                        )
+            }
+        }
+    });
     // create player for client
-    Game.players['self'] = new PlayerSetup(
-        Game.engine,
-        'self',
-        Player.mario,
-        0,
-        0,
-        true
-    );
+    /*Game.players['self'] = new PlayerSetup(
+            Game.engine,
+            'self',
+            Player.mario,
+            0,
+            0,
+            true
+            );*/
 
     // main camera follow main character
-    Game.engine.camera.follow(Game.players.self.character);
+
+    //Game.engine.camera.follow(Game.players.self.character);
 
     /*----------------- debug */
-    Game.players['Alice'] = new PlayerSetup(
-        Game.engine,
-        'Alice',
-        Player.mario,
-        100,
-        20
-    );
-    Game.players['fuck'] = new PlayerSetup(
-        Game.engine,
-        'fuck',
-        Player.mario,
-        150,
-        20
-    );
+    /*Game.players['Alice'] = new PlayerSetup(
+      Game.engine,
+      'Alice',
+      Player.mario,
+      100,
+      20
+      );
+      Game.players['fuck'] = new PlayerSetup(
+      Game.engine,
+      'fuck',
+      Player.mario,
+      150,
+      20
+      );*/
     Game.map.solid.debug = true;
     //sound testing
     //music = Game.engine.add.audio(Map.music[0].name);
@@ -180,16 +230,16 @@ function update()
         for(let monsterType in Game.monsters)
         {
             Game.engine.physics.arcade.collide(Game.monsters[monsterType], Game.map.solid);
-        
+
             Game.engine.physics.arcade.overlap(
-                character,
-                Game.monsters[monsterType],
-                Monster[monsterType].overlap
-            );
+                    character,
+                    Game.monsters[monsterType],
+                    Monster[monsterType].overlap
+                    );
         }
 
         //set each player' title on head
-       // let character = Game.players[name].character;
+        // let character = Game.players[name].character;
         let text=Game.players[name].text;
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
@@ -240,31 +290,55 @@ function render()
     for(let name in Game.players)
     {
         let character = Game.players[name].character;
-            Game.engine.debug.body(character);
+        Game.engine.debug.body(character);
     }
     //Game.engine.debug.body(Game.map.solid);
 }
+socket.on('move',function(datamove){
+    Game.players[datamove.name].cursor[datamove.move].isDown=true;
+    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
+});
+socket.on('stop',function(datamove){
+    Game.players[datamove.name].cursor[datamove.move].isDown=false;
+    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
+});
 
 window.addEventListener("keypress",function(e){
     switch (e.key)
     {
         /* spawn event
-        case 'g':
-            playerSetup('Alice',10,20);
-            fuck++;
-            break;
-        */
+           case 'g':
+           playerSetup('Alice',10,20);
+           fuck++;
+           break;
+           */
         case 'w':
-            Game.players.Alice.cursor.up.isDown = true;
+            socket.emit('move',{
+                name:radomname,
+                move:'up'
+            })
+            Game.players.self.cursor.up.isDown = true;
             break;
         case 'a':
-            Game.players.Alice.cursor.left.isDown = true;
+            socket.emit('move',{
+                name:radomname,
+                move:'left'
+            })
+            Game.players.self.cursor.left.isDown = true;
             break;
         case 's':
-            Game.players.Alice.cursor.down.isDown = true;
+            socket.emit('move',{
+                name:radomname,
+                move:'down'
+            })
+            Game.players.self.cursor.down.isDown = true;
             break;
         case 'd':
-            Game.players.Alice.cursor.right.isDown = true;
+            socket.emit('move',{
+                name:radomname,
+                move:'right'
+            })
+            Game.players.self.cursor.right.isDown = true;
             break;
         case 'i':
             Game.players.fuck.cursor.up.isDown = true;
@@ -286,16 +360,32 @@ window.addEventListener("keyup", function(e){
     switch (e.key)
     {
         case 'w':
-            Game.players.Alice.cursor.up.isDown = false;
+            socket.emit('stop',{
+                name:radomname,
+                move:'up'
+            })
+            Game.players.self.cursor.up.isDown = false;
             break;
         case 'a':
-            Game.players.Alice.cursor.left.isDown = false;
+            socket.emit('stop',{
+                name:radomname,
+                move:'left'
+            })
+            Game.players.self.cursor.left.isDown = false;
             break;
         case 's':
-            Game.players.Alice.cursor.down.isDown = false;
+            socket.emit('stop',{
+                name:radomname,
+                move:'down'
+            })
+            Game.players.self.cursor.down.isDown = false;
             break;
         case 'd':
-            Game.players.Alice.cursor.right.isDown = false;
+            socket.emit('stop',{
+                name:radomname,
+                move:'right'
+            })
+            Game.players.self.cursor.right.isDown = false;
             break;
         case 'i':
             Game.players.fuck.cursor.up.isDown = false;
@@ -317,8 +407,8 @@ function playerOverlap(player,otherCharacter)
 {
     if (player.body.touching.down)
     {
-            player.body.velocity.y = -120;
-            //playerDeath(otherCharacter);
+        player.body.velocity.y = -120;
+        //playerDeath(otherCharacter);
     }
     else if(player.body.touching.left)
     {
@@ -343,8 +433,8 @@ function playerDeath(character)
     character.body.enable = false;
     character.visible = false;    
     Game.engine.time.events.add(Phaser.Timer.SECOND, function()
-    {
-        character.body.enable = true;
-        character.visible = true;
-    });
+            {
+                character.body.enable = true;
+                character.visible = true;
+            });
 }
