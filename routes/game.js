@@ -6,7 +6,6 @@ router.get('/', UrlSetting, function(req, res, next) {
 });
 
 router.get('/pedia', UrlSetting, function(req, res, next) {
-    console.log(req.io);
     res.render('game/pedia');
 });
 

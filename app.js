@@ -20,6 +20,12 @@ const game = require('./routes/game');
 // setting server listening port
 const port = 10000;
 
+// setting server SSL
+/*const SERVER_CONFIG = {
+    key:  fs.readFileSync('ssl/private.key'),
+    cert: fs.readFileSync('ssl/certificate.crt')
+};*/
+
 // starting server
 const server = app.listen(port);
 /*const server = https.createServer(SERVER_CONFIG, app)
@@ -28,11 +34,22 @@ const server = app.listen(port);
 // loading socket io module
 const io = require('socket.io').listen(server);
 
-// setting SSL
-/*const SERVER_CONFIG = {
-    key:  fs.readFileSync('ssl/private.key'),
-    cert: fs.readFileSync('ssl/certificate.crt')
-};*/
+io.on('connection',function(socket){
+    console.log('---------------------------no fuck------------------');
+    socket.on('login',function(data){
+        console.log(data.time);
+            /*socket.broadcast.emit('login',
+            {
+                name: 'lala'
+            });*/
+        socket.emit('return', {time: new Date()});
+        });
+    /*
+    socket.on('chat message',function(msg){
+        //console.log('message:  ' +msg);
+        socket.broadcast.emit('chat message',msg);
+    });*/
+});
 
 // setting framework module `express`
 app.use(logger('dev'));
