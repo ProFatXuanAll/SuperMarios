@@ -49,11 +49,12 @@ io.on('connection',function(socket){
         });
         //socket.emit('return', {time: new Date()});
         });
-    /*
-    socket.on('chat message',function(msg){
-        //console.log('message:  ' +msg);
-        socket.broadcast.emit('chat message',msg);
-    });*/
+    socket.on('move',function(datamove){
+        socket.broadcast.emit('move',datamove);
+    });
+    socket.on('stop',function(datamove){
+        socket.broadcast.emit('stop',datamove);
+    });
 });
 
 // setting framework module `express`

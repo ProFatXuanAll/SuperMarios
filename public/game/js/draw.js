@@ -3,8 +3,8 @@ let Game = {};
 var socket=io();
 var playerlist={};
 
-    var radomname=Math.random().toString();
-    var radomx=Math.floor(Math.random()*(150-90+1))+90;
+var radomname=Math.random().toString();
+var radomx=Math.floor(Math.random()*(150-90+1))+90;
 Game.engine = new Phaser.Game(
 
         // game window width
@@ -43,6 +43,7 @@ function preload()
       Phaser.Tilemap.TILED_JSON
       );
       }*/
+    Game.engine.stage.disableVisibilityChange=true;
     Game.engine.load.tilemap(
             Map.structure[0].name,
             Map.structure[0].src,
@@ -181,13 +182,13 @@ function create()
     });
     // create player for client
     /*Game.players['self'] = new PlayerSetup(
-            Game.engine,
-            'self',
-            Player.mario,
-            0,
-            0,
-            true
-            );*/
+      Game.engine,
+      'self',
+      Player.mario,
+      0,
+      0,
+      true
+      );*/
 
     // main camera follow main character
 
@@ -313,32 +314,44 @@ window.addEventListener("keypress",function(e){
            break;
            */
         case 'w':
-            socket.emit('move',{
-                name:radomname,
-                move:'up'
-            })
-            Game.players.self.cursor.up.isDown = true;
+            if(Game.players.self.cursor.up.isDown == false)
+            {
+                socket.emit('move',{
+                    name:radomname,
+                    move:'up'
+                })
+                Game.players.self.cursor.up.isDown = true;
+            }
             break;
         case 'a':
-            socket.emit('move',{
-                name:radomname,
-                move:'left'
-            })
-            Game.players.self.cursor.left.isDown = true;
+            if(Game.players.self.cursor.left.isDown == false)
+            {
+                socket.emit('move',{
+                    name:radomname,
+                    move:'left'
+                })
+                Game.players.self.cursor.left.isDown = true;
+            }
             break;
         case 's':
-            socket.emit('move',{
-                name:radomname,
-                move:'down'
-            })
-            Game.players.self.cursor.down.isDown = true;
+            if(Game.players.self.cursor.down.isDown == false)
+            {
+                socket.emit('move',{
+                    name:radomname,
+                    move:'down'
+                })
+                Game.players.self.cursor.down.isDown = true;
+            }
             break;
         case 'd':
-            socket.emit('move',{
-                name:radomname,
-                move:'right'
-            })
-            Game.players.self.cursor.right.isDown = true;
+            if(Game.players.self.cursor.right.isDown == false)
+            {
+                socket.emit('move',{
+                    name:radomname,
+                    move:'right'
+                })
+                Game.players.self.cursor.right.isDown = true;
+            }
             break;
         case 'i':
             Game.players.fuck.cursor.up.isDown = true;
