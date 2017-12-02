@@ -33,16 +33,21 @@ const server = app.listen(port);
 
 // loading socket io module
 const io = require('socket.io').listen(server);
-
+var charalist={};
 io.on('connection',function(socket){
     console.log('---------------------------no fuck------------------');
     socket.on('login',function(data){
         console.log(data.time);
-            /*socket.broadcast.emit('login',
-            {
-                name: 'lala'
-            });*/
-        socket.emit('return', {time: new Date()});
+        charalist[data.name]={name:data.name,x:data.x,y:20};
+        socket.emit('login',
+        {
+            listdata: JSON.stringify(charalist)
+        });
+        socket.broadcast.emit('newplayer',
+        {
+            name:data.name
+        });
+        //socket.emit('return', {time: new Date()});
         });
     /*
     socket.on('chat message',function(msg){

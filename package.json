@@ -21,7 +21,8 @@
     "nunjucks": "^3.0.1",
     "phaser": "^2.6.2",
     "phaser-ce": "^2.9.2",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "socket.io": "^2.0.4"
   },
   "main": "app.js",
   "devDependencies": {},
