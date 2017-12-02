@@ -35,13 +35,22 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
     }
 
     this.playerType = playerType;
+    this.currentType={
+        velocity: {
+            left: -200,
+            right: 200,
+            up: -600,
+            idle: 0
+        },
+        gravity: 20
+    };
     this.character = GameEngine.add.sprite(x, y, this.playerType.spriteName);
     this.cursor = controlable ? 
         GameEngine.input.keyboard.createCursorKeys() : new SyncCursor();
 
     GameEngine.physics.enable(this.character);
 
-    this.character.body.collideWorldBounds = true;
+    this.character.body.collideWorldBounds = false;
     // set up animations by Phaser engine
     this.character.animations.add('left', this.playerType.animation.left, this.playerType.animation.frameRate, true);
     this.character.animations.add('idle', this.playerType.animation.idle, this.playerType.animation.frameRate, true);
@@ -52,5 +61,6 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
     };
     this.x = x;
     this.y = y;
+    this.character.dieyet=false;
     this.text = GameEngine.add.text(x, y, playerName, Config.font.Arial);
 }

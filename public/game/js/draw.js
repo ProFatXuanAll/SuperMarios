@@ -38,6 +38,7 @@ function preload()
             Phaser.Tilemap.TILED_JSON
         );
     }*/
+    Game.engine.stage.disableVisibilityChange = true;
     Game.engine.load.tilemap(
         Map.structure[0].name,
         Map.structure[0].src,
@@ -101,7 +102,18 @@ function preload()
             Monster[monsterType].picture.width,
             Monster[monsterType].picture.height
         );
+        Game.engine.load.audio(Monster[monsterType].death.name,Monster[monsterType].death.src);
     }
+    for(let itemType in Items)
+    {
+        Game.engine.load.spritesheet(
+            Items[itemType].spriteName,
+            Items[itemType].picture.src,
+            Items[itemType].picture.width,
+            Items[itemType].picture.height
+        );
+    }
+    Game.engine.load.audio('youdie','/game/assets/sounds/die.wav');
     // add promise make sure pictures loaded
 }
 
@@ -123,6 +135,11 @@ function create()
 
     // create monster
     Game.monsters = new MonsterSetup(
+        Game.engine,
+        Game.map,
+        Map.structure[0]
+    );
+    Game.items = new ItemSetup(
         Game.engine,
         Game.map,
         Map.structure[0]
@@ -161,8 +178,10 @@ function create()
     Game.map.solid.debug = true;
     //sound testing
     //music = Game.engine.add.audio(Map.music[0].name);
-    //music.play();
+    deathsound=Game.engine.add.audio('youdie');
+    resizeGame();
     /*------------------ debug */
+
 }
 
 function update()
@@ -171,29 +190,50 @@ function update()
     {
         let character = Game.players[name].character;
         Game.engine.physics.arcade.collide(character, Game.map.solid);
+        
         for(let other in Game.players)
         {
+            if(name==other) continue;
             let otherCharacter = Game.players[other].character;
-            //Game.engine.physics.arcade.overlap(character, otherCharacter, playerOverlap(character,otherCharacter));
+            Game.engine.physics.arcade.collide(character, otherCharacter);
         }
-        //Game.engine.physics.arcade.collide(character, Game.map.solid);
         for(let monsterType in Game.monsters)
         {
             Game.engine.physics.arcade.collide(Game.monsters[monsterType], Game.map.solid);
-        
+            
             Game.engine.physics.arcade.overlap(
                 character,
                 Game.monsters[monsterType],
                 Monster[monsterType].overlap
             );
+            for(let i=0;i<Game.monsters[monsterType].length;i++)
+            {
+                detectWorldBoundm(Game.monsters[monsterType].children[i]);
+                /*
+                detectworlbound(monster,monstertype)
+                Monster[monstertype]=....
+                merge it into Monster.js
+
+                */
+            }
+        }
+        for(let itemType in Game.items)
+        {
+            Game.engine.physics.arcade.collide(Game.items[itemType], Game.map.solid);
+            
+            Game.engine.physics.arcade.overlap(
+                character,
+                Game.items[itemType],
+                Items[itemType].overlap(Game.players[name].currentType)
+            );
         }
 
-        //set each player' title on head
-       // let character = Game.players[name].character;
+        //set each players' title on head
         let text=Game.players[name].text;
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
-        //detectWorldBound(character);
+        detectWorldBound(character);
+        detectFinished(character);
     }
     for(let name in Game.players)
     {
@@ -201,24 +241,24 @@ function update()
         let cursor = Game.players[name].cursor;
         let action = Game.players[name].action;
         let velocity = character.body.velocity;
-        let playerType = Game.players[name].playerType;
+        let currentType = Game.players[name].currentType;
 
         // stop moving to left or right
-        velocity.x = playerType.velocity.idle;
+        velocity.x = currentType.velocity.idle;
         if (cursor.up.isDown)
         {
-            if (character.body.onFloor()) velocity.y = playerType.velocity.up;
+            if (character.body.onFloor()) velocity.y = currentType.velocity.up;
         }
-        if(!character.body.onFloor()) velocity.y += playerType.gravity;
+        if(!character.body.onFloor()) velocity.y += currentType.gravity;
         if(cursor.left.isDown)
         {
-            velocity.x = playerType.velocity.left;
+            velocity.x = currentType.velocity.left;
             character.animations.play('left');
             action.facing = 'left';
         }
         else if (cursor.right.isDown)
         {
-            velocity.x = playerType.velocity.right;
+            velocity.x = currentType.velocity.right;
             character.animations.play('right');
             action.facing = 'right';
         }
@@ -248,12 +288,6 @@ function render()
 window.addEventListener("keypress",function(e){
     switch (e.key)
     {
-        /* spawn event
-        case 'g':
-            playerSetup('Alice',10,20);
-            fuck++;
-            break;
-        */
         case 'w':
             Game.players.Alice.cursor.up.isDown = true;
             break;
@@ -315,9 +349,13 @@ window.addEventListener("keyup", function(e){
 /* player overlap test*/
 function playerOverlap(player,otherCharacter)
 {
+    if(player==otherCharacter){
+        console.log('fuck');
+        return;
+    }
     if (player.body.touching.down)
     {
-            player.body.velocity.y = -120;
+            player.body.velocity.y = -150;
             //playerDeath(otherCharacter);
     }
     else if(player.body.touching.left)
@@ -327,24 +365,110 @@ function playerOverlap(player,otherCharacter)
 }
 function detectWorldBound(character)
 {
-    if(character.y+character.height>=Game.map.tileMap.width)
+    /*
+    should be merged into player.js
+    maybe rename to playerDetectWorldBound(character)
+    */
+    if(character.position.y+character.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
     {
-        playerDeath(character);
+       playerDeath(character);
+       character.position.y=Game.map.tileMap.height*Game.map.tileMap.tileHeight-character.height-1;
+    }
+    if(character.position.x<=0)
+    {
+        character.position.x=0;
+    }
+    if(character.position.x+character.width>=Game.map.tileMap.width*Game.map.tileMap.tileWidth)
+    {
+        character.position.x=Game.map.tileMap.width*Game.map.tileMap.tileWidth-character.width;
+    }
+}
+
+function detectWorldBoundm(monster)
+{
+    if(monster.position.y+monster.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
+    {
+        Monster.goomba.respawn(monster);        
+    }
+    if(monster.position.x<=0)
+    {
+        Monster.goomba.respawn(monster);        
+    }
+    if(monster.position.x+monster.width>=Game.map.tileMap.width*Game.map.tileMap.tileWidth)
+    {
+        Monster.goomba.respawn(monster);        
+    }
+}
+function detectFinished(character)
+{
+    if(character.position.y>=Map.structure[0].finish.y&&character.position.x>=Map.structure[0].finish.x)
+    {
+        console.log('finished');
     }
 }
 
 function playerDeath(character)
 {
-    // need promise object
-    character.body.velocity.x=0;
-    character.body.velocity.y=0;
-    character.x=0;
-    character.y=0;
-    character.body.enable = false;
-    character.visible = false;    
-    Game.engine.time.events.add(Phaser.Timer.SECOND, function()
+    if(!character.dieyet)
     {
-        character.body.enable = true;
-        character.visible = true;
-    });
+        // need promise object
+        character.animations.stop();
+        character.frame=1;    
+        character.immovable = true;
+        character.body.moves=false;
+        deathsound.play();
+        console.log(character.dieyet);
+        character.dieyet=true;
+        
+        Game.engine.time.events.add(Phaser.Timer.SECOND*2, function()
+        {
+            character.body.velocity.x=0;
+            character.body.velocity.y=0;
+            character.x=Map.structure[0].start.x;
+            character.y=Map.structure[0].start.y;
+            character.body.moves=true;
+            character.immovable = false;
+            character.animations.play();
+            character.dieyet=false;
+        });
+    }
+    else return;
+}
+
+function resizeGame() {
+    Game.engine.scale.setGameSize($( window ).width(), $( window ).height()*0.8);
+}
+
+$( window ).resize(function() {
+    resizeGame();
+});
+
+
+function MonsterRespawn()
+{
+    let map=Game.map;
+    let mon=Game.monsters;
+    let structure=Map.structure[0];
+    for(let monsterType in Monster)
+    {
+        map.tileMap.createFromTiles(
+            Monster[monsterType].tileNumber,
+            null,
+            monsterType,
+            structure.layer.monster,
+            mon[monsterType]);
+
+        mon[monsterType].callAll(
+            'animations.add',
+            'animations',
+            'walk',
+            Monster[monsterType].animation.walk,
+            Monster[monsterType].animation.frame_rate,
+            true
+        );
+        mon[monsterType].callAll('animations.play', 'animations', 'walk');
+        mon[monsterType].setAll('body.velocity.x', Monster[monsterType].velocity.x);
+        mon[monsterType].setAll('body.gravity.y', Monster[monsterType].gravity.y);
+        mon[monsterType].setAll('body.bounce.x', 1);
+    }
 }
