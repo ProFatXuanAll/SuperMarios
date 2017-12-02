@@ -1,5 +1,8 @@
+module.exports = function(app){
+
 const express = require('express');
 const mongoose = require('mongoose');
+const session = require('express-session');
 const config = require('../config');
 const model = require('../models/game_model');
 const router = express.Router();
@@ -12,6 +15,11 @@ mongoose.connect(url, { useMongoClient: true }, (err, res) => {
 });
 mongoose.Promise = global.Promise;
 
+app.use('/game',session({
+  secret : 'dkwqhnfqwohfwnfuqha',
+  resave : false,
+  saveUninitialized : true,
+}));
 
 router.get('/', UrlSetting, function(req, res, next) {
     res.render('game/index');
@@ -85,4 +93,6 @@ function UrlSetting(req,res,next){
     next();
 }
 
-module.exports = router;
+return router;
+
+};
