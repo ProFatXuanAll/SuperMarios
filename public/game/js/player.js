@@ -1,16 +1,22 @@
 const Player = {
     mario: {
-        spriteName: 'Mario',
+        spriteName: 'mario',
+        picture: {
+            width: 32,
+            height: 56,
+            src: '/game/assets/player/image/mariox32.png'
+        },
+        music: {
+            die: {
+                name: 'marioDie',
+                src: '/game/assets/sounds/die.wav'
+            }
+        },
         animation: {
             left: [ 0, 1, 2, 3 ],
             idle: [ 4 ],
             right: [ 4, 5, 6, 7 ],
             frameRate: 10
-        },
-        picture: {
-            width: 32,
-            height: 56,
-            src: '/game/assets/player/image/mariox32.png'
         },
         velocity: {
             left: -200,
@@ -24,7 +30,7 @@ const Player = {
     }
 };
 
-function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=false)
+function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
 {
     function SyncCursor()
     {
@@ -44,11 +50,11 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
         },
         gravity: 20
     };
-    this.character = GameEngine.add.sprite(x, y, this.playerType.spriteName);
+    this.character = Game.engine.add.sprite(x, y, this.playerType.spriteName);
     this.cursor = controlable ? 
-        GameEngine.input.keyboard.createCursorKeys() : new SyncCursor();
+        Game.engine.input.keyboard.createCursorKeys() : new SyncCursor();
 
-    GameEngine.physics.enable(this.character);
+    Game.engine.physics.enable(this.character);
 
     this.character.body.collideWorldBounds = false;
     // set up animations by Phaser engine
@@ -62,5 +68,5 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
     this.x = x;
     this.y = y;
     this.character.dieyet=false;
-    this.text = GameEngine.add.text(x, y, playerName, Config.font.Arial);
+    this.text = Game.engine.add.text(x, y, playerName, Config.font.Arial);
 }

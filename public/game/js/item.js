@@ -25,11 +25,11 @@ const Items = {
     },
 }
 
-function ItemSetup(GameEngine, map, structure)
+function ItemSetup(map, structure)
 {
     for(let itemType in Items)
     {
-        this[itemType] = GameEngine.add.group();
+        this[itemType] = Game.engine.add.group();
         this[itemType].enableBody = true;
 
         map.tileMap.createFromTiles(

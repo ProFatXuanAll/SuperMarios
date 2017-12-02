@@ -90,21 +90,23 @@ const Map = {
     ]
 }
 
-function MapSetup(GameEngine, structure, tileset, background, music)
+function MapSetup(structure, tileset, background, music)
 {
     // add background
-    this.background = GameEngine.add.tileSprite(
+    this.background = Game.engine.add.tileSprite(
         background.x,
         background.y,
         background.width,
         background.height,
         background.name
     );
+
     // background camera fixed to center
     this.background.fixedToCamera = true;
 
     // add tile map (previous defined map.json)
-    this.tileMap = GameEngine.add.tilemap(structure.name);
+    this.tileMap = Game.engine.add.tilemap(structure.name);
+    
     // load tile set for tile map
     // can have multiple tile set for one map
     this.tileMap.addTilesetImage('tileset', tileset.name);
@@ -116,7 +118,8 @@ function MapSetup(GameEngine, structure, tileset, background, music)
     this.solid.resizeWorld();
 
     // enable collision on tile map
-
     this.tileMap.setCollisionByExclusion(this.tileMap.properties.collisionExclusion);
-    this.music = GameEngine.add.audio(music.name);
+
+    // add map music
+    this.music = Game.engine.add.audio(music.name);
 }

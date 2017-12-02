@@ -1,19 +1,14 @@
 let Game = {};
 
 Game.engine = new Phaser.Game(
-
     // game window width
     Config.window.width,
-
     // game window height
     Config.window.height,
-
     // phaser draw engine
     Phaser.CANVAS,
-
     // html tag id
     Config.html.main,
-
     // phaser state object
     // state order: preload -> create-> update -> render
     // keep looping between update and render states
@@ -28,8 +23,10 @@ Game.engine = new Phaser.Game(
 // load image and tilemap
 function preload()
 {
-    // future version: load all map at once
-    /*for(let i = 0; i < Map.structure.length; ++i)
+    // cancel onblur event
+    Game.engine.stage.disableVisibilityChange = true;
+    // load all map
+    for(let i = 0; i < Map.structure.length; ++i)
     {
         Game.engine.load.tilemap(
             Map.structure[i].name,
@@ -37,39 +34,24 @@ function preload()
             null, 
             Phaser.Tilemap.TILED_JSON
         );
-    }*/
-    Game.engine.stage.disableVisibilityChange = true;
-    Game.engine.load.tilemap(
-        Map.structure[0].name,
-        Map.structure[0].src,
-        null,
-        Phaser.Tilemap.TILED_JSON
-    );
-    // future version: load all tileset at once
-    /*for(let i = 0; i < Map.tileset.length; ++i)
+    }
+    // load all tileset
+    for(let i = 0; i < Map.tileset.length; ++i)
     {
         Game.engine.load.image(
             Map.tileset[i].name,
             Map.tileset[i].src
         );
-    }*/
-    Game.engine.load.image(
-        Map.tileset[0].name,
-        Map.tileset[0].src
-    );
-    // future version: load all background at once
-    /*for(let i = 0; i < Map.background.length; ++i)
+    }
+    // load all background
+    for(let i = 0; i < Map.background.length; ++i)
     {
         Game.engine.load.image(
             Map.background[i].name,
             Map.background[i].src
         );
-    }*/
-    Game.engine.load.image(
-        Map.background[0].name,
-        Map.background[0].src
-    );
-    // load all bgm
+    }
+    // load all background music
     for(let i = 0; i < Map.music.length; ++i)
     {
         Game.engine.load.audio(
@@ -77,8 +59,8 @@ function preload()
             Map.music[i].src
         );
     }
-    // future version: load all player spritesheet at once
-    /*for(let playerType in Player)
+    // load all player spritesheet and music
+    for(let playerType in Player)
     {
         Game.engine.load.spritesheet(
             Player[playerType].spriteName,
@@ -86,14 +68,12 @@ function preload()
             Player[playerType].picture.width,
             Player[playerType].picture.height
         );
-    }*/
-    Game.engine.load.spritesheet(
-        Player.mario.spriteName,
-        Player.mario.picture.src,
-        Player.mario.picture.width,
-        Player.mario.picture.height
-    );
-    // load all monster spritesheet
+        Game.engine.load.audio(
+            Player[playerType].music.die.name,
+            Player[playerType].music.die.src,
+        );
+    }
+    // load all monster spritesheet and music
     for(let monsterType in Monster)
     {
         Game.engine.load.spritesheet(
@@ -102,8 +82,12 @@ function preload()
             Monster[monsterType].picture.width,
             Monster[monsterType].picture.height
         );
-        Game.engine.load.audio(Monster[monsterType].death.name,Monster[monsterType].death.src);
+        Game.engine.load.audio(
+            Monster[monsterType].music.die.name,
+            Monster[monsterType].music.die.src
+        );
     }
+    // load all item spritesheet and music
     for(let itemType in Items)
     {
         Game.engine.load.spritesheet(
@@ -113,17 +97,16 @@ function preload()
             Items[itemType].picture.height
         );
     }
-    Game.engine.load.audio('youdie','/game/assets/sounds/die.wav');
     // add promise make sure pictures loaded
 }
 
 function create()
 {
+    // start physics system
     Game.engine.physics.startSystem(Phaser.Physics.ARCADE);
 
     // create map
     Game.map = new MapSetup(
-        Game.engine,
         Map.structure[0],
         Map.tileset[0],
         Map.background[0],
@@ -135,12 +118,12 @@ function create()
 
     // create monster
     Game.monsters = new MonsterSetup(
-        Game.engine,
         Game.map,
         Map.structure[0]
     );
+
+    // create item
     Game.items = new ItemSetup(
-        Game.engine,
         Game.map,
         Map.structure[0]
     );
@@ -149,7 +132,6 @@ function create()
 
     // create player for client
     Game.players['self'] = new PlayerSetup(
-        Game.engine,
         'self',
         Player.mario,
         0,
@@ -162,14 +144,12 @@ function create()
 
     /*----------------- debug */
     Game.players['Alice'] = new PlayerSetup(
-        Game.engine,
         'Alice',
         Player.mario,
         100,
         20
     );
     Game.players['fuck'] = new PlayerSetup(
-        Game.engine,
         'fuck',
         Player.mario,
         150,
@@ -178,7 +158,7 @@ function create()
     Game.map.solid.debug = true;
     //sound testing
     //music = Game.engine.add.audio(Map.music[0].name);
-    deathsound=Game.engine.add.audio('youdie');
+    deathsound=Game.engine.add.audio(Player.mario.music.die.name);
     resizeGame();
     /*------------------ debug */
 
