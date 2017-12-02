@@ -20,6 +20,14 @@ const game = require('./routes/game');
 // setting server listening port
 const port = 10000;
 
+// starting server
+const server = app.listen(port);
+/*const server = https.createServer(SERVER_CONFIG, app)
+  .listen(port,function(){console.log("https done.");} );*/
+
+// loading socket io module
+const io = require('socket.io').listen(server);
+
 // setting SSL
 /*const SERVER_CONFIG = {
     key:  fs.readFileSync('ssl/private.key'),
@@ -52,6 +60,12 @@ nunjucks.configure(
 // setting template files extentions to `.html`
 app.set('view engine', 'html');
 
+// making io module visible to other router module
+app.use(function(req, res, next){
+    req.io = io;
+    next();
+});
+
 // setting URL routing module
 app.use('/home', home);
 app.use('/game', game);
@@ -74,7 +88,3 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-app.listen(port);
-/*https.createServer(SERVER_CONFIG, app)
-  .listen(port,function(){console.log("https done.");} );*/
