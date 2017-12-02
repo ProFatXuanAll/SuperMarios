@@ -102,7 +102,7 @@ function preload()
             Monster[monsterType].picture.height
         );
     }
-    Game.engine.load.audio('test','/game/assets/sounds/hit.wav');
+    Game.engine.load.audio('death','/game/assets/sounds/die.wav');
     // add promise make sure pictures loaded
 }
 
@@ -163,7 +163,7 @@ function create()
     //sound testing
     //music = Game.engine.add.audio(Map.music[0].name);
     //music.play();
-    sfx=Game.engine.add.audio('test');
+    sfx=Game.engine.add.audio('death');
     /*------------------ debug */
 }
 
@@ -178,7 +178,6 @@ function update()
             let otherCharacter = Game.players[other].character;
             //Game.engine.physics.arcade.overlap(character, otherCharacter, playerOverlap(character,otherCharacter));
         }
-        //Game.engine.physics.arcade.collide(character, Game.map.solid);
         for(let monsterType in Game.monsters)
         {
             Game.engine.physics.arcade.collide(Game.monsters[monsterType], Game.map.solid);
@@ -196,6 +195,7 @@ function update()
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
         detectWorldBound(character);
+        detectFinished(character);
     }
     for(let name in Game.players)
     {
@@ -331,23 +331,40 @@ function detectWorldBound(character)
 {
     if(character.position.y+character.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
     {
-        playerDeath(character);
-        sfx.play();
+       playerDeath(character);
+    }
+    if(character.position.x<=0)
+    {
+        character.position.x=0;
+    }
+    if(character.position.x+character.width>=Game.map.tileMap.width*Game.map.tileMap.tileWidth)
+    {
+        character.position.x=Game.map.tileMap.width*Game.map.tileMap.tileWidth-character.width;
+    }
+}
+function detectFinished(character)
+{
+    if(character.position.y>=Map.structure[0].finish.y&&character.position.x>=Map.structure[0].finish.x)
+    {
+        console.log('finished');
     }
 }
 
 function playerDeath(character)
 {
     // need promise object
-    character.body.velocity.x=0;
-    character.body.velocity.y=0;
-    character.x=0;
-    character.y=0;
-    character.body.enable = false;
-    character.visible = false;    
+
+    character.immovable = true;
+    character.body.moves=false;    
     Game.engine.time.events.add(Phaser.Timer.SECOND, function()
     {
-        character.body.enable = true;
-        character.visible = true;
+        character.body.velocity.x=0;
+        character.body.velocity.y=0;
+        character.x=Map.structure[0].start.x;
+        character.y=Map.structure[0].start.y;
+        character.body.moves=true;
+        character.immovable = false;
     });
+
+    sfx.play();
 }
