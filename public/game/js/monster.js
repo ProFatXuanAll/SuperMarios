@@ -26,16 +26,15 @@ const Monster = {
             src:'/game/assets/sounds/hit.wav'
         },
         overlap: function(character, monster){
-            console.log(monster);
-            if (character.body.touching.down)
+            if (character.body.touching.down&&!character.body.touching.up)//need more precise detection
             {
                 monster.animations.stop();
                 monster.frame = 2;
                 monster.body.enable = false;
-                character.body.velocity.y = -80;
+                character.body.velocity.y = -300;
                 sfx=Game.engine.add.audio(monster.key);
                 sfx.play();
-                Game.engine.time.events.add(Phaser.Timer.SECOND, function()
+                Game.engine.time.events.add(Phaser.Timer.SECOND*3, function()
                 {
                     console.log(monster);
                     Monster.goomba.respawn(monster);
@@ -43,24 +42,27 @@ const Monster = {
             }
             else playerDeath(character);
         },
-        respawn: function(monster)
-        {
+        respawn: function(monster)  //function(monster,monstertype)
+        {  
+            //add sprite and animation
             test=Game.engine.add.sprite(monster.spawn.x,monster.spawn.y, 'goomba');
-            Game.engine.physics.enable(test);
-            test.body.enable=true;
-            
             test.animations.add('walk', Monster['goomba'].animation.walk, Monster['goomba'].animation.frame_rate, true);
             test.animations.play('walk');
+
+            //reassign spawnpoint
             test.spawn={
                 x: monster.spawn.x,
                 y: monster.spawn.y 
             }
+
+            //set physic
+            Game.engine.physics.enable(test);
+            test.body.enable=true;
             test.body.velocity.x=Monster['goomba'].velocity.x;
             test.body.gravity.y=Monster['goomba'].gravity.y;
             test.body.bounce.x=1;
             Game.monsters['goomba'].add(test);
             monster.destroy();
-            console.log('fuck');
         }
     },
     caveTurtle:{
@@ -94,7 +96,7 @@ const Monster = {
             src:'/game/assets/sounds/hit.wav'
         },
         overlap: function(character, monster){
-            if (character.body.touching.down)
+            if (character.body.touching.down&&!character.body.touching.up&&!character.body.touching.left&&!character.body.touching.right)
             {
                 monster.animations.stop();
                 monster.frame = 2;
@@ -103,7 +105,6 @@ const Monster = {
                 Game.engine.time.events.add(Phaser.Timer.SECOND, function()
                 {
                     monster.destroy();
-                    
                 });
             }
             else playerDeath(character);

@@ -61,5 +61,6 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
     };
     this.x = x;
     this.y = y;
+    this.character.dieyet=false;
     this.text = GameEngine.add.text(x, y, playerName, Config.font.Arial);
 }

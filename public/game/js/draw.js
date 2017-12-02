@@ -38,6 +38,7 @@ function preload()
             Phaser.Tilemap.TILED_JSON
         );
     }*/
+    Game.engine.stage.disableVisibilityChange = true;
     Game.engine.load.tilemap(
         Map.structure[0].name,
         Map.structure[0].src,
@@ -112,7 +113,7 @@ function preload()
             Items[itemType].picture.height
         );
     }
-    Game.engine.load.audio('death','/game/assets/sounds/die.wav');
+    Game.engine.load.audio('youdie','/game/assets/sounds/die.wav');
     // add promise make sure pictures loaded
 }
 
@@ -177,7 +178,7 @@ function create()
     Game.map.solid.debug = true;
     //sound testing
     //music = Game.engine.add.audio(Map.music[0].name);
-    deathsound=Game.engine.add.audio('death');
+    deathsound=Game.engine.add.audio('youdie');
     resizeGame();
     /*------------------ debug */
 
@@ -208,6 +209,12 @@ function update()
             for(let i=0;i<Game.monsters[monsterType].length;i++)
             {
                 detectWorldBoundm(Game.monsters[monsterType].children[i]);
+                /*
+                detectworlbound(monster,monstertype)
+                Monster[monstertype]=....
+                merge it into Monster.js
+
+                */
             }
         }
         for(let itemType in Game.items)
@@ -358,6 +365,10 @@ function playerOverlap(player,otherCharacter)
 }
 function detectWorldBound(character)
 {
+    /*
+    should be merged into player.js
+    maybe rename to playerDetectWorldBound(character)
+    */
     if(character.position.y+character.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
     {
        playerDeath(character);
@@ -398,23 +409,30 @@ function detectFinished(character)
 
 function playerDeath(character)
 {
-    // need promise object
-    character.animations.stop();
-    character.frame=1;    
-    character.immovable = true;
-    character.body.moves=false;
-
-    Game.engine.time.events.add(Phaser.Timer.SECOND, function()
+    if(!character.dieyet)
     {
-        character.body.velocity.x=0;
-        character.body.velocity.y=0;
-        character.x=Map.structure[0].start.x;
-        character.y=Map.structure[0].start.y;
-        character.body.moves=true;
-        character.immovable = false;
-        character.animations.play();
-    });
-    deathsound.play();
+        // need promise object
+        character.animations.stop();
+        character.frame=1;    
+        character.immovable = true;
+        character.body.moves=false;
+        deathsound.play();
+        console.log(character.dieyet);
+        character.dieyet=true;
+        
+        Game.engine.time.events.add(Phaser.Timer.SECOND*2, function()
+        {
+            character.body.velocity.x=0;
+            character.body.velocity.y=0;
+            character.x=Map.structure[0].start.x;
+            character.y=Map.structure[0].start.y;
+            character.body.moves=true;
+            character.immovable = false;
+            character.animations.play();
+            character.dieyet=false;
+        });
+    }
+    else return;
 }
 
 function resizeGame() {

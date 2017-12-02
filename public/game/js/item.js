@@ -16,10 +16,8 @@ const Items = {
         {
             
             return function(character, item){
-                console.log(character);
                 currentType.velocity.left-=50;
                 currentType.velocity.right+=50;
-                //playerDeath(character);
                 item.kill();
             }
         }
