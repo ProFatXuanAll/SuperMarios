@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const config = require('../config');
-const model = require('/models/game_model');
+const model = require('../models/game_model');
 const router = express.Router();
 
 const url = `mongodb://${config.mongo.user}:${config.mongo.password}@localhost:27017/${config.mongo.dbname}`
@@ -22,16 +22,16 @@ router.get('/pedia', UrlSetting, function(req, res, next) {
 });
 
 router.get('/login', UrlSetting, function(req, res, next) {
-    res.render('game/login');
+    res.render('game/login',{error : false});
 });
 
 router.post('/login', UrlSetting, function(req, res, next) {
     var act = req.body.account;
     var pwd = req.body.password;
     model.user.findOne({ 'account' : act }, 'password', function(err,user){
-        if(err || user.password != pwd){
-            console.log('login error');
-            res.send('Login error');
+        if(err || act == "" || user.password != pwd){
+                console.log('login error');
+                res.render('game/login',{error : true});
         }
         else{
             console.log('login success');
@@ -45,7 +45,7 @@ router.post('/login', UrlSetting, function(req, res, next) {
 });
 
 router.get('/regist', UrlSetting, function(req, res, next) {
-    res.render('game/regist');
+    res.render('game/regist',{ error : false });
 });
 
 router.post('/regist', UrlSetting, function(req, res, next) {
@@ -58,15 +58,15 @@ router.post('/regist', UrlSetting, function(req, res, next) {
     });
 
     newUser.save(function(err){
-        if(err){
+        if(err || act == "" || pwd == ""){
             console.log('regist failed');
-            res.send('regist failed');
+            res.render('game/regist',{ error : true });
         }
         else{
             console.log('regist success');
             res.render('game/redirect',{
                 fromLogin : false,
-                fromRedirect : true,
+                fromRegist : true,
                 userName : act,
             });            
         };

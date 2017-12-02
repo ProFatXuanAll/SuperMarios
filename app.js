@@ -21,10 +21,10 @@ const game = require('./routes/game');
 const port = 10000;
 
 // setting SSL
-/*const SERVER_CONFIG = {
+const SERVER_CONFIG = {
     key:  fs.readFileSync('ssl/private.key'),
     cert: fs.readFileSync('ssl/certificate.crt')
-};*/
+};
 
 // setting framework module `express`
 app.use(logger('dev'));
@@ -75,6 +75,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(port);
-/*https.createServer(SERVER_CONFIG, app)
-  .listen(port,function(){console.log("https done.");} );*/
+//app.listen(port);
+https.createServer(SERVER_CONFIG, app)
+  .listen(port,function(){console.log("https done.");} );

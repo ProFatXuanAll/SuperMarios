@@ -5,12 +5,43 @@
 
 {% block content %}
 <h1>regist</h1>
-<form method="POST" action="">
-	account:<input type="text" name="account" placeholder="Your Account"><br>
-	password:<input type="password" name="password" placeholder="Your Password"><br>
-	<input type="submit" value="regist"><br>
-</form>
+
+<div>
+    <form method="POST" action="">
+        account: <input type="text" id="account" name="account" placeholder="Your Account"><br>
+        password: <input type="password" id="password" name="password" placeholder="Your Password"><br>
+        <input id="btn" type="submit" value="regist"><br>
+    </form>
+</div>
+
+{% if error %}
+<div>
+    <p style="background: #ffcccc">This username have been used, please try another one.</p>    
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block scripts %}
+<script>
+    $(document).ready(function(){
+        $("form").submit(function(e){
+            if($("#account").val() == "" && $("#password").val() == ""){
+                e.preventDefault();
+                window.alert("Please enter your user name and password.");
+                return false;
+            }
+            else if($("#password").val() == ""){
+                e.preventDefault();
+                window.alert("Please enter your password.");
+                return false;
+            }
+            else if($("#account").val() == ""){
+                e.preventDefault();
+                window.alert("Please enter your user name.");
+                return false;
+            };
+        });
+    })
+</script>
 {% endblock %}
