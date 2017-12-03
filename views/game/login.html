@@ -4,13 +4,43 @@
 {% endblock %}
 
 {% block content %}
+<div>
 <form method="POST" action="">
-	account:<input type="text" name="account" placeholder="Your Account">
-	password:<input type="password" name="password" placeholder="Your Password">
-	<input type="submit" value="login">
-	<button><a href="{{ regist }}">register</a></button>
+    account: <input type="text" id="account" name="account" placeholder="Your Account"><br>
+    password: <input type="password" id="password" name="password" placeholder="Your Password"><br>
+  <input type="submit" value="login"><br>
+  <button><a href="{{ regist }}">register</a></button><br>
 </form>
+</div>
+
+{% if error %}
+<div>
+    <p style="background: #ffcccc">Your user name or password are invalid, please try again.</p>    
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block scripts %}
+<script>
+    $(document).ready(function(){
+        $("form").submit(function(e){
+            if($("#account").val() == "" && $("#password").val() == ""){
+                e.preventDefault();
+                window.alert("Please enter your user name and password.");
+                return false;
+            }
+            else if($("#password").val() == ""){
+                e.preventDefault();
+                window.alert("Please enter your password.");
+                return false;
+            }
+            else if($("#account").val() == ""){
+                e.preventDefault();
+                window.alert("Please enter your user name.");
+                return false;
+            };
+        });
+    })
+</script>
 {% endblock %}

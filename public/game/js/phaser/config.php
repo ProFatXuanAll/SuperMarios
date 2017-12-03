@@ -51,7 +51,12 @@
     <script src="$path/src/pixi/display/DisplayObject.js"></script>
     <script src="$path/src/pixi/display/DisplayObjectContainer.js"></script>
     <script src="$path/src/pixi/display/Sprite.js"></script>
-    
+    <script src="$path/src/pixi/display/SpriteBatch.js"></script>
+
+    <script src="$path/src/pixi/utils/Utils.js"></script>
+    <script src="$path/src/pixi/utils/EarCut.js"></script>
+    <script src="$path/src/pixi/utils/CanvasPool.js"></script>
+
     <script src="$path/src/pixi/renderers/webgl/utils/WebGLShaderUtils.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PixiShader.js"></script>
     <script src="$path/src/pixi/renderers/webgl/shaders/PixiFastShader.js"></script>
@@ -75,18 +80,34 @@
     <script src="$path/src/pixi/renderers/canvas/CanvasRenderer.js"></script>
     <script src="$path/src/pixi/renderers/canvas/CanvasGraphics.js"></script>
 
+    <script src="$path/src/pixi/primitives/Graphics.js"></script>
+    <script src="$path/src/pixi/primitives/GraphicsData.js"></script>
+
 EOL;
+
+    if ($modules['rope'])
+    {
+        echo "    <script src=\"$path/src/pixi/extras/Strip.js\"></script>";
+        echo "    <script src=\"$path/src/pixi/extras/Rope.js\"></script>";
+    }
+
+    if ($modules['tilesprite'])
+    {
+        echo "    <script src=\"$path/src/pixi/extras/TilingSprite.js\"></script>";
+    }
 
     //  PIXI Outro + Phaser Global
     echo <<<EOL
 
     <script src="$path/src/pixi/textures/BaseTexture.js"></script>
     <script src="$path/src/pixi/textures/Texture.js"></script>
+    <script src="$path/src/pixi/textures/RenderTexture.js"></script>
+
+    <script src="$path/src/pixi/filters/AbstractFilter.js"></script>
 
     <script src="$path/src/Phaser.js"></script>
     <script src="$path/src/polyfills.js"></script>
     <script src="$path/src/utils/Utils.js"></script>
-    <script src="$path/src/utils/CanvasPool.js"></script>
 
     <script src="$path/src/geom/Circle.js"></script>
     <script src="$path/src/geom/Ellipse.js"></script>
@@ -229,7 +250,6 @@ EOL;
     if ($modules['graphics'])
     {
         echo <<<EOL
-    <script src="$path/src/gameobjects/GraphicsData.js"></script>
     <script src="$path/src/gameobjects/Graphics.js"></script>
 
 

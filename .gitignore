@@ -5,3 +5,6 @@ ssl
 
 # for vim
 *.swp
+
+# environment setting
+config.js

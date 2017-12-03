@@ -3,7 +3,7 @@ let Game = {};
 var socket=io();
 var playerlist={};
 
-var radomname=Math.random().toString();
+var playername=$("#userName").html();
 var radomx=Math.floor(Math.random()*(150-90+1))+90;
 Game.engine = new Phaser.Game(
         // game window width
@@ -139,25 +139,26 @@ function create()
     //$('.loginclick').on('click',function(){
     socket.emit('login',
             {
-                name:radomname,
+                name:playername,
                 //x:radomx
                 x:0
             });
 
     Game.players['self'] = new PlayerSetup(
-            radomname,
+            playername,
             Player.mario,
             0,
             0,
             true
             );
 
+
     Game.engine.camera.follow(Game.players.self.character);
     //});
     socket.on('newplayer',function(data){
         playerlist[data.name]={};
         Game.players[data.name]=new PlayerSetup(
-                radomname,
+                playername,
                 Player.mario,
                 data.x,
                 20
@@ -167,7 +168,7 @@ function create()
         playerlist=JSON.parse(data.listdata);
         for(let cyclep in playerlist)
         {
-            if(radomname!=playerlist[cyclep].name)
+            if(playername!=playerlist[cyclep].name)
             {
                 Game.players[playerlist[cyclep].name]=new PlayerSetup(
                         playerlist[cyclep].name,
@@ -279,7 +280,7 @@ function update()
     if(Game.players.self.cursor.up.isDown && Game.players.self.ispressed.up == false)
     {
         socket.emit('move',{
-            name:radomname,
+            name:playername,
             move:'up'
         });
         Game.players.self.ispressed.up = true;
@@ -287,7 +288,7 @@ function update()
     if(!Game.players.self.cursor.up.isDown && Game.players.self.ispressed.up == true)
     {
         socket.emit('stop',{
-            name:radomname,
+            name:playername,
             move:'up'
         });
         Game.players.self.ispressed.up = false;
@@ -295,7 +296,7 @@ function update()
     if(Game.players.self.cursor.left.isDown && Game.players.self.ispressed.left == false)
     {
         socket.emit('move',{
-            name:radomname,
+            name:playername,
             move:'left'
         });
         Game.players.self.ispressed.left = true;
@@ -303,7 +304,7 @@ function update()
     if(!Game.players.self.cursor.left.isDown && Game.players.self.ispressed.left == true)
     {
         socket.emit('stop',{
-            name:radomname,
+            name:playername,
             move:'left'
         });
         Game.players.self.ispressed.left = false;
@@ -311,7 +312,7 @@ function update()
     if(Game.players.self.cursor.right.isDown && Game.players.self.ispressed.right == false)
     {
         socket.emit('move',{
-            name:radomname,
+            name:playername,
             move:'right'
         });
         Game.players.self.ispressed.right = true;
@@ -319,7 +320,7 @@ function update()
     if(!Game.players.self.cursor.right.isDown && Game.players.self.ispressed.right == true)
     {
         socket.emit('stop',{
-            name:radomname,
+            name:playername,
             move:'right'
         });
         Game.players.self.ispressed.right = false;
@@ -339,7 +340,7 @@ function playerplaceupdate()
 {
     socket.emit('playerupdate',
             {
-                name:radomname,
+                name:playername,
                 x:Game.players.self.character.x,
                 y:Game.players.self.character.y
             });

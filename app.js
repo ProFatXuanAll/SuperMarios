@@ -15,7 +15,7 @@ const path = require('path');
 
 // loading URL routing module
 const home = require('./routes/home');
-const game = require('./routes/game');
+const game = require('./routes/game')(app);
 
 // setting server listening port
 const port = 10000;
@@ -82,19 +82,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // setting template engine `nunjucks`
 nunjucks.configure(
-
-        // views path
-        path.join(__dirname, 'views'),
-
-        // detail setting
-        {
-            // auto html escape
-            autoescape: true,
-
-            // using express framework
-            express: app
-        }
-        );
+    path.join(__dirname, 'views'), //views path
+    // detail setting
+    {
+        autoescape: true,//auto html escape
+        express: app //using express framework
+    }
+);
 
 // setting template files extentions to `.html`
 app.set('view engine', 'html');
