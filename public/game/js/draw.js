@@ -1,19 +1,14 @@
 let Game = {};
 
 Game.engine = new Phaser.Game(
-
     // game window width
     Config.window.width,
-
     // game window height
     Config.window.height,
-
     // phaser draw engine
     Phaser.CANVAS,
-
     // html tag id
     Config.html.main,
-
     // phaser state object
     // state order: preload -> create-> update -> render
     // keep looping between update and render states
@@ -28,8 +23,10 @@ Game.engine = new Phaser.Game(
 // load image and tilemap
 function preload()
 {
-    // future version: load all map at once
-    /*for(let i = 0; i < Map.structure.length; ++i)
+    // cancel onblur event
+    Game.engine.stage.disableVisibilityChange = true;
+    // load all map
+    for(let i = 0; i < Map.structure.length; ++i)
     {
         Game.engine.load.tilemap(
             Map.structure[i].name,
@@ -37,39 +34,24 @@ function preload()
             null, 
             Phaser.Tilemap.TILED_JSON
         );
-    }*/
-    Game.engine.stage.disableVisibilityChange = true;
-    Game.engine.load.tilemap(
-        Map.structure[0].name,
-        Map.structure[0].src,
-        null,
-        Phaser.Tilemap.TILED_JSON
-    );
-    // future version: load all tileset at once
-    /*for(let i = 0; i < Map.tileset.length; ++i)
+    }
+    // load all tileset
+    for(let i = 0; i < Map.tileset.length; ++i)
     {
         Game.engine.load.image(
             Map.tileset[i].name,
             Map.tileset[i].src
         );
-    }*/
-    Game.engine.load.image(
-        Map.tileset[0].name,
-        Map.tileset[0].src
-    );
-    // future version: load all background at once
-    /*for(let i = 0; i < Map.background.length; ++i)
+    }
+    // load all background
+    for(let i = 0; i < Map.background.length; ++i)
     {
         Game.engine.load.image(
             Map.background[i].name,
             Map.background[i].src
         );
-    }*/
-    Game.engine.load.image(
-        Map.background[0].name,
-        Map.background[0].src
-    );
-    // load all bgm
+    }
+    // load all background music
     for(let i = 0; i < Map.music.length; ++i)
     {
         Game.engine.load.audio(
@@ -77,23 +59,22 @@ function preload()
             Map.music[i].src
         );
     }
-    // future version: load all player spritesheet at once
-    /*for(let playerType in Player)
+    // load all player spritesheet and music
+    for(let playerType in Player)
     {
+        console.log(Player[playerType]);
         Game.engine.load.spritesheet(
             Player[playerType].spriteName,
             Player[playerType].picture.src,
             Player[playerType].picture.width,
             Player[playerType].picture.height
         );
-    }*/
-    Game.engine.load.spritesheet(
-        Player.mario.spriteName,
-        Player.mario.picture.src,
-        Player.mario.picture.width,
-        Player.mario.picture.height
-    );
-    // load all monster spritesheet
+        Game.engine.load.audio(
+            Player[playerType].music.die.name,
+            Player[playerType].music.die.src,
+        );
+    }
+    // load all monster spritesheet and music
     for(let monsterType in Monster)
     {
         Game.engine.load.spritesheet(
@@ -102,8 +83,12 @@ function preload()
             Monster[monsterType].picture.width,
             Monster[monsterType].picture.height
         );
-        Game.engine.load.audio(Monster[monsterType].death.name,Monster[monsterType].death.src);
+        Game.engine.load.audio(
+            Monster[monsterType].music.die.name,
+            Monster[monsterType].music.die.src
+        );
     }
+    // load all item spritesheet and music
     for(let itemType in Items)
     {
         Game.engine.load.spritesheet(
@@ -113,17 +98,16 @@ function preload()
             Items[itemType].picture.height
         );
     }
-    Game.engine.load.audio('youdie','/game/assets/sounds/die.wav');
     // add promise make sure pictures loaded
 }
 
 function create()
 {
+    // start physics system
     Game.engine.physics.startSystem(Phaser.Physics.ARCADE);
 
     // create map
     Game.map = new MapSetup(
-        Game.engine,
         Map.structure[0],
         Map.tileset[0],
         Map.background[0],
@@ -135,21 +119,21 @@ function create()
 
     // create monster
     Game.monsters = new MonsterSetup(
-        Game.engine,
-        Game.map,
-        Map.structure[0]
-    );
-    Game.items = new ItemSetup(
-        Game.engine,
         Game.map,
         Map.structure[0]
     );
 
+    // create item
+    Game.items = new ItemSetup(
+        Game.map,
+        Map.structure[0]
+    );
+
+    //create players' container
     Game.players = {};
 
     // create player for client
     Game.players['self'] = new PlayerSetup(
-        Game.engine,
         'self',
         Player.mario,
         0,
@@ -157,27 +141,21 @@ function create()
         true
     );
 
-    // main camera follow main character
-    Game.engine.camera.follow(Game.players.self.character);
 
     /*----------------- debug */
     Game.players['Alice'] = new PlayerSetup(
-        Game.engine,
         'Alice',
         Player.mario,
         100,
         20
     );
     Game.players['fuck'] = new PlayerSetup(
-        Game.engine,
         'fuck',
         Player.mario,
         150,
         20
     );
-    Game.map.solid.debug = true;
-    deathsound=Game.engine.add.audio('youdie');
-    
+    deathsound=Game.engine.add.audio(Player.mario.music.die.name);
     /*------------------ debug */
 
 }
@@ -187,14 +165,19 @@ function update()
     for(let player in Game.players)
     {
         let character = Game.players[player].character;
+
+        //player vs solidlayer
         Game.engine.physics.arcade.collide(character, Game.map.solid);
         
+        //player vs other players        
         for(let other in Game.players)
         {
             if(player==other) continue;
             let otherCharacter = Game.players[other].character;
             Game.engine.physics.arcade.collide(character, otherCharacter);
         }
+        
+        //player vs monsters
         for(let monsterType in Game.monsters)
         {
             Game.engine.physics.arcade.collide(Game.monsters[monsterType], Game.map.solid);
@@ -206,15 +189,11 @@ function update()
             );
             for(let i=0;i<Game.monsters[monsterType].length;i++)
             {
-                detectWorldBoundm(Game.monsters[monsterType].children[i]);
-                /*
-                detectworlbound(monster,monstertype)
-                Monster[monstertype]=....
-                merge it into Monster.js
-
-                */
+                Map.detectMonsterWorldBound(Game.monsters[monsterType].children[i],Game.map);
             }
         }
+
+        //player vs items
         for(let itemType in Game.items)
         {
             Game.engine.physics.arcade.collide(Game.items[itemType], Game.map.solid);
@@ -222,24 +201,26 @@ function update()
             Game.engine.physics.arcade.overlap(
                 character,
                 Game.items[itemType],
-                Items[itemType].overlap(Game.players[name].currentType)
+                Items[itemType].overlap(Game.players[player].currentType)
             );
         }
 
         //set each players' title on head
-        let text=Game.players[name].text;
+        let text=Game.players[player].text;
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
-        detectWorldBound(character,Game.map);
-        detectFinished(character);
+        Map.detectPlayerWorldBound(character,Game.map);
+        Map.detectFinished(character,Game.map);
     }
-    for(let name in Game.players)
+
+    //player movement setting
+    for(let player in Game.players)
     {
-        let character = Game.players[name].character;
-        let cursor = Game.players[name].cursor;
-        let action = Game.players[name].action;
+        let character = Game.players[player].character;
+        let cursor = Game.players[player].cursor;
+        let action = Game.players[player].action;
         let velocity = character.body.velocity;
-        let currentType = Game.players[name].currentType;
+        let currentType = Game.players[player].currentType;
 
         // stop moving to left or right
         velocity.x = currentType.velocity.idle;
@@ -272,15 +253,7 @@ function update()
     }
 }
 
-function render()
-{
-    /*debug*/
-    for(let name in Game.players)
-    {
-        let character = Game.players[name].character;
-            Game.engine.debug.body(character);
-    }
-}
+function render(){}
 
 window.addEventListener("keypress",function(e){
     switch (e.key)
@@ -342,121 +315,3 @@ window.addEventListener("keyup", function(e){
             break;
     }
 });
-
-/* player overlap test*/
-function playerOverlap(player,otherCharacter)
-{
-    if(player==otherCharacter){
-        console.log('fuck');
-        return;
-    }
-    if (player.body.touching.down)
-    {
-            player.body.velocity.y = -150;
-            //playerDeath(otherCharacter);
-    }
-    else if(player.body.touching.left)
-    {
-        //someone do something.
-    }
-}
-function detectWorldBound(character,map)
-{
-    /*
-    should be merged into player.js
-    maybe rename to playerDetectWorldBound(character)
-    */
-    if(character.y+character.height>=map.tileMap.height*map.tileMap.tileHeight)
-    {
-       playerDeath(character);
-       character.y=map.tileMap.height*map.tileMap.tileHeight-character.height-1;
-    }
-    if(character.x<=0)
-    {
-        
-        character.position.x=0;
-    }
-    if(character.position.x+character.width>=map.tileMap.width*map.tileMap.tileWidth)
-    {
-        character.position.x=map.tileMap.width*map.tileMap.tileWidth-character.width;
-    }
-}
-//testing function
-function detectWorldBoundm(monster)
-{
-    if(monster.position.y+monster.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
-    {
-        Monster.goomba.respawn(monster);        
-    }
-    if(monster.position.x<=0)
-    {
-        Monster.goomba.respawn(monster);        
-    }
-    if(monster.position.x+monster.width>=Game.map.tileMap.width*Game.map.tileMap.tileWidth)
-    {
-        Monster.goomba.respawn(monster);        
-    }
-}
-function detectFinished(character)
-{
-    if(character.position.y>=Map.structure[0].finish.y&&character.position.x>=Map.structure[0].finish.x)
-    {
-        console.log('finished');
-    }
-}
-
-function playerDeath(character)
-{
-    if(!character.dieyet)
-    {
-        // need promise object
-        character.animations.stop();
-        character.frame=1;    
-        character.immovable = true;
-        character.body.moves=false;
-        deathsound.play();
-        character.dieyet=true;
-        
-        Game.engine.time.events.add(Phaser.Timer.SECOND*2, function()
-        {
-            character.body.velocity.x=0;
-            character.body.velocity.y=0;
-            character.x=Map.structure[0].start.x;
-            character.y=Map.structure[0].start.y;
-            character.body.moves=true;
-            character.immovable = false;
-            character.animations.play();
-            character.dieyet=false;
-        });
-    }
-    else return;
-}
-
-function MonsterRespawn()
-{
-    let map=Game.map;
-    let mon=Game.monsters;
-    let structure=Map.structure[0];
-    for(let monsterType in Monster)
-    {
-        map.tileMap.createFromTiles(
-            Monster[monsterType].tileNumber,
-            null,
-            monsterType,
-            structure.layer.monster,
-            mon[monsterType]);
-
-        mon[monsterType].callAll(
-            'animations.add',
-            'animations',
-            'walk',
-            Monster[monsterType].animation.walk,
-            Monster[monsterType].animation.frame_rate,
-            true
-        );
-        mon[monsterType].callAll('animations.play', 'animations', 'walk');
-        mon[monsterType].setAll('body.velocity.x', Monster[monsterType].velocity.x);
-        mon[monsterType].setAll('body.gravity.y', Monster[monsterType].gravity.y);
-        mon[monsterType].setAll('body.bounce.x', 1);
-    }
-}

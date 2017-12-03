@@ -5,7 +5,11 @@ const Items = {
 
         gravity: {
             x: 0,
-            y: 500
+            y: 0
+        },
+        bounce:{
+            x: 0,
+            y: 0
         },
         picture:{
             src: '/game/assets/item/image/coin.png',
@@ -14,22 +18,21 @@ const Items = {
         },
         overlap:function(currentType)
         {
-            
             return function(character, item){
                 currentType.velocity.left-=50;
                 currentType.velocity.right+=50;
-                item.kill();
+                item.destroy();
             }
         }
         
     },
 }
 
-function ItemSetup(GameEngine, map, structure)
+function ItemSetup(map, structure)
 {
     for(let itemType in Items)
     {
-        this[itemType] = GameEngine.add.group();
+        this[itemType] = Game.engine.add.group();
         this[itemType].enableBody = true;
 
         map.tileMap.createFromTiles(
@@ -39,7 +42,7 @@ function ItemSetup(GameEngine, map, structure)
             structure.layer.item,
             this[itemType]);
         this[itemType].setAll('body.gravity.y', Items[itemType].gravity.y);
-        this[itemType].setAll('body.bounce.x', 1);
-        this[itemType].setAll('body.bounce.y', 1);
+        this[itemType].setAll('body.bounce.x', Items[itemType].bounce.x);
+        this[itemType].setAll('body.bounce.y', Items[itemType].bounce.y);
     }
 }

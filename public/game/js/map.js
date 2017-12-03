@@ -15,7 +15,12 @@ const Map = {
             finish:{
                 x: 3114,
                 y:0
+            },
+            size:{
+                x:3200,
+                y:1280
             }
+            
         }
     ],
     background: [
@@ -87,24 +92,71 @@ const Map = {
             name: 'worldmap',
             src: ['/game/assets/map/music/worldmap.wav']
         }
-    ]
+    ],
+    detectFinished: function(character,map)
+    {
+        if(character.y>=map.finish.y&&character.x>=map.finish.x)
+        {
+            console.log('finished');
+        }
+    },
+    detectPlayerWorldBound: function(character,map)
+    {
+        if(character.y+character.height>=map.size.y)
+        {
+           Player[character.key].respawn(character);
+           character.y=map.size.y-character.height;
+        }
+        if(character.x<=0)
+        {
+            character.position.x=0;
+        }
+        if(character.position.x+character.width>=map.size.x)
+        {
+            character.position.x=map.size.x-character.width;
+        }
+    },
+    detectMonsterWorldBound: function(monster,map)
+    {
+        let monsterName=monster.name;
+        if(monster.position.y+monster.height>=map.size.y)
+        {
+            Monster[monsterName].respawn(monster);        
+        }
+        if(monster.position.x<=0)
+        {
+            Monster[monsterName].respawn(monster);        
+        }
+        if(monster.position.x+monster.width>=map.size.x)
+        {
+            Monster[monsterName].respawn(monster);        
+        }
+    }
 }
 
-function MapSetup(GameEngine, structure, tileset, background, music)
+function MapSetup(structure, tileset, background, music)
 {
     // add background
-    this.background = GameEngine.add.tileSprite(
+    this.background = Game.engine.add.tileSprite(
         background.x,
         background.y,
         background.width,
         background.height,
         background.name
     );
+
+    //give map size(use to detect collide worldbound or not)
+    this.size=structure.size;
+
+    //give map finish point
+    this.finish=structure.finish;
+
     // background camera fixed to center
     this.background.fixedToCamera = true;
 
     // add tile map (previous defined map.json)
-    this.tileMap = GameEngine.add.tilemap(structure.name);
+    this.tileMap = Game.engine.add.tilemap(structure.name);
+    
     // load tile set for tile map
     // can have multiple tile set for one map
     this.tileMap.addTilesetImage('tileset', tileset.name);
@@ -116,11 +168,10 @@ function MapSetup(GameEngine, structure, tileset, background, music)
     this.solid.resizeWorld();
 
     // enable collision on tile map
-
     this.tileMap.setCollisionByExclusion(this.tileMap.properties.collisionExclusion);
     
     //add backgroundmusic
-    this.music = GameEngine.add.audio(music.name);
+    this.music = Game.engine.add.audio(music.name);
 
     //resize game window when initialize the game
     resizeGameWindow();
