@@ -18,7 +18,7 @@ const home = require('./routes/home');
 const game = require('./routes/game')(app);
 
 // setting server listening port
-const port = 10001;
+const port = 10000;
 
 /*
 // setting SSL

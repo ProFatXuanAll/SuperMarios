@@ -130,9 +130,12 @@ function create()
 
     Game.players = {};
 
+    // get user name
+    let curName = $("#userName").html();
+
     // create player for client
-    Game.players['self'] = new PlayerSetup(
-        'self',
+    Game.players[curName] = new PlayerSetup(
+        curName,
         Player.mario,
         0,
         0,
@@ -191,7 +194,6 @@ function update()
                 detectworlbound(monster,monstertype)
                 Monster[monstertype]=....
                 merge it into Monster.js
-
                 */
             }
         }
