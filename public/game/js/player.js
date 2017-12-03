@@ -67,7 +67,6 @@ const Player = {
                 //someone do something.
             }
         }
-        
     },
 };
 
