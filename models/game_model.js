@@ -37,9 +37,9 @@ const monsterSchema = new mongoose.Schema({
 });
 
 const gameModel = {
-    user: mongoose.model('user', userSchema),
-    player: mongoose.model('player', playerSchema),
-    monster: mongoose.model('monster', monsterSchema)
+    user: mongoose.model('user', userSchema,'user'),
+    player: mongoose.model('player', playerSchema,'player'),
+    monster: mongoose.model('monster', monsterSchema,'monster')
 }
 
 module.exports = gameModel;

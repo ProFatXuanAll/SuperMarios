@@ -24,40 +24,41 @@ app.use('/game',session({
 router.get('/', UrlSetting, function(req, res, next) {
     var sess = req.session;
     if(sess.userName){
-        res.render('game/index',{ noLogin : false, userName : sess.userName, });
+        res.render('game/index',{ noLogin : false, userName : sess.userName });
     }
-    else req.redirect('/game/login');
+    else res.redirect('/game/login');
 });
 
 router.get('/pedia', UrlSetting, function(req, res, next) {
     var sess = req.session;
     if(sess.userName){
-        res.render('game/pedia',{ noLogin : false, userName : sess.userName, });
+        res.render('game/pedia',{ noLogin : false, userName : sess.userName });
     }
-    else res.render('game/pedia');
+    else res.render('game/pedia',{ noLogin : true });
 });
 
 router.get('/login', UrlSetting, function(req, res, next) {
     var sess = req.session;
     if(sess.userName){
-        res.redirect('/game');
+        res.redirect('/game/');
     }
-    else res.render('game/login',{error : false});
+    else res.render('game/login',{ noLogin : true, error : false});
 });
 
 router.post('/login', UrlSetting, function(req, res, next) {
     var act = req.body.account;
     var pwd = req.body.password;
     var sess = req.session;
-    model.user.findOne({ 'account' : act }, 'password', function(err,user){
-        if(err || act == "" || user.password != pwd){
+    model.user.findOne({ 'account' : act, 'password' : pwd }, "account", function(err,user){
+        if( user === null ){
                 console.log('login error');
-                res.render('game/login',{error : true});
+                res.render('game/login',{ noLogin : true, error : true});
         }
         else{
-            console.log('login success');
+            console.log('login success : ' + user.account);
             sess.userName = act;
             res.render('game/redirect',{
+                noLogin : false,
                 fromLogin : true,
                 fromRegist : false,
                 userName : act,
@@ -69,9 +70,9 @@ router.post('/login', UrlSetting, function(req, res, next) {
 router.get('/regist', UrlSetting, function(req, res, next) {
     var sess = req.session;
     if(sess.userName){
-        res.redirect('/game');
+        res.redirect('/game',{ noLogin : false, userName : sess.userName });
     }
-    else res.render('game/regist',{ error : false });
+    else res.render('game/regist',{ noLogin : true, error : false });
 });
 
 router.post('/regist', UrlSetting, function(req, res, next) {
@@ -84,19 +85,25 @@ router.post('/regist', UrlSetting, function(req, res, next) {
     });
 
     newUser.save(function(err){
-        if(err || act == "" || pwd == ""){
+        if(err){
             console.log('regist failed');
-            res.render('game/regist',{ error : true });
+            res.render('game/regist',{ noLogin : true, error : true });
         }
         else{
             console.log('regist success');
             res.render('game/redirect',{
+                noLogin : true,
                 fromLogin : false,
                 fromRegist : true,
                 userName : act,
             });            
         };
     });
+});
+
+router.get('/logout', UrlSetting, function(req, res, next) {
+    req.session.destroy();
+    res.redirect('/game/login');
 });
 
 function UrlSetting(req,res,next){
@@ -106,9 +113,9 @@ function UrlSetting(req,res,next){
         game: '/game',
         pedia: '/game/pedia',
         login: '/game/login',
+        logout: '/game/logout',
         regist: '/game/regist',
         user : '/game/user',
-        noLogin : true,
     };
     next();
 }
@@ -116,3 +123,4 @@ function UrlSetting(req,res,next){
 return router;
 
 };
+
