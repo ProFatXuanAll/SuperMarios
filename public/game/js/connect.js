@@ -1,13 +1,13 @@
 let socket = io();
 
 // server tell current player info of new player
-socket.on('join', function(playerData){
+socket.on('join', function(newPlayerData){
     // create new player
-    Game.players[playerData.name] = new PlayerSetup(
-        playerData.name,
-        Player[playerData.typeName],
-        playerData.x,
-        playerData.y
+    Game.players[newPlayerData.name] = new PlayerSetup(
+        newPlayerData.name,
+        Player[newPlayerData.typeName],
+        newPlayerData.x,
+        newPlayerData.y
     )
 });
 

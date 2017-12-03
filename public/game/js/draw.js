@@ -150,11 +150,6 @@ function create()
             y: Game.players[Config.currentUserName].y
         }
     );
-
-    /*------------------ debug */
-    //Game.engine.time.events.loop(Phaser.Timer.SECOND*0.5,playerplaceupdate,this);
-    /*------------------ debug */
-
 }
 
 
@@ -165,9 +160,9 @@ function update()
     {
         let character = Game.players[player].character;
 
-        /*******************
-         how to optimize ???
-        *********************/
+        /**********************
+        * how to optimize ??? *
+        **********************/
 
         // character collide with solid layer
         Game.engine.physics.arcade.collide(character, Game.map.solid);
@@ -324,13 +319,3 @@ function update()
 }
 
 function render(){}
-
-function playerplaceupdate()
-{
-    socket.emit('playerupdate',
-    {
-        name:playername,
-        x:Game.players[Config.currentUserName].character.x,
-        y:Game.players[Config.currentUserName].character.y
-    });
-}
