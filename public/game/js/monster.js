@@ -42,9 +42,8 @@ const Monster = {
             }
             else  Player[character.key].respawn(character);
         },
-        respawn: function(monster)  //function(monster,monstertype)
+        respawn: function(monster)
         {
-            //add sprite and animation
             let test = Game.engine.add.sprite(
                 monster.spawn.x,
                 monster.spawn.y,

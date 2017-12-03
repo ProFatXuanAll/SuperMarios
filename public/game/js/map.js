@@ -8,10 +8,9 @@ const Map = {
                 monster: 'monsterLayer',
                 item: 'itemLayer',
             },
-            start:{
-                x:64,
-                y:1096
-            },
+            start:
+                {x:64,y:1096}
+            ,
             finish:{
                 x: 3114,
                 y:0
