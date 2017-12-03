@@ -139,8 +139,6 @@ function create()
         true
     );
 
-    // main camera follow main character
-    Game.engine.camera.follow(Game.players.self.character);
 
     /*----------------- debug */
     Game.players['Alice'] = new PlayerSetup(

@@ -51,8 +51,15 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
         gravity: 20
     };
     this.character = Game.engine.add.sprite(x, y, this.playerType.spriteName);
-    this.cursor = controlable ? 
-        Game.engine.input.keyboard.createCursorKeys() : new SyncCursor();
+
+    if(controlable){
+        // main camera follow main character
+        Game.engine.camera.follow(this.character);
+        this.cursor = Game.engine.input.keyboard.createCursorKeys();
+    }
+    else {
+        this.cursor = new SyncCursor();
+    }
 
     Game.engine.physics.enable(this.character);
 

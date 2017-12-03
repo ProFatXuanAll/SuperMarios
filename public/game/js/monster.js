@@ -60,6 +60,13 @@ const Monster = {
                 true
             );
 
+            test.animations.add(
+                'die',
+                Monster.goomba.animation.die,
+                Monster.goomba.animation.frame_rate,
+                true
+            );
+
             test.animations.play('walk');
 
             //reassign spawnpoint
