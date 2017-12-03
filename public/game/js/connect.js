@@ -1,54 +1,45 @@
-/*$(function () {
-    var socket = io();
-    var playerlist={};
+let socket = io();
 
-    radomname=Math.random().toString();
-    x= Math.floor(Math.random() * (150 - 90 + 1)) + 90;
-    $('.loginclick').on('click',function(){
-        socket.emit('login',
-                {
-                    name:radomname,
-                    x:x,
-                    time: new Date()
-                });
-        Game.players[radomname]=new PlayerSetup(
-                Game.engine,
-                radomname,
-                Player.mario,
-                x,
-                20,
-                true
-                );
-        
-    //Game.engine.camera.follow(Game.players[radomname].character);
-    });
-    socket.on('newplayer',function(data){
-        playerlist[data.name]={};
-        Game.players[data.name]=new PlayerSetup(
-                Game.engine,
-                data.name,
-                Player.mario,
-                120,
-                20
-                );
-    });
+socket.on('newplayer',function(data){
+    playerlist[data.name]={};
+    Game.players[data.name]=new PlayerSetup(
+            playername,
+            Player.mario,
+            data.x,
+            20
+            );
+});
 
-    socket.on('login',function(data){
-        playerlist=JSON.parse(data.listdata);
-        for(let p in playerlist)
+socket.on('join',function(data){
+    playerlist=JSON.parse(data.listdata);
+    for(let cyclep in playerlist)
+    {
+        if(playername!=playerlist[cyclep].name)
         {
-            Game.players[playerlist[p].name]=new PlayerSetup(
-                    Game.engine,
-                    playerlist[p].name,
+            Game.players[playerlist[cyclep].name]=new PlayerSetup(
+                    playerlist[cyclep].name,
                     Player.mario,
-                    playerlist[p].x,
-                    playerlist[p].y
-                    );
+                    playerlist[cyclep].x,
+                    playerlist[cyclep].y
+                    )
         }
-        console.log(playerlist);
+    }
+});
 
-    });
-    socket.on('return', function(data){
-        console.log(data.time);
-    });
-});*/
+socket.on('move',function(datamove){
+    Game.players[datamove.name].cursor[datamove.move].isDown=true;
+    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
+});
+
+socket.on('stop',function(datamove){
+    Game.players[datamove.name].cursor[datamove.move].isDown=false;
+    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
+});
+
+socket.on('playerupdate',function(updata){
+    if(Game.players[updata.name].character.x!=updata.x)
+        Game.players[updata.name].character.x=updata.x;
+
+    if(Game.players[updata.name].character.y!=updata.y)
+        Game.players[updata.name].character.y=updata.y;
+});

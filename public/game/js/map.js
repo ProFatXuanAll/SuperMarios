@@ -8,14 +8,17 @@ const Map = {
                 monster: 'monsterLayer',
                 item: 'itemLayer',
             },
-            start:
-                {x:64,y:1096}
-            ,
-            finish:{
+            start: [
+                {
+                    x:64,
+                    y:1096
+                }
+            ],
+            finish: {
                 x: 3114,
                 y:0
             },
-            size:{
+            size: {
                 x:9600,
                 y:1280
             }
@@ -92,41 +95,41 @@ const Map = {
             src: ['/game/assets/map/music/worldmap.wav']
         }
     ],
-    detectFinished: function(character,map)
+    detectFinished: function(character)
     {
-        if(character.y>=map.finish.y&&character.x>=map.finish.x)
+        if(character.y >= Game.map.finish.y && character.x >= Game.map.finish.x)
         {
             console.log('finished');
         }
     },
-    detectPlayerWorldBound: function(character,map)
+    detectPlayerWorldBound: function(character)
     {
-        if(character.y+character.height>=map.size.y)
+        if(character.y + character.height >= Game.map.size.y)
         {
            Player[character.key].respawn(character);
-           character.y=map.size.y-character.height;
+           character.y = Game.map.size.y-character.height;
         }
         if(character.x<=0)
         {
-            character.position.x=0;
+            character.position.x = 0;
         }
-        if(character.position.x+character.width>=map.size.x)
+        if(character.position.x+character.width >= Game.map.size.x)
         {
-            character.position.x=map.size.x-character.width;
+            character.position.x = Game.map.size.x - character.width;
         }
     },
-    detectMonsterWorldBound: function(monster,map)
+    detectMonsterWorldBound: function(monster)
     {
-        let monsterName=monster.name;
-        if(monster.position.y+monster.height>=map.size.y)
+        let monsterName = monster.name;
+        if(monster.position.y + monster.height >= Game.map.size.y)
         {
             Monster[monsterName].respawn(monster);        
         }
-        if(monster.position.x<=0)
+        if(monster.position.x <= 0)
         {
             Monster[monsterName].respawn(monster);        
         }
-        if(monster.position.x+monster.width>=map.size.x)
+        if(monster.position.x + monster.width >= Game.map.size.x)
         {
             Monster[monsterName].respawn(monster);        
         }
