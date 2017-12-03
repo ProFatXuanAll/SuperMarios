@@ -1,16 +1,22 @@
 const Player = {
     mario: {
-        spriteName: 'Mario',
+        spriteName: 'mario',
+        picture: {
+            width: 32,
+            height: 56,
+            src: '/game/assets/player/image/mariox32.png'
+        },
+        music: {
+            die: {
+                name: 'marioDie',
+                src: '/game/assets/sounds/die.wav'
+            }
+        },
         animation: {
             left: [ 0, 1, 2, 3 ],
             idle: [ 4 ],
             right: [ 4, 5, 6, 7 ],
             frameRate: 10
-        },
-        picture: {
-            width: 32,
-            height: 56,
-            src: '/game/assets/player/image/mariox32.png'
         },
         velocity: {
             left: -200,
@@ -26,11 +32,51 @@ const Player = {
             down:false,
             left:false,
             right:false
+        },
+        respawn: function(character)
+        {
+            if(!character.dieyet)
+            {
+                // need promise object
+                character.animations.stop();
+                character.frame=1;
+                character.immovable = true;
+                character.body.moves=false;
+                deathsound.play();
+                character.dieyet=true;
+
+                Game.engine.time.events.add(Phaser.Timer.SECOND*3, function()
+                        {
+                            character.body.velocity.x=0;
+                            character.body.velocity.y=0;
+                            character.x=Map.structure[0].start.x;
+                            character.y=Map.structure[0].start.y;
+                            character.body.moves=true;
+                            character.immovable = false;
+                            character.animations.play();
+                            character.dieyet=false;
+                        });
+            }
+            else return;
+        },
+        overlap: function(player,otherCharacter)
+        {
+            if(player==otherCharacter){
+                return;
+            }
+            if (player.body.touching.down)
+            {
+                player.body.velocity.y = -150;
+            }
+            else if(player.body.touching.left)
+            {
+                //someone do something.
+            }
         }
     }
 };
 
-function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=false)
+function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
 {
     function SyncCursor()
     {
@@ -39,14 +85,27 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
         this.left = {isDown: false};
         this.right = {isDown: false};
     }
-
+    console.log(playerName);
+    console.log(playerType);
     this.playerType = playerType;
+    console.log(playerType);
+    console.log(this.playerType);
     this.ispressed=playerType.ispressed;
-    this.character = GameEngine.add.sprite(x, y, this.playerType.spriteName);
     this.cursor = controlable ? 
-        GameEngine.input.keyboard.createCursorKeys() : new SyncCursor();
+        Game.engine.input.keyboard.createCursorKeys() : new SyncCursor();
+    this.currentType={
+        velocity: {
+            left: -200,
+            right: 200,
+            up: -600,
+            idle: 0
+        },
+        gravity: 20
+    };
+    this.character = Game.engine.add.sprite(x, y, this.playerType.spriteName);
+    console.log(this.character);
 
-    GameEngine.physics.enable(this.character);
+    Game.engine.physics.enable(this.character);
 
     this.character.body.collideWorldBounds = false;
     // set up animations by Phaser engine
@@ -59,5 +118,6 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
     };
     this.x = x;
     this.y = y;
-    this.text = GameEngine.add.text(x, y, playerName, Config.font.Arial);
+    this.character.dieyet=false;
+    this.text = Game.engine.add.text(x, y, playerName, Config.font.Arial);
 }
