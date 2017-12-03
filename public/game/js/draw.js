@@ -176,24 +176,22 @@ function create()
         20
     );
     Game.map.solid.debug = true;
-    //sound testing
-    //music = Game.engine.add.audio(Map.music[0].name);
     deathsound=Game.engine.add.audio('youdie');
-    resizeGame();
+    
     /*------------------ debug */
 
 }
 
 function update()
 {
-    for(let name in Game.players)
+    for(let player in Game.players)
     {
-        let character = Game.players[name].character;
+        let character = Game.players[player].character;
         Game.engine.physics.arcade.collide(character, Game.map.solid);
         
         for(let other in Game.players)
         {
-            if(name==other) continue;
+            if(player==other) continue;
             let otherCharacter = Game.players[other].character;
             Game.engine.physics.arcade.collide(character, otherCharacter);
         }
@@ -232,7 +230,7 @@ function update()
         let text=Game.players[name].text;
         text.x = Math.floor(character.x);
         text.y = Math.floor(character.y-character.height/3);
-        detectWorldBound(character);
+        detectWorldBound(character,Game.map);
         detectFinished(character);
     }
     for(let name in Game.players)
@@ -282,7 +280,6 @@ function render()
         let character = Game.players[name].character;
             Game.engine.debug.body(character);
     }
-    //Game.engine.debug.body(Game.map.solid);
 }
 
 window.addEventListener("keypress",function(e){
@@ -363,27 +360,28 @@ function playerOverlap(player,otherCharacter)
         //someone do something.
     }
 }
-function detectWorldBound(character)
+function detectWorldBound(character,map)
 {
     /*
     should be merged into player.js
     maybe rename to playerDetectWorldBound(character)
     */
-    if(character.position.y+character.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
+    if(character.y+character.height>=map.tileMap.height*map.tileMap.tileHeight)
     {
        playerDeath(character);
-       character.position.y=Game.map.tileMap.height*Game.map.tileMap.tileHeight-character.height-1;
+       character.y=map.tileMap.height*map.tileMap.tileHeight-character.height-1;
     }
-    if(character.position.x<=0)
+    if(character.x<=0)
     {
+        
         character.position.x=0;
     }
-    if(character.position.x+character.width>=Game.map.tileMap.width*Game.map.tileMap.tileWidth)
+    if(character.position.x+character.width>=map.tileMap.width*map.tileMap.tileWidth)
     {
-        character.position.x=Game.map.tileMap.width*Game.map.tileMap.tileWidth-character.width;
+        character.position.x=map.tileMap.width*map.tileMap.tileWidth-character.width;
     }
 }
-
+//testing function
 function detectWorldBoundm(monster)
 {
     if(monster.position.y+monster.height>=Game.map.tileMap.height*Game.map.tileMap.tileHeight)
@@ -417,7 +415,6 @@ function playerDeath(character)
         character.immovable = true;
         character.body.moves=false;
         deathsound.play();
-        console.log(character.dieyet);
         character.dieyet=true;
         
         Game.engine.time.events.add(Phaser.Timer.SECOND*2, function()
@@ -434,15 +431,6 @@ function playerDeath(character)
     }
     else return;
 }
-
-function resizeGame() {
-    Game.engine.scale.setGameSize($( window ).width(), $( window ).height()*0.8);
-}
-
-$( window ).resize(function() {
-    resizeGame();
-});
-
 
 function MonsterRespawn()
 {

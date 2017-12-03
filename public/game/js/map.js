@@ -118,5 +118,20 @@ function MapSetup(GameEngine, structure, tileset, background, music)
     // enable collision on tile map
 
     this.tileMap.setCollisionByExclusion(this.tileMap.properties.collisionExclusion);
+    
+    //add backgroundmusic
     this.music = GameEngine.add.audio(music.name);
+
+    //resize game window when initialize the game
+    resizeGameWindow();
 }
+// resize Phaser game window 
+function resizeGameWindow()
+{
+    Game.engine.scale.setGameSize($( window ).width(), $( window ).height()*0.8);
+}
+// trigger function when resize(using jQuery)
+$(window).resize(function()
+{
+    resizeGameWindow();
+});

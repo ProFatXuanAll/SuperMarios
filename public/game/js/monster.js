@@ -36,7 +36,6 @@ const Monster = {
                 sfx.play();
                 Game.engine.time.events.add(Phaser.Timer.SECOND*3, function()
                 {
-                    console.log(monster);
                     Monster.goomba.respawn(monster);
                 });
             }
