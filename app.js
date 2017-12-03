@@ -33,21 +33,28 @@ const server = app.listen(port);
 
 // loading socket io module
 const io = require('socket.io').listen(server);
-var charalist={};
-io.on('connection',function(socket){
+let playerList = {};
+
+io.on('connection', function(socket){
     console.log('---------------------------no fuck------------------');
 
-    socket.on('login',function(data){
-        charalist[data.name]={name:data.name,x:data.x,y:20};
-        socket.username=data.name;
-        socket.emit('login',
-                {
-                    listdata: JSON.stringify(charalist)
-                });
-        socket.broadcast.emit('newplayer',
-                {
-                    name:data.name
-                });
+    // new player tell server to join game
+    socket.on('join', function(playerData){
+        // server tell existed player(s) info new of player
+        socket.broadcast.emit('join', playerData);
+        socket.username = playerData.name;
+        // server tell new player info of exist player(s)
+        socket.emit('join-succeeded',
+            {
+                // stringify to speed up pass data
+                playerList: JSON.stringify(playerList)
+            }
+        );
+        playerList[playerData.name] = playerData;
+        /*socket.broadcast.emit('newplayer',
+        {
+            name:data.name
+        });*/
     });
 
     socket.on('move',function(datamove){
@@ -58,18 +65,18 @@ io.on('connection',function(socket){
         socket.broadcast.emit('stop',datamove);
     });
 
-    socket.on('disconnect',function(){
-        socket.broadcast.emit('userdis',
-                {
-                    name:socket.username
-                });
-    });
-
     socket.on('playerupdate',function(updata){
         charalist[updata.name].x=updata.x;
         charalist[updata.name].y=updata.y;
         //console.log(updata.name,updata.x,updata.y);
         socket.broadcast.emit('playerupdate',updata);
+    });
+
+    socket.on('disconnect',function(){
+        socket.broadcast.emit('userdis',
+                {
+                    name:socket.username
+                });
     });
 });
 

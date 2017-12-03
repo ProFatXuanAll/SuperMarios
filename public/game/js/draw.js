@@ -1,9 +1,5 @@
 let Game = {};
 
-var playerlist={};
-
-var radomx=Math.floor(Math.random()*(150-90+1))+90;
-
 Game.engine = new Phaser.Game(
     // game window width
     Config.window.width,
@@ -136,18 +132,23 @@ function create()
     // create players' container
     Game.players = {};
     
-    // player join game
-    socket.emit('join', {
-        name: Config.currentUserName,
-        x:0
-    });
-
     Game.players[Config.currentUserName] = new PlayerSetup(
         Config.currentUserName,
         Player.mario,
         Map.structure[0].start[0].x,
         Map.structure[0].start[0].y,
         true
+    );
+
+    // new player tell server to join game
+    socket.emit(
+        'join', 
+        {
+            name: Config.currentUserName,
+            typeName: Player.mario.spriteName,
+            x: Game.players[Config.currentUserName].x,
+            y: Game.players[Config.currentUserName].y
+        }
     );
 
     /*------------------ debug */
@@ -265,7 +266,8 @@ function update()
         }
     }
 
-    // current player key press event
+    // current player key press and release event
+    // press up
     if(Game.players[Config.currentUserName].cursor.up.isDown && Game.players[Config.currentUserName].ispressed.up == false)
     {
         socket.emit('move',{
@@ -274,6 +276,7 @@ function update()
         });
         Game.players[Config.currentUserName].ispressed.up = true;
     }
+    // release up
     if(!Game.players[Config.currentUserName].cursor.up.isDown && Game.players[Config.currentUserName].ispressed.up == true)
     {
         socket.emit('stop',{
@@ -282,6 +285,7 @@ function update()
         });
         Game.players[Config.currentUserName].ispressed.up = false;
     }
+    // press left
     if(Game.players[Config.currentUserName].cursor.left.isDown && Game.players[Config.currentUserName].ispressed.left == false)
     {
         socket.emit('move',{
@@ -290,6 +294,7 @@ function update()
         });
         Game.players[Config.currentUserName].ispressed.left = true;
     }
+    // release left
     if(!Game.players[Config.currentUserName].cursor.left.isDown && Game.players[Config.currentUserName].ispressed.left == true)
     {
         socket.emit('stop',{
@@ -298,6 +303,7 @@ function update()
         });
         Game.players[Config.currentUserName].ispressed.left = false;
     }
+    // press right
     if(Game.players[Config.currentUserName].cursor.right.isDown && Game.players[Config.currentUserName].ispressed.right == false)
     {
         socket.emit('move',{
@@ -306,6 +312,7 @@ function update()
         });
         Game.players[Config.currentUserName].ispressed.right = true;
     }
+    // release right
     if(!Game.players[Config.currentUserName].cursor.right.isDown && Game.players[Config.currentUserName].ispressed.right == true)
     {
         socket.emit('stop',{

@@ -1,28 +1,28 @@
 let socket = io();
 
-socket.on('newplayer',function(data){
-    playerlist[data.name]={};
-    Game.players[data.name]=new PlayerSetup(
-            playername,
-            Player.mario,
-            data.x,
-            20
-            );
+// server tell current player info of new player
+socket.on('join', function(playerData){
+    // create new player
+    Game.players[playerData.name] = new PlayerSetup(
+        playerData.name,
+        Player[playerData.typeName],
+        playerData.x,
+        playerData.y
+    )
 });
 
-socket.on('join',function(data){
-    playerlist=JSON.parse(data.listdata);
-    for(let cyclep in playerlist)
-    {
-        if(playername!=playerlist[cyclep].name)
-        {
-            Game.players[playerlist[cyclep].name]=new PlayerSetup(
-                    playerlist[cyclep].name,
-                    Player.mario,
-                    playerlist[cyclep].x,
-                    playerlist[cyclep].y
-                    )
-        }
+// server tell new player info of exist player(s)
+socket.on('join-succeeded', function(playerData){
+    // need to decode because server encode to speed up
+    let playerList = JSON.parse(playerData.playerList);
+    // create existed player(s)
+    for(playerName in playerList){
+        Game.players[playerName] = new PlayerSetup(
+            playerName,
+            Player[playerList[playerName].typeName],
+            playerList[playerName].x,
+            playerList[playerName].y
+        );
     }
 });
 
