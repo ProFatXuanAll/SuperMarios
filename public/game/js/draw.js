@@ -136,31 +136,32 @@ function create()
 
 
     Game.players = {};
-    $('.loginclick').on('click',function(){
-        socket.emit('login',
-                {
-                    name:radomname,
-                    x:radomx
-                });
+    //$('.loginclick').on('click',function(){
+    socket.emit('login',
+            {
+                name:radomname,
+                //x:radomx
+                x:0
+            });
 
-        Game.players['self'] = new PlayerSetup(
-                Game.engine,
-                radomname,
-                Player.mario,
-                0,
-                0,
-                true
-                );
+    Game.players['self'] = new PlayerSetup(
+            Game.engine,
+            radomname,
+            Player.mario,
+            0,
+            0,
+            true
+            );
 
-        Game.engine.camera.follow(Game.players.self.character);
-    });
+    Game.engine.camera.follow(Game.players.self.character);
+    //});
     socket.on('newplayer',function(data){
         playerlist[data.name]={};
         Game.players[data.name]=new PlayerSetup(
                 Game.engine,
                 data.name,
                 Player.mario,
-                120,
+                data.x,
                 20
                 );
     });
@@ -180,6 +181,10 @@ function create()
             }
         }
     });
+    /*socket.on('userdis',function(disdata){
+      console.log(disdata.name);
+      Game.players[disdata.name].character.destroy();
+      });*/
     // create player for client
     /*Game.players['self'] = new PlayerSetup(
       Game.engine,
@@ -214,7 +219,10 @@ function create()
     //music = Game.engine.add.audio(Map.music[0].name);
     //music.play();
     /*------------------ debug */
+    Game.engine.time.events.loop(Phaser.Timer.SECOND*0.5,playerplaceupdate,this);
 }
+
+let up_ispress = false;
 
 function update()
 {
@@ -283,6 +291,54 @@ function update()
             action.facing = 'idle';
         }
     }
+    if(Game.players.self.cursor.up.isDown && Game.players.self.ispressed.up == false)
+    {
+        socket.emit('move',{
+            name:radomname,
+            move:'up'
+        });
+        Game.players.self.ispressed.up = true;
+    }
+    if(!Game.players.self.cursor.up.isDown && Game.players.self.ispressed.up == true)
+    {
+        socket.emit('stop',{
+            name:radomname,
+            move:'up'
+        });
+        Game.players.self.ispressed.up = false;
+    }
+    if(Game.players.self.cursor.left.isDown && Game.players.self.ispressed.left == false)
+    {
+        socket.emit('move',{
+            name:radomname,
+            move:'left'
+        });
+        Game.players.self.ispressed.left = true;
+    }
+    if(!Game.players.self.cursor.left.isDown && Game.players.self.ispressed.left == true)
+    {
+        socket.emit('stop',{
+            name:radomname,
+            move:'left'
+        });
+        Game.players.self.ispressed.left = false;
+    }
+    if(Game.players.self.cursor.right.isDown && Game.players.self.ispressed.right == false)
+    {
+        socket.emit('move',{
+            name:radomname,
+            move:'right'
+        });
+        Game.players.self.ispressed.right = true;
+    }
+    if(!Game.players.self.cursor.right.isDown && Game.players.self.ispressed.right == true)
+    {
+        socket.emit('stop',{
+            name:radomname,
+            move:'right'
+        });
+        Game.players.self.ispressed.right = false;
+    }
 }
 
 function render()
@@ -295,24 +351,23 @@ function render()
     }
     //Game.engine.debug.body(Game.map.solid);
 }
-socket.on('move',function(datamove){
-    Game.players[datamove.name].cursor[datamove.move].isDown=true;
-    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
-});
-socket.on('stop',function(datamove){
-    Game.players[datamove.name].cursor[datamove.move].isDown=false;
-    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
-});
-
-window.addEventListener("keypress",function(e){
+    socket.on('move',function(datamove){
+        Game.players[datamove.name].cursor[datamove.move].isDown=true;
+        console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
+    });
+    socket.on('stop',function(datamove){
+        Game.players[datamove.name].cursor[datamove.move].isDown=false;
+        console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
+    });
+/*window.addEventListener("keypress",function(e){
     switch (e.key)
     {
-        /* spawn event
+         spawn event
            case 'g':
            playerSetup('Alice',10,20);
            fuck++;
            break;
-           */
+           
         case 'w':
             if(Game.players.self.cursor.up.isDown == false)
             {
@@ -367,9 +422,9 @@ window.addEventListener("keypress",function(e){
             break;
 
     }
-});
+});*/
 
-window.addEventListener("keyup", function(e){
+/*window.addEventListener("keyup", function(e){
     switch (e.key)
     {
         case 'w':
@@ -413,7 +468,7 @@ window.addEventListener("keyup", function(e){
             Game.players.fuck.cursor.right.isDown = false;
             break;
     }
-});
+});*/
 
 /* player overlap test*/
 function playerOverlap(player,otherCharacter)
@@ -444,10 +499,27 @@ function playerDeath(character)
     character.x=0;
     character.y=0;
     character.body.enable = false;
-    character.visible = false;    
+    character.visible = false;
     Game.engine.time.events.add(Phaser.Timer.SECOND, function()
             {
                 character.body.enable = true;
                 character.visible = true;
             });
+}
+function playerplaceupdate()
+{
+    socket.emit('playerupdate',
+            {
+                name:radomname,
+                x:Game.players.self.character.x,
+                y:Game.players.self.character.y
+            });
+
+    socket.on('playerupdate',function(updata){
+        if(Game.players[updata.name].character.x!=updata.x)
+            Game.players[updata.name].character.x=updata.x;
+
+        if(Game.players[updata.name].character.y!=updata.y)
+            Game.players[updata.name].character.y=updata.y;
+    });
 }

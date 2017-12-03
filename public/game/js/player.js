@@ -20,7 +20,13 @@ const Player = {
         },
         gravity: 20,
         width: 32,
-        height: 56
+        height: 56,
+        ispressed: {
+            up:false,
+            down:false,
+            left:false,
+            right:false
+        }
     }
 };
 
@@ -35,20 +41,20 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
     }
 
     this.playerType = playerType;
+    this.ispressed=playerType.ispressed;
     this.character = GameEngine.add.sprite(x, y, this.playerType.spriteName);
     this.cursor = controlable ? 
         GameEngine.input.keyboard.createCursorKeys() : new SyncCursor();
 
     GameEngine.physics.enable(this.character);
-
     this.character.body.collideWorldBounds = true;
     // set up animations by Phaser engine
     this.character.animations.add('left', this.playerType.animation.left, this.playerType.animation.frameRate, true);
     this.character.animations.add('idle', this.playerType.animation.idle, this.playerType.animation.frameRate, true);
     this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
     this.action = {
-          facing: 'idle',
-          attack: 'none'
+        facing: 'idle',
+        attack: 'none'
     };
     this.x = x;
     this.y = y;

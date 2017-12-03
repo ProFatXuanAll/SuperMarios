@@ -22,9 +22,9 @@ const port = 10000;
 
 // setting server SSL
 /*const SERVER_CONFIG = {
-    key:  fs.readFileSync('ssl/private.key'),
-    cert: fs.readFileSync('ssl/certificate.crt')
-};*/
+  key:  fs.readFileSync('ssl/private.key'),
+  cert: fs.readFileSync('ssl/certificate.crt')
+  };*/
 
 // starting server
 const server = app.listen(port);
@@ -36,24 +36,40 @@ const io = require('socket.io').listen(server);
 var charalist={};
 io.on('connection',function(socket){
     console.log('---------------------------no fuck------------------');
+
     socket.on('login',function(data){
-        console.log(data.time);
         charalist[data.name]={name:data.name,x:data.x,y:20};
+        socket.username=data.name;
         socket.emit('login',
-        {
-            listdata: JSON.stringify(charalist)
-        });
+                {
+                    listdata: JSON.stringify(charalist)
+                });
         socket.broadcast.emit('newplayer',
-        {
-            name:data.name
-        });
-        //socket.emit('return', {time: new Date()});
-        });
+                {
+                    name:data.name
+                });
+    });
+
     socket.on('move',function(datamove){
         socket.broadcast.emit('move',datamove);
     });
+
     socket.on('stop',function(datamove){
         socket.broadcast.emit('stop',datamove);
+    });
+
+    socket.on('disconnect',function(){
+        socket.broadcast.emit('userdis',
+                {
+                    name:socket.username
+                });
+    });
+
+    socket.on('playerupdate',function(updata){
+        charalist[updata.name].x=updata.x;
+        charalist[updata.name].y=updata.y;
+        //console.log(updata.name,updata.x,updata.y);
+        socket.broadcast.emit('playerupdate',updata);
     });
 });
 
@@ -67,18 +83,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 // setting template engine `nunjucks`
 nunjucks.configure(
 
-    // views path
-    path.join(__dirname, 'views'),
+        // views path
+        path.join(__dirname, 'views'),
 
-    // detail setting
-    {
-        // auto html escape
-        autoescape: true,
+        // detail setting
+        {
+            // auto html escape
+            autoescape: true,
 
-        // using express framework
-        express: app
-    }
-);
+            // using express framework
+            express: app
+        }
+        );
 
 // setting template files extentions to `.html`
 app.set('view engine', 'html');
@@ -96,18 +112,18 @@ app.use('/', function(req,res,next){ res.redirect('/home'); });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  let err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    let err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
