@@ -15,16 +15,18 @@ const path = require('path');
 
 // loading URL routing module
 const home = require('./routes/home');
-const game = require('./routes/game');
+const game = require('./routes/game')(app);
 
 // setting server listening port
-const port = 10000;
+const port = 10001;
 
+/*
 // setting SSL
-/*const SERVER_CONFIG = {
+const SERVER_CONFIG = {
     key:  fs.readFileSync('ssl/private.key'),
     cert: fs.readFileSync('ssl/certificate.crt')
-};*/
+};
+*/
 
 // setting framework module `express`
 app.use(logger('dev'));
@@ -35,17 +37,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // setting template engine `nunjucks`
 nunjucks.configure(
-
-    // views path
-    path.join(__dirname, 'views'),
-
+    path.join(__dirname, 'views'), //views path
     // detail setting
     {
-        // auto html escape
-        autoescape: true,
-
-        // using express framework
-        express: app
+        autoescape: true,//auto html escape
+        express: app //using express framework
     }
 );
 
@@ -58,7 +54,7 @@ app.use('/game', game);
 app.use('/', function(req,res,next){ res.redirect('/home'); });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function(req, res, next){
   let err = new Error('Not Found');
   err.status = 404;
   next(err);

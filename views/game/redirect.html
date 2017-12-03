@@ -1,0 +1,37 @@
+{% extends "game/base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+{% if fromLogin %}
+
+<h1>Welcome back, {{userName}}! Have fun :D</h1>
+
+{% elseif fromRegist %}
+
+<h1>Regist Success!</h1>
+<p>Welcome, {{userName}}! Please wait for redirecting...</p>
+
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% if fromLogin %}
+
+<script>
+    setTimeout(function(){
+        window.location.replace("https://luffy.ee.ncku.edu.tw:10001/game");
+    },3000);
+</script>
+
+{% elseif fromRegist %}
+
+<script>
+    setTimeout(function(){
+        window.location.replace("https://luffy.ee.ncku.edu.tw:10001/game/login");
+    },3000);
+</script>
+
+{% endif %}
+{% endblock %}
