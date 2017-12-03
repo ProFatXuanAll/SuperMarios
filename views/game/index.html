@@ -4,14 +4,23 @@
 {% endblock %}
 
 {% block content %}
+<div id="loginpage">
+    <h3>whats your name??</h3>
+    <div class="putname">
+        <input type="text" id="loginname">
+        <button class="loginclick">ok!!!</button>
+    </div>
+</div>
 <div id="html_game_block"></div>
 {% endblock %}
 
 {% block scripts %}
+<script src="/game/js/socket.io/socket.io.js"></script>
 <script src="/game/js/config.js"></script>
 <script src="/game/js/map.js"></script>
 <script src="/game/js/monster.js"></script>
 <script src="/game/js/player.js"></script>
 <script src="/game/js/item.js"></script>
 <script src="/game/js/draw.js"></script>
+<script src="/game/js/connect.js"></script>
 {% endblock %}

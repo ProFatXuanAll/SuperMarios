@@ -20,8 +20,13 @@
         <li><a href="{{ home }}">Home</a></li>
         <li><a href="{{ game }}">Game</a></li>
         <li><a href="{{ pedia }}">Pedia</a></li>
+        {% if noLogin %}
+        <li><a href="{{ regist }}">Sign In</a></li>
         <li><a href="{{ login }}">Login</a></li>
-        <li><a href="{{ regist }}">Regist</a></li>
+        {% else %}
+        <li><a href="{{ logout }}">Logout</a></li>
+        <li><a id="userName">{{ userName }}</a></li>
+        {% endif %}
       </ul>
     </nav>
   </header>

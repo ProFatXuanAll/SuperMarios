@@ -27,6 +27,12 @@ const Player = {
         gravity: 20,
         width: 32,
         height: 56,
+        ispressed: {
+            up:false,
+            down:false,
+            left:false,
+            right:false
+        },
         respawn: function(character)
         {
             if(!character.dieyet)
@@ -38,18 +44,18 @@ const Player = {
                 character.body.moves=false;
                 deathsound.play();
                 character.dieyet=true;
-                
+
                 Game.engine.time.events.add(Phaser.Timer.SECOND*3, function()
-                {
-                    character.body.velocity.x=0;
-                    character.body.velocity.y=0;
-                    character.x=Map.structure[0].start.x;
-                    character.y=Map.structure[0].start.y;
-                    character.body.moves=true;
-                    character.immovable = false;
-                    character.animations.play();
-                    character.dieyet=false;
-                });
+                        {
+                            character.body.velocity.x=0;
+                            character.body.velocity.y=0;
+                            character.x=Map.structure[0].start.x;
+                            character.y=Map.structure[0].start.y;
+                            character.body.moves=true;
+                            character.immovable = false;
+                            character.animations.play();
+                            character.dieyet=false;
+                        });
             }
             else return;
         },
@@ -60,14 +66,14 @@ const Player = {
             }
             if (player.body.touching.down)
             {
-                    player.body.velocity.y = -150;
+                player.body.velocity.y = -150;
             }
             else if(player.body.touching.left)
             {
                 //someone do something.
             }
         }
-    },
+    }
 };
 
 function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
@@ -79,8 +85,10 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
         this.left = {isDown: false};
         this.right = {isDown: false};
     }
-
     this.playerType = playerType;
+    this.ispressed=playerType.ispressed;
+    this.cursor = controlable ? 
+        Game.engine.input.keyboard.createCursorKeys() : new SyncCursor();
     this.currentType={
         velocity: {
             left: -200,
@@ -91,15 +99,7 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
         gravity: 20
     };
     this.character = Game.engine.add.sprite(x, y, this.playerType.spriteName);
-
-    if(controlable){
-        // main camera follow main character
-        Game.engine.camera.follow(this.character);
-        this.cursor = Game.engine.input.keyboard.createCursorKeys();
-    }
-    else {
-        this.cursor = new SyncCursor();
-    }
+    console.log(this.character);
 
     Game.engine.physics.enable(this.character);
 
@@ -109,8 +109,8 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
     this.character.animations.add('idle', this.playerType.animation.idle, this.playerType.animation.frameRate, true);
     this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
     this.action = {
-          facing: 'idle',
-          attack: 'none'
+        facing: 'idle',
+        attack: 'none'
     };
     this.x = x;
     this.y = y;
