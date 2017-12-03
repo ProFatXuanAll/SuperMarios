@@ -3,5 +3,3 @@ node_modules/
 bin
 ssl
 config.js
-cleardb.js
-viewdb.js
