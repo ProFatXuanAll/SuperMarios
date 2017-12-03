@@ -47,7 +47,8 @@ function PlayerSetup(GameEngine, playerName, playerType, x=0, y=0, controlable=f
         GameEngine.input.keyboard.createCursorKeys() : new SyncCursor();
 
     GameEngine.physics.enable(this.character);
-    this.character.body.collideWorldBounds = true;
+
+    this.character.body.collideWorldBounds = false;
     // set up animations by Phaser engine
     this.character.animations.add('left', this.playerType.animation.left, this.playerType.animation.frameRate, true);
     this.character.animations.add('idle', this.playerType.animation.idle, this.playerType.animation.frameRate, true);

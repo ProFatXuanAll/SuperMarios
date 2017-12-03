@@ -91,7 +91,6 @@ const Monster = {
             height: 32
         },
         overlap: function(character, monster){
-            console.log('death');
             playerDeath(character);
         }
     },
