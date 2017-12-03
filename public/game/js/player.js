@@ -85,11 +85,7 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
         this.left = {isDown: false};
         this.right = {isDown: false};
     }
-    console.log(playerName);
-    console.log(playerType);
     this.playerType = playerType;
-    console.log(playerType);
-    console.log(this.playerType);
     this.ispressed=playerType.ispressed;
     this.cursor = controlable ? 
         Game.engine.input.keyboard.createCursorKeys() : new SyncCursor();
