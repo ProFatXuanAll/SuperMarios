@@ -1,47 +1,27 @@
 {% extends "game/base.html" %}
 
 {% block stylesheets %}
+<link rel="stylesheet" href="/game/css/regist.css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block content %}
-<h1>regist</h1>
-
-<div>
+<div class="box">
     <form method="POST" action="">
-        account: <input type="text" id="account" name="account" placeholder="Your Account"><br>
-        password: <input type="password" id="password" name="password" placeholder="Your Password"><br>
-        <input id="btn" type="submit" value="regist"><br>
+        <h2><b>Sign Up</b></h2>
+        <input type="text" id="account" class="inputbox" name="account" placeholder="Username"><br>
+        <input type="password" id="password" class="inputbox" name="password" placeholder="Password"><br>
+        {% if error %}
+        <div class="inputbox" id="error">
+            This username have been used, please try another one.
+        </div><br>
+        {% endif %}
+        <input id="btn" type="submit" class="btn" value="Sign Up">
     </form>
 </div>
-
-{% if error %}
-<div>
-    <p style="background: #ffcccc">This username have been used, please try another one.</p>    
-</div>
-{% endif %}
 
 {% endblock %}
 
 {% block scripts %}
-<script>
-    $(document).ready(function(){
-        $("form").submit(function(e){
-            if($("#account").val() == "" && $("#password").val() == ""){
-                e.preventDefault();
-                window.alert("Please enter your user name and password.");
-                return false;
-            }
-            else if($("#password").val() == ""){
-                e.preventDefault();
-                window.alert("Please enter your password.");
-                return false;
-            }
-            else if($("#account").val() == ""){
-                e.preventDefault();
-                window.alert("Please enter your user name.");
-                return false;
-            };
-        });
-    })
-</script>
+<script src="/game/js/regist.js"></script>
 {% endblock %}
