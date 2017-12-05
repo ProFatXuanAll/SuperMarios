@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const config = require('../config');
 const model = require('../models/game_model');
+const io = require("./socket")(app.server);
 const router = express.Router();
 
 const url = `mongodb://${config.mongo.user}:${config.mongo.password}@localhost:27017/${config.mongo.dbname}`
