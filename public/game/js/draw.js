@@ -62,7 +62,6 @@ function preload()
     // load all player spritesheet and music
     for(let playerType in Player)
     {
-        console.log(Player[playerType]);
         Game.engine.load.spritesheet(
             Player[playerType].spriteName,
             Player[playerType].picture.src,
@@ -154,6 +153,7 @@ function create()
             y: Game.players[Config.currentUserName].y
         }
     );
+    //Game.engine.time.events.loop(Phaser.Timer.SECOND*10,updatapla,this);
 }
 
 

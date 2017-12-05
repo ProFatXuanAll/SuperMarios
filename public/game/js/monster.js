@@ -81,6 +81,46 @@ const Monster = {
             spawnedMonster.body.bounce.x=1;
             Game.monsters[monster.name].add(spawnedMonster);
             monster.destroy();
+        },
+        spawnFromServer: function(monsterStat)
+        {
+            let monsterName=monsterStat.monsterType;
+            let spawnedMonster = Game.engine.add.sprite(
+                monsterStat.x,
+                monsterStat.y,
+                monsterName
+            );
+
+            spawnedMonster.animations.add(
+                'walk',
+                Monster[monsterName].animation.walk,
+                Monster[monsterName].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.add(
+                'die',
+                Monster[monsterName].animation.die,
+                Monster[monsterName].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.play('walk');
+
+            //reassign spawnpoint
+            spawnedMonster.name=monsterName;
+            spawnedMonster.spawn={
+                x: monsterStat.x,
+                y: monsterStat.y 
+            }
+
+            //set physic
+            Game.engine.physics.enable(spawnedMonster);
+            spawnedMonster.body.enable=true;
+            spawnedMonster.body.velocity.x=Monster[monsterName].velocity.x;
+            spawnedMonster.body.gravity.y=Monster[monsterName].gravity.y;
+            spawnedMonster.body.bounce.x=1;
+            Game.monsters[monsterName].add(spawnedMonster);
         }
     },
     caveTurtle:{
@@ -167,6 +207,46 @@ const Monster = {
             spawnedMonster.body.bounce.x=1;
             Game.monsters[monster.name].add(spawnedMonster);
             monster.destroy();
+        },
+        spawnFromServer: function(monsterStat)
+        {
+            let monsterName=monsterStat.monsterType;
+            let spawnedMonster = Game.engine.add.sprite(
+                monsterStat.x,
+                monsterStat.y,
+                monsterName
+            );
+
+            spawnedMonster.animations.add(
+                'walk',
+                Monster[monsterName].animation.walk,
+                Monster[monsterName].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.add(
+                'die',
+                Monster[monsterName].animation.die,
+                Monster[monsterName].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.play('walk');
+
+            //reassign spawnpoint
+            spawnedMonster.name=monsterName;
+            spawnedMonster.spawn={
+                x: monsterStat.x,
+                y: monsterStat.y 
+            }
+
+            //set physic
+            Game.engine.physics.enable(spawnedMonster);
+            spawnedMonster.body.enable=true;
+            spawnedMonster.body.velocity.x=Monster[monsterName].velocity.x;
+            spawnedMonster.body.gravity.y=Monster[monsterName].gravity.y;
+            spawnedMonster.body.bounce.x=1;
+            Game.monsters[monsterName].add(spawnedMonster);
         }
     },
     spikeTurtle:{
@@ -243,6 +323,46 @@ const Monster = {
             spawnedMonster.body.bounce.x=1;
             Game.monsters[monster.name].add(spawnedMonster);
             monster.destroy();
+        },
+        spawnFromServer: function(monsterStat)
+        {
+            let monsterName=monsterStat.monsterType;
+            let spawnedMonster = Game.engine.add.sprite(
+                monsterStat.x,
+                monsterStat.y,
+                monsterName
+            );
+
+            spawnedMonster.animations.add(
+                'walk',
+                Monster[monsterName].animation.walk,
+                Monster[monsterName].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.add(
+                'die',
+                Monster[monsterName].animation.die,
+                Monster[monsterName].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.play('walk');
+
+            //reassign spawnpoint
+            spawnedMonster.name=monsterName;
+            spawnedMonster.spawn={
+                x: monsterStat.x,
+                y: monsterStat.y 
+            }
+
+            //set physic
+            Game.engine.physics.enable(spawnedMonster);
+            spawnedMonster.body.enable=true;
+            spawnedMonster.body.velocity.x=Monster[monsterName].velocity.x;
+            spawnedMonster.body.gravity.y=Monster[monsterName].gravity.y;
+            spawnedMonster.body.bounce.x=1;
+            Game.monsters[monsterName].add(spawnedMonster);
         }
     },
     ironFlower:{
@@ -314,6 +434,46 @@ const Monster = {
             spawnedMonster.body.bounce.x=1;
             Game.monsters[monster.name].add(spawnedMonster);
             monster.destroy();
+        },
+        spawnFromServer: function(monsterStat)
+        {
+            let monsterName=monsterStat.monsterType;
+            let spawnedMonster = Game.engine.add.sprite(
+                monsterStat.x,
+                monsterStat.y,
+                monsterName
+            );
+
+            spawnedMonster.animations.add(
+                'walk',
+                Monster[monsterName].animation.walk,
+                Monster[monsterName].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.add(
+                'die',
+                Monster[monsterName].animation.die,
+                Monster[monsterName].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.play('walk');
+
+            //reassign spawnpoint
+            spawnedMonster.name=monsterName;
+            spawnedMonster.spawn={
+                x: monsterStat.x,
+                y: monsterStat.y 
+            }
+
+            //set physic
+            Game.engine.physics.enable(spawnedMonster);
+            spawnedMonster.body.enable=true;
+            spawnedMonster.body.velocity.x=Monster[monsterName].velocity.x;
+            spawnedMonster.body.gravity.y=Monster[monsterName].gravity.y;
+            spawnedMonster.body.bounce.x=1;
+            Game.monsters[monsterName].add(spawnedMonster);
         }
     },
 
@@ -360,11 +520,22 @@ function MonsterSetup(map, structure)
                 x: child.position.x,
                 y: child.position.y
             }
+            socket.emit(
+                'monsterSpawn',
+                {
+                    monsterType: monsterType,
+                    x: child.position.x,
+                    y: child.position.y,
+                    vx: Monster[monsterType].velocity.x,
+                    vy: Monster[monsterType].velocity.y
+                }
+            );
         }
 
         this[monsterType].callAll('animations.play', 'animations', 'walk');
         this[monsterType].setAll('body.velocity.x', Monster[monsterType].velocity.x);
         this[monsterType].setAll('body.gravity.y', Monster[monsterType].gravity.y);
         this[monsterType].setAll('body.bounce.x', 1);
+
     }
 }

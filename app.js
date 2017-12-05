@@ -66,18 +66,25 @@ io.on('connection', function(socket){
     });
 
     socket.on('playerupdate',function(updata){
-        charalist[updata.name].x=updata.x;
-        charalist[updata.name].y=updata.y;
+        playerList[updata.name].x=updata.x;
+        playerList[updata.name].y=updata.y;
         //console.log(updata.name,updata.x,updata.y);
         socket.broadcast.emit('playerupdate',updata);
     });
 
     socket.on('disconnect',function(){
+        delete playerList[socket.username];
         socket.broadcast.emit('userdis',
                 {
                     name:socket.username
                 });
     });
+
+    socket.on('monsterSpawn',function(monsterStat){
+        socket.broadcast.emit('monsterSpawn',monsterStat);
+    });
+
+
 });
 
 // setting framework module `express`
