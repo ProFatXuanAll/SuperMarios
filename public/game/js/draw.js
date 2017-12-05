@@ -97,6 +97,10 @@ function preload()
             Items[itemType].picture.width,
             Items[itemType].picture.height
         );
+        Game.engine.load.audio(
+            Items[itemType].music.get.name,
+            Items[itemType].music.get.src
+        );
     }
     // add promise make sure pictures loaded
 }
