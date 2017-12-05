@@ -13,13 +13,18 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
+// setting server listening port
+const config = require('./config');
+const port = config.port;
+
+// starting server
+app.server = app.listen(port);
+/*const server = https.createServer(SERVER_CONFIG, app)
+  .listen(port,function(){console.log("https done.");} );*/
+
 // loading URL routing module
 const home = require('./routes/home');
 const game = require('./routes/game')(app);
-const config = require('./config');
-
-// setting server listening port
-const port = config.port;
 
 // setting server SSL
 /*const SERVER_CONFIG = {
@@ -27,18 +32,12 @@ const port = config.port;
   cert: fs.readFileSync('ssl/certificate.crt')
   };*/
 
-// starting server
-const server = app.listen(port);
-/*const server = https.createServer(SERVER_CONFIG, app)
-  .listen(port,function(){console.log("https done.");} );*/
-
 // setting framework module `express`
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.server = server;
 
 // setting template engine `nunjucks`
 nunjucks.configure(
