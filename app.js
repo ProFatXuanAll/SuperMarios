@@ -79,6 +79,12 @@ io.on('connection', function(socket){
                     name:socket.username
                 });
     });
+
+    socket.on('monsterSpawn',function(monsterStat){
+        socket.broadcast.emit('monsterSpawn',monsterStat);
+    });
+
+
 });
 
 // setting framework module `express`

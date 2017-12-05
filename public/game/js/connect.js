@@ -28,38 +28,21 @@ socket.on('join-succeeded', function(playerData){
 
 socket.on('move',function(datamove){
     Game.players[datamove.name].cursor[datamove.move].isDown=true;
-    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
 });
 
 socket.on('stop',function(datamove){
     Game.players[datamove.name].cursor[datamove.move].isDown=false;
-    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
 });
-
-/*function updatapla()
-{
-    socket.emit('playerupdate',
-            {
-                name:Config.currentUserName,
-                x:Game.players[Config.currentUserName].character.x,
-                y:Game.players[Config.currentUserName].character.y
-            });
-}
-
-socket.on('playerupdate',function(updata){
-    console.log(updata,name,updata.x,updata.y)
-    if(Game.players[updata.name].character.x!=updata.x)
-        Game.players[updata.name].character.x=updata.x;
-
-    if(Game.players[updata.name].character.y!=updata.y)
-        Game.players[updata.name].character.y=updata.y;
-});*/
-
 // delete other players
 socket.on('userdis',function(dele){
-    console.log(dele.name,'need dele');
     Game.players[dele.name].character.destroy();
     Game.players[dele.name].name.destroy();
     delete Game.players[dele.name];
+});
 
+socket.on('monsterSpawn',function(monsterStat){
+    console.log(monsterStat.monsterType);
+    let x=10;
+    let y=10;
+    Monster[monsterStat.monsterType].spawnFromServer(monsterStat);
 });
