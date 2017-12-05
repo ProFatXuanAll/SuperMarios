@@ -238,18 +238,24 @@ function update()
         velocity.x = currentType.velocity.idle;
         if (cursor.up.isDown)
         {
-            if (character.body.onFloor()) velocity.y = currentType.velocity.up;
+            if(character.body.onFloor()) velocity.y = currentType.velocity.up;
         }
         if(!character.body.onFloor()) velocity.y += currentType.gravity;
         if(cursor.left.isDown)
         {
-            velocity.x = currentType.velocity.left;
-            character.animations.play('left');
+            if(!character.dieyet)
+            {
+                velocity.x = currentType.velocity.left;
+                character.animations.play('left');
+            }
         }
         else if (cursor.right.isDown)
         {
-            velocity.x = currentType.velocity.right;
-            character.animations.play('right');
+            if(!character.dieyet)
+            {
+                velocity.x = currentType.velocity.right;
+                character.animations.play('right');
+            }
         }
         else if (cursor.down.isDown)
         {
@@ -257,7 +263,7 @@ function update()
         }
         else
         {
-            character.animations.play('idle');
+            if(!character.dieyet) character.animations.play('idle');
         }
     }
 
