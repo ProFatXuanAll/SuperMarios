@@ -1,7 +1,4 @@
 $(document).ready(function(){
-    
-    $('.box').hide().fadeIn(1000);
-
     $("form").submit(function(e){
         if($("#account").val() == "" && $("#password").val() == ""){
             e.preventDefault();
