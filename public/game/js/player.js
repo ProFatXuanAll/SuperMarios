@@ -42,20 +42,22 @@ const Player = {
                 character.frame=1;
                 character.immovable = true;
                 character.body.moves=false;
-                deathsound.play();
+                Game.map.music.stop();
+                character.sound.die.play();
                 character.dieyet=true;
 
                 Game.engine.time.events.add(Phaser.Timer.SECOND*3, function()
-                        {
-                            character.body.velocity.x=0;
-                            character.body.velocity.y=0;
-                            character.x=Map.structure[0].start.x;
-                            character.y=Map.structure[0].start.y;
-                            character.body.moves=true;
-                            character.immovable = false;
-                            character.animations.play();
-                            character.dieyet=false;
-                        });
+                {
+                    Game.map.music.loopFull();
+                    character.body.velocity.x=0;
+                    character.body.velocity.y=0;
+                    character.x=Map.structure[0].start[0].x;
+                    character.y=Map.structure[0].start[0].y;
+                    character.body.moves=true;
+                    character.immovable = false;
+                    character.animations.play();
+                    character.dieyet=false;
+                });
             }
             else return;
         },
@@ -85,11 +87,18 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
         this.left = {isDown: false};
         this.right = {isDown: false};
     }
+
     this.playerType = playerType;
-    this.ispressed=playerType.ispressed;
-    this.cursor = controlable ? 
-        Game.engine.input.keyboard.createCursorKeys() : new SyncCursor();
-    this.currentType={
+    
+    this.ispressed = playerType.ispressed;
+    
+    this.character = Game.engine.add.sprite(
+        x,
+        y,
+        this.playerType.spriteName
+    );
+
+    this.character.currentType = {
         velocity: {
             left: -200,
             right: 200,
@@ -98,8 +107,14 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
         },
         gravity: 20
     };
-    this.character = Game.engine.add.sprite(x, y, this.playerType.spriteName);
-    console.log(this.character);
+
+    if(controlable) {
+        this.cursor = Game.engine.input.keyboard.createCursorKeys();
+        Game.engine.camera.follow(this.character);
+    }
+    else {
+        this.cursor = new SyncCursor();
+    }
 
     Game.engine.physics.enable(this.character);
 
@@ -108,12 +123,17 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
     this.character.animations.add('left', this.playerType.animation.left, this.playerType.animation.frameRate, true);
     this.character.animations.add('idle', this.playerType.animation.idle, this.playerType.animation.frameRate, true);
     this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
-    this.action = {
-        facing: 'idle',
-        attack: 'none'
-    };
     this.x = x;
     this.y = y;
-    this.character.dieyet=false;
-    this.text = Game.engine.add.text(x, y, playerName, Config.font.Arial);
+    this.character.dieyet = false;
+    this.name = Game.engine.add.text(
+        x,
+        y,
+        playerName,
+        Config.font.Arial
+    );
+
+    this.character.sound = {
+        die: Game.engine.add.audio(playerType.music.die.name)
+    };
 }

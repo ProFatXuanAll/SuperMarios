@@ -7,28 +7,29 @@ const Items = {
             x: 0,
             y: 0
         },
-        bounce:{
+        bounce: {
             x: 0,
             y: 0
         },
-        picture:{
+        picture: {
             src: '/game/assets/item/image/coin.png',
             width: 32,
             height: 32
         },
-        overlap:function(currentType)
+        overlap: function(character, item)
         {
-            return function(character, item){
-                currentType.velocity.left-=50;
-                currentType.velocity.right+=50;
-                item.destroy();
-                Game.engine.time.events.add(Phaser.Timer.SECOND*3, function()
+            character.currentType.velocity.left -= 50;
+            character.currentType.velocity.right += 50;
+            item.destroy();
+            Game.engine.time.events.add(
+                Phaser.Timer.SECOND * 3,
+                function()
                 {
-                    currentType.velocity.left+=50;
-                    currentType.velocity.right-=50;
+                    character.currentType.velocity.left+=50;
+                    character.currentType.velocity.right-=50;
                     Items.coin.respawn();
-                });
-            }
+                }
+            );
         },
         respawn: function()
         {

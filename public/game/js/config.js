@@ -13,5 +13,6 @@ const Config = {
             fill: "#000000",
             align: "center"
         }
-    }
+    },
+    currentUserName: $("#userName").html()
 }
