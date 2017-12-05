@@ -16,6 +16,7 @@ const Player = {
             left: [ 0, 1, 2, 3 ],
             idle: [ 4 ],
             right: [ 4, 5, 6, 7 ],
+            die: [ 8 ],
             frameRate: 10
         },
         velocity: {
@@ -38,10 +39,10 @@ const Player = {
             if(!character.dieyet)
             {
                 // need promise object
-                character.animations.stop();
-                character.frame=1;
                 character.immovable = true;
                 character.body.moves=false;
+                character.animations.stop();
+                character.frame=8;
                 Game.map.music.stop();
                 character.sound.die.play();
                 character.dieyet=true;
@@ -122,6 +123,7 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
     // set up animations by Phaser engine
     this.character.animations.add('left', this.playerType.animation.left, this.playerType.animation.frameRate, true);
     this.character.animations.add('idle', this.playerType.animation.idle, this.playerType.animation.frameRate, true);
+    this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
     this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
     this.x = x;
     this.y = y;

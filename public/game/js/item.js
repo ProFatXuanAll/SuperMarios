@@ -1,6 +1,6 @@
 const Items = {
     coin:{
-        tileNumber: 27,
+        tileNumber: 60,
         spriteName: 'coin',
 
         gravity: {

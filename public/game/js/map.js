@@ -170,7 +170,7 @@ function MapSetup(structure, tileset, background, music)
     this.solid.resizeWorld();
 
     // enable collision on tile map
-    this.tileMap.setCollisionByExclusion(this.tileMap.properties.collisionExclusion);
+    this.tileMap.setCollisionByExclusion([67,68,77,78,98,99,100]);
     
     //add backgroundmusic
     this.music = Game.engine.add.audio(music.name);
