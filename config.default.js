@@ -1,9 +1,10 @@
 config = {
-    'mongo' : {
+    'mongo': {
         'user' : '',
         'password' : '',
         'dbname' : '',
     },
+    'port':,
 }
 
 module.exports = config;

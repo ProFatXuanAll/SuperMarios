@@ -1,8 +1,8 @@
-// loading main framework `express`
+/* main framework : `express`       *
+ * template engine : `nunjucks`     *
+ * connection module : `socket.io`  */
 const express = require('express');
 const app = express();
-
-// loading template engine `nunjucks`
 const nunjucks = require('nunjucks');
 
 // loading framework required modules
@@ -13,72 +13,24 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
+// setting server listening port
+const config = require('./config');
+const port = config.port;
+
+// starting server
+app.server = app.listen(port);
+/*const server = https.createServer(SERVER_CONFIG, app)
+  .listen(port,function(){console.log("https done.");} );*/
+
 // loading URL routing module
 const home = require('./routes/home');
 const game = require('./routes/game')(app);
-
-// setting server listening port
-const port = 10000;
 
 // setting server SSL
 /*const SERVER_CONFIG = {
   key:  fs.readFileSync('ssl/private.key'),
   cert: fs.readFileSync('ssl/certificate.crt')
   };*/
-
-// starting server
-const server = app.listen(port);
-/*const server = https.createServer(SERVER_CONFIG, app)
-  .listen(port,function(){console.log("https done.");} );*/
-
-// loading socket io module
-const io = require('socket.io').listen(server);
-let playerList = {};
-
-io.on('connection', function(socket){
-    console.log('---------------------------no fuck------------------');
-
-    // new player tell server to join game
-    socket.on('join', function(playerData){
-        // server tell existed player(s) info new of player
-        socket.broadcast.emit('join', playerData);
-        socket.username = playerData.name;
-        // server tell new player info of exist player(s)
-        socket.emit('join-succeeded',
-            {
-                // stringify to speed up pass data
-                playerList: JSON.stringify(playerList)
-            }
-        );
-        playerList[playerData.name] = playerData;
-        /*socket.broadcast.emit('newplayer',
-        {
-            name:data.name
-        });*/
-    });
-
-    socket.on('move',function(datamove){
-        socket.broadcast.emit('move',datamove);
-    });
-
-    socket.on('stop',function(datamove){
-        socket.broadcast.emit('stop',datamove);
-    });
-
-    socket.on('playerupdate',function(updata){
-        charalist[updata.name].x=updata.x;
-        charalist[updata.name].y=updata.y;
-        //console.log(updata.name,updata.x,updata.y);
-        socket.broadcast.emit('playerupdate',updata);
-    });
-
-    socket.on('disconnect',function(){
-        socket.broadcast.emit('userdis',
-                {
-                    name:socket.username
-                });
-    });
-});
 
 // setting framework module `express`
 app.use(logger('dev'));
@@ -99,12 +51,6 @@ nunjucks.configure(
 
 // setting template files extentions to `.html`
 app.set('view engine', 'html');
-
-// making io module visible to other router module
-app.use(function(req, res, next){
-    req.io = io;
-    next();
-});
 
 // setting URL routing module
 app.use('/home', home);

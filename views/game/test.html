@@ -1,0 +1,23 @@
+<html>
+   <head>
+       <link rel="stylesheet" href="../../public/game/css/login.css">
+       <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
+   </head>
+    <body>
+        <form method="POST" action="">
+            <div class="box">
+                <h1>Login</h1>
+                <input type="text" id="account" class="inputbox" name="account" placeholder="Username"><br>
+                <input type="password" id="password" class="inputbox" name="password" placeholder="Password"><br>
+                <div id="error">
+                    <p>Your user name or password are invalid, please try again.</p>
+                </div>
+                <input type="submit" class="btn" value="Login">
+                <a href="{{ regist }}"><div class="btn">Sign Up</div></a>
+            </div>
+        </form>
+        <p>Forgot your password? <a href="" style="color:#f1c40f;">lol~~~</a></p>
+
+        <script src="../../public/game/js/login.js"></script>
+     </body>
+</html>

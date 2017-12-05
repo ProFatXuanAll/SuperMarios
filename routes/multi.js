@@ -1,49 +1,18 @@
 module.exports = function(app){
 
 const express = require('express');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const config = require('../config');
-const model = require('../models/game_model');
-const io = require("./socket")(app.server);
 const router = express.Router();
 
-const url = `mongodb://${config.mongo.user}:${config.mongo.password}@localhost:27017/${config.mongo.dbname}`
-
-mongoose.connect(url, { useMongoClient: true }, (err, res) => {
-  if (err) console.log('MongoDB connected failed');
-  else console.log('MongoDB connected success');
-});
-mongoose.Promise = global.Promise;
-
-app.use('/game',session({
-  secret : 'dkwqhnfqwohfwnfuqha',
-  resave : false,
-  saveUninitialized : true,
-}));
-
 router.get('/', UrlSetting, function(req, res, next) {
-    var sess = req.session;
-    if(sess.userName){
-        res.render('game/index',{ noLogin : false, userName : sess.userName });
-    }
-    else res.redirect('/game/login');
+    res.render('game/index',{ userName : "fuck" });
 });
 
 router.get('/pedia', UrlSetting, function(req, res, next) {
-    var sess = req.session;
-    if(sess.userName){
-        res.render('game/pedia',{ noLogin : false, userName : sess.userName });
-    }
-    else res.render('game/pedia',{ noLogin : true });
+    res.render('game/pedia');
 });
 
-router.get('/login', UrlSetting, function(req, res, next) {
-    var sess = req.session;
-    if(sess.userName){
-        res.redirect('/game/');
-    }
-    else res.render('game/login',{ noLogin : true, error : false});
+/*router.get('/login', UrlSetting, function(req, res, next) {
+    res.render('game/login',{ noLogin : true, error : false});
 });
 
 router.post('/login', UrlSetting, function(req, res, next) {
@@ -97,7 +66,7 @@ router.post('/regist', UrlSetting, function(req, res, next) {
                 fromLogin : false,
                 fromRegist : true,
                 userName : act,
-            });            
+            });
         };
     });
 });
@@ -106,6 +75,7 @@ router.get('/logout', UrlSetting, function(req, res, next) {
     req.session.destroy();
     res.redirect('/game/login');
 });
+*/
 
 function UrlSetting(req,res,next){
     res.locals = {
@@ -117,6 +87,7 @@ function UrlSetting(req,res,next){
         logout: '/game/logout',
         regist: '/game/regist',
         user : '/game/user',
+        nologin : true,
     };
     next();
 }

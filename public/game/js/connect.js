@@ -28,18 +28,21 @@ socket.on('join-succeeded', function(playerData){
 
 socket.on('move',function(datamove){
     Game.players[datamove.name].cursor[datamove.move].isDown=true;
-    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
 });
 
 socket.on('stop',function(datamove){
     Game.players[datamove.name].cursor[datamove.move].isDown=false;
-    console.log(Game.players[datamove.name].cursor[datamove.move].isDown,datamove.move);
+});
+// delete other players
+socket.on('userdis',function(dele){
+    Game.players[dele.name].character.destroy();
+    Game.players[dele.name].name.destroy();
+    delete Game.players[dele.name];
 });
 
-socket.on('playerupdate',function(updata){
-    if(Game.players[updata.name].character.x!=updata.x)
-        Game.players[updata.name].character.x=updata.x;
-
-    if(Game.players[updata.name].character.y!=updata.y)
-        Game.players[updata.name].character.y=updata.y;
+socket.on('monsterSpawn',function(monsterStat){
+    console.log(monsterStat.monsterType);
+    let x=10;
+    let y=10;
+    Monster[monsterStat.monsterType].spawnFromServer(monsterStat);
 });

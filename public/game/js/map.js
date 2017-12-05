@@ -15,7 +15,7 @@ const Map = {
                 }
             ],
             finish: {
-                x: 3114,
+                x: 9500,
                 y:0
             },
             size: {

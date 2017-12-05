@@ -1,46 +1,29 @@
 {% extends "game/base.html" %}
 
 {% block stylesheets %}
+<link rel="stylesheet" href="/game/css/login.css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block content %}
-<div>
-<form method="POST" action="">
-    account: <input type="text" id="account" name="account" placeholder="Your Account"><br>
-    password: <input type="password" id="password" name="password" placeholder="Your Password"><br>
-  <input type="submit" value="login"><br>
-  <button><a href="{{ regist }}">register</a></button><br>
-</form>
+<div class="box">
+    <form method="POST" action="">
+        <h2><b>Login</b></h2>
+        <input type="text" id="account" class="inputbox" name="account" placeholder="Username"><br>
+        <input type="password" id="password" class="inputbox" name="password" placeholder="Password"><br>
+        {% if error %}
+        <div class="inputbox" id="error">
+            Your user name or password are invalid, please try again.
+        </div><br>
+        {% endif %}
+        <input type="submit" class="btn" value="Login">
+        <a href="{{ regist }}" class="btn" style="text-decoration: none">Sign Up</a>
+    </form>
 </div>
-
-{% if error %}
-<div>
-    <p style="background: #ffcccc">Your user name or password are invalid, please try again.</p>    
-</div>
-{% endif %}
+<p>Forgot your password? <a href="" style="color:#f1c40f;">lol~~~</a></p>
 
 {% endblock %}
 
 {% block scripts %}
-<script>
-    $(document).ready(function(){
-        $("form").submit(function(e){
-            if($("#account").val() == "" && $("#password").val() == ""){
-                e.preventDefault();
-                window.alert("Please enter your user name and password.");
-                return false;
-            }
-            else if($("#password").val() == ""){
-                e.preventDefault();
-                window.alert("Please enter your password.");
-                return false;
-            }
-            else if($("#account").val() == ""){
-                e.preventDefault();
-                window.alert("Please enter your user name.");
-                return false;
-            };
-        });
-    })
-</script>
+<script src="/game/js/login.js"></script>
 {% endblock %}

@@ -7,6 +7,12 @@ const Items = {
             x: 0,
             y: 0
         },
+        music : {
+            get : {
+                name: 'coinGet',
+                src:'/game/assets/sounds/get.wav'
+            }
+        },
         bounce: {
             x: 0,
             y: 0
@@ -20,6 +26,8 @@ const Items = {
         {
             character.currentType.velocity.left -= 50;
             character.currentType.velocity.right += 50;
+            let sfx = Game.engine.add.audio(Items.coin.music.get.name);
+            sfx.play();
             item.destroy();
             Game.engine.time.events.add(
                 Phaser.Timer.SECOND * 3,
@@ -27,13 +35,28 @@ const Items = {
                 {
                     character.currentType.velocity.left+=50;
                     character.currentType.velocity.right-=50;
-                    Items.coin.respawn();
+                    Items.coin.respawn(item);
                 }
             );
         },
-        respawn: function()
+        respawn: function(item)
         {
-            console.log('fuck');
+            let spawnedItem = Game.engine.add.sprite(
+                item.spawn.x,
+                item.spawn.y,
+                item.name
+            );
+            //reassign spawnpoint
+            spawnedItem.name=item.name;
+            spawnedItem.spawn={
+                x: item.spawn.x,
+                y: item.spawn.y 
+            }
+            //set physic
+            Game.engine.physics.enable(spawnedItem);
+            spawnedItem.body.enable=true;
+            Game.items[item.name].add(spawnedItem);
+            item.destroy();
         }
     },
 }

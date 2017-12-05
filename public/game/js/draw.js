@@ -62,7 +62,6 @@ function preload()
     // load all player spritesheet and music
     for(let playerType in Player)
     {
-        console.log(Player[playerType]);
         Game.engine.load.spritesheet(
             Player[playerType].spriteName,
             Player[playerType].picture.src,
@@ -96,6 +95,10 @@ function preload()
             Items[itemType].picture.src,
             Items[itemType].picture.width,
             Items[itemType].picture.height
+        );
+        Game.engine.load.audio(
+            Items[itemType].music.get.name,
+            Items[itemType].music.get.src
         );
     }
     // add promise make sure pictures loaded
@@ -150,6 +153,7 @@ function create()
             y: Game.players[Config.currentUserName].y
         }
     );
+    //Game.engine.time.events.loop(Phaser.Timer.SECOND*10,updatapla,this);
 }
 
 
