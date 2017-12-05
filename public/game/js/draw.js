@@ -150,6 +150,7 @@ function create()
             y: Game.players[Config.currentUserName].y
         }
     );
+    Game.engine.time.events.loop(Phaser.Timer.SECOND*10,updatapla,this);
 }
 
 
