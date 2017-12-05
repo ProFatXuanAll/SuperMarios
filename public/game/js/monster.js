@@ -1,6 +1,6 @@
 const Monster = {
     goomba:{
-        tileNumber: 42,
+        tileNumber: 87,
         spriteName: 'goomba',
         picture: {
             src: '/game/assets/monster/image/goomba.png',
@@ -44,47 +44,47 @@ const Monster = {
         },
         respawn: function(monster)
         {
-            let test = Game.engine.add.sprite(
+            let spawnedMonster = Game.engine.add.sprite(
                 monster.spawn.x,
                 monster.spawn.y,
                 monster.name
             );
 
-            test.animations.add(
+            spawnedMonster.animations.add(
                 'walk',
                 Monster[monster.name].animation.walk,
                 Monster[monster.name].animation.frame_rate,
                 true
             );
 
-            test.animations.add(
+            spawnedMonster.animations.add(
                 'die',
                 Monster[monster.name].animation.die,
                 Monster[monster.name].animation.frame_rate,
                 true
             );
 
-            test.animations.play('walk');
+            spawnedMonster.animations.play('walk');
 
             //reassign spawnpoint
-            test.name=monster.name;
-            test.spawn={
+            spawnedMonster.name=monster.name;
+            spawnedMonster.spawn={
                 x: monster.spawn.x,
                 y: monster.spawn.y 
             }
 
             //set physic
-            Game.engine.physics.enable(test);
-            test.body.enable=true;
-            test.body.velocity.x=Monster[monster.name].velocity.x;
-            test.body.gravity.y=Monster[monster.name].gravity.y;
-            test.body.bounce.x=1;
-            Game.monsters[monster.name].add(test);
+            Game.engine.physics.enable(spawnedMonster);
+            spawnedMonster.body.enable=true;
+            spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;
+            spawnedMonster.body.gravity.y=Monster[monster.name].gravity.y;
+            spawnedMonster.body.bounce.x=1;
+            Game.monsters[monster.name].add(spawnedMonster);
             monster.destroy();
         }
     },
     caveTurtle:{
-        tileNumber: 43,
+        tileNumber: 88,
         spriteName: 'caveTurtle',
         picture:{
             src: '/game/assets/monster/image/cave_turtle.png',
@@ -128,50 +128,49 @@ const Monster = {
             }
             else Player[character.key].respawn(character);
         },
-        respawn: function(monster)  //function(monster,monstertype)
-        {  
-            //add sprite and animation
-            let test = Game.engine.add.sprite(
+        respawn: function(monster)
+        {
+            let spawnedMonster = Game.engine.add.sprite(
                 monster.spawn.x,
                 monster.spawn.y,
-                'goomba'
+                monster.name
             );
 
-            test.animations.add(
+            spawnedMonster.animations.add(
                 'walk',
-                Monster['goomba'].animation.walk,
-                Monster['goomba'].animation.frame_rate,
+                Monster[monster.name].animation.walk,
+                Monster[monster.name].animation.frame_rate,
                 true
             );
 
-            test.animations.add(
+            spawnedMonster.animations.add(
                 'die',
-                Monster['goomba'].animation.die,
-                Monster['goomba'].animation.frame_rate,
+                Monster[monster.name].animation.die,
+                Monster[monster.name].animation.frame_rate,
                 true
             );
 
-            test.animations.play('walk');
+            spawnedMonster.animations.play('walk');
 
             //reassign spawnpoint
-            test.name='goomba';
-            test.spawn={
+            spawnedMonster.name=monster.name;
+            spawnedMonster.spawn={
                 x: monster.spawn.x,
                 y: monster.spawn.y 
             }
 
             //set physic
-            Game.engine.physics.enable(test);
-            test.body.enable=true;
-            test.body.velocity.x=Monster['goomba'].velocity.x;
-            test.body.gravity.y=Monster['goomba'].gravity.y;
-            test.body.bounce.x=1;
-            Game.monsters['goomba'].add(test);
+            Game.engine.physics.enable(spawnedMonster);
+            spawnedMonster.body.enable=true;
+            spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;
+            spawnedMonster.body.gravity.y=Monster[monster.name].gravity.y;
+            spawnedMonster.body.bounce.x=1;
+            Game.monsters[monster.name].add(spawnedMonster);
             monster.destroy();
         }
     },
     spikeTurtle:{
-        tileNumber: 41,
+        tileNumber: 86,
         spriteName: 'spikeTurtle',
         picture:{
             src: '/game/assets/monster/image/spike_turtle.png',
@@ -207,47 +206,47 @@ const Monster = {
         respawn: function(monster)  //function(monster,monstertype)
         {  
             //add sprite and animation
-            let test = Game.engine.add.sprite(
+            let spawnedMonster = Game.engine.add.sprite(
                 monster.spawn.x,
                 monster.spawn.y,
                 monster.name
             );
 
-            test.animations.add(
+            spawnedMonster.animations.add(
                 'walk',
                 Monster[monster.name].animation.walk,
                 Monster[monster.name].animation.frame_rate,
                 true
             );
 
-            test.animations.add(
+            spawnedMonster.animations.add(
                 'die',
                 Monster[monster.name].animation.die,
                 Monster[monster.name].animation.frame_rate,
                 true
             );
 
-            test.animations.play('walk');
+            spawnedMonster.animations.play('walk');
 
             //reassign spawnpoint
-            test.name=monster.name;
-            test.spawn={
+            spawnedMonster.name=monster.name;
+            spawnedMonster.spawn={
                 x: monster.spawn.x,
                 y: monster.spawn.y 
             }
 
             //set physic
-            Game.engine.physics.enable(test);
-            test.body.enable=true;
-            test.body.velocity.x=Monster[monster.name].velocity.x;
-            test.body.gravity.y=Monster[monster.name].gravity.y;
-            test.body.bounce.x=1;
-            Game.monsters[monster.name].add(test);
+            Game.engine.physics.enable(spawnedMonster);
+            spawnedMonster.body.enable=true;
+            spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;
+            spawnedMonster.body.gravity.y=Monster[monster.name].gravity.y;
+            spawnedMonster.body.bounce.x=1;
+            Game.monsters[monster.name].add(spawnedMonster);
             monster.destroy();
         }
     },
     ironFlower:{
-        tileNumber: 35,
+        tileNumber: 80,
         spriteName: 'ironFlower',
         picture:{
             src: '/game/assets/monster/image/iron_flower.png',
@@ -275,6 +274,46 @@ const Monster = {
         },
         overlap: function(character, monster){
             Player[character.key].respawn(character);
+        },
+        respawn: function(monster)
+        {
+            let spawnedMonster = Game.engine.add.sprite(
+                monster.spawn.x,
+                monster.spawn.y,
+                monster.name
+            );
+
+            spawnedMonster.animations.add(
+                'walk',
+                Monster[monster.name].animation.walk,
+                Monster[monster.name].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.add(
+                'die',
+                Monster[monster.name].animation.die,
+                Monster[monster.name].animation.frame_rate,
+                true
+            );
+
+            spawnedMonster.animations.play('walk');
+
+            //reassign spawnpoint
+            spawnedMonster.name=monster.name;
+            spawnedMonster.spawn={
+                x: monster.spawn.x,
+                y: monster.spawn.y 
+            }
+
+            //set physic
+            Game.engine.physics.enable(spawnedMonster);
+            spawnedMonster.body.enable=true;
+            spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;
+            spawnedMonster.body.gravity.y=Monster[monster.name].gravity.y;
+            spawnedMonster.body.bounce.x=1;
+            Game.monsters[monster.name].add(spawnedMonster);
+            monster.destroy();
         }
     },
 
