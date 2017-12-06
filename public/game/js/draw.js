@@ -143,8 +143,8 @@ function create()
         {
             name: Config.currentUserName,
             typeName: Player.mario.spriteName,
-            x: Game.players[Config.currentUserName].x,
-            y: Game.players[Config.currentUserName].y
+            x: Game.players[Config.currentUserName].character.x,
+            y: Game.players[Config.currentUserName].character.y
         }
     );
     

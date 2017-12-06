@@ -9,21 +9,30 @@ socket.on('player-join', function(newPlayerData){
         newPlayerData.x,
         newPlayerData.y
     )
+
+    socket.emit('player-join-succeeded',
+        {
+            requestName: newPlayerData.name,
+            data: {
+                name: Config.currentUserName,
+                typeName: Player.mario.spriteName,
+                x: Game.players[Config.currentUserName].character.x,
+                y: Game.players[Config.currentUserName].character.y
+            }
+        }
+    );
 });
 
 // server tell new player info of exist player(s)
 socket.on('player-join-succeeded', function(playerData){
     // need to decode because server encode to speed up
-    let playerList = JSON.parse(playerData.playerList);
     // create existed player(s)
-    for(playerName in playerList){
-        Game.players[playerName] = new PlayerSetup(
-            playerName,
-            Player[playerList[playerName].typeName],
-            playerList[playerName].x,
-            playerList[playerName].y
-        );
-    }
+    Game.players[playerData.name] = new PlayerSetup(
+        playerData.name,
+        Player[playerData.typeName],
+        playerData.x,
+        playerData.y
+    );
 });
 
 socket.on('monster-join', function(nameData){
@@ -82,19 +91,14 @@ socket.on('monster-join-succeeded', function(monsterData){
     {
         monsterData = JSON.parse(monsterData.monsterGroup);
         
-        console.log(monsterData);
-
-
         Game.monsters = {};
         for(let monsterType in monsterData)
         {
-            console.log('---------------'+monsterType+'-----------');
             Game.monsters[monsterType] = Game.engine.add.group();
             Game.monsters[monsterType].enableBody = true;
 
             monsterData[monsterType].forEach(function(monster)
             {
-                console.log(monster);
                 let spawnMonster = Game.engine.add.sprite(
                     monster.x,
                     monster.y,

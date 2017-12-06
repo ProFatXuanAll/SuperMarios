@@ -12,7 +12,7 @@ module.exports = function(server){
             // server tell existed player(s) info new of player
             socket.broadcast.emit('player-join', playerData);
             socket.username = playerData.name;
-            
+            /*
             let dataString = '{';
             for(let player in playerList){
                 if(dataString.length > 1)
@@ -20,16 +20,7 @@ module.exports = function(server){
                 dataString += `"${player}":${JSON.stringify(playerList[player].data)}`;
             }
             dataString+='}'
-
-            console.log(dataString);
-
-            // server tell new player info of exist player(s)
-            socket.emit('player-join-succeeded',
-                {
-                    // stringify to speed up pass data
-                    playerList: dataString
-                }
-            );
+            */
 
             // server store new player info
             playerList[playerData.name] = {
@@ -39,6 +30,15 @@ module.exports = function(server){
                 socket: socket
             };
         });
+        
+        // server tell new player info of exist player(s)
+        socket.on('player-join-succeeded', function(playerData){
+            playerList[playerData.requestName].socket.emit(
+                'player-join-succeeded',
+                playerData.data
+            );
+        });
+
         
         // new player tell server to get monster
         socket.on('monster-join', function(nameData){

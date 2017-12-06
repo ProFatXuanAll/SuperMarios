@@ -125,8 +125,6 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
     this.character.animations.add('idle', this.playerType.animation.idle, this.playerType.animation.frameRate, true);
     this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
     this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
-    this.x = x;
-    this.y = y;
     this.character.dieyet = false;
     this.name = Game.engine.add.text(
         x,
