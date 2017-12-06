@@ -145,11 +145,18 @@ socket.on('monster-join-succeeded', function(monsterData){
 });
 
 socket.on('move',function(datamove){
-    Game.players[datamove.name].cursor[datamove.move].isDown=true;
+
+    if(datamove.name in Game.players)
+    {
+        Game.players[datamove.name].cursor[datamove.move].isDown=true;
+    }
 });
 
 socket.on('stop',function(datamove){
-    Game.players[datamove.name].cursor[datamove.move].isDown=false;
+    if(datamove.name in Game.players)
+    {
+        Game.players[datamove.name].cursor[datamove.move].isDown=false;
+    }
 });
 
 // delete other players
