@@ -3,6 +3,7 @@ module.exports = function(server){
     const io = require('socket.io').listen(server);
 
     let playerList = {};
+    let superUser = null;
 
     io.on('connection', function(socket){
         console.log('----------------------no fuck----------------------');
@@ -43,28 +44,28 @@ module.exports = function(server){
         // new player tell server to get monster
         socket.on('monster-join', function(nameData){
             // find exist user to sync monster
-            let findOther = false;
-            for(let player in playerList){
-                if(player != nameData.name){
-                    playerList[player].socket.emit('monster-join', nameData);
-                    findOther = true;
-                    break;
-                }
+            if(superUser == null)
+            {
+               superUser = nameData.name;
+               socket.emit('monster-join-succeeded',
+                   {
+                       superUser: true
+                   }
+               );
             }
-           
-            if(!findOther) {
-                socket.emit('monster-join-succeeded',
-                    {
-                        findOther: false
-                    }
+            else{
+                playerList[superUser].socket.emit(
+                    'monster-join', 
+                    nameData
                 );
             }
+           
         });
 
         socket.on('monster-join-succeeded', function(monsterData){
             playerList[monsterData.requestName].socket.emit('monster-join-succeeded',
                 {
-                    findOther: true,
+                    superUser: false,
                     monsterGroup: monsterData.monsterGroup
                 }
             );
@@ -79,6 +80,21 @@ module.exports = function(server){
         });
 
         socket.on('disconnect',function(){
+            if(socket.username == superUser){
+                let findOther = false;
+                for(let player in playerList)
+                {
+                    if(player != superUser){
+                        findOther = true;
+                        superUser = player;
+                        break;
+                    }
+                }
+
+                if(!findOther)
+                    superUser = null;
+            }
+
             delete playerList[socket.username];
             socket.broadcast.emit('userdis',
                     {

@@ -64,8 +64,6 @@ socket.on('monster-join', function(nameData){
     }
     dataString += '}';
 
-    console.log(dataString);
-
     // return monster info
     socket.emit('monster-join-succeeded',
         {
@@ -80,7 +78,7 @@ socket.on('monster-join-succeeded', function(monsterData){
     console.log('monster-join-succeeded');
 
     // first one join game
-    if(!monsterData.findOther)
+    if(monsterData.superUser)
     {
         Game.monsters = new MonsterSetup(
             Game.map,
