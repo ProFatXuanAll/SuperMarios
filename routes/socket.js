@@ -6,24 +6,68 @@ module.exports = function(server){
 
     io.on('connection', function(socket){
         console.log('----------------------no fuck----------------------');
-
+        
         // new player tell server to join game
-        socket.on('join', function(playerData){
+        socket.on('player-join', function(playerData){
             // server tell existed player(s) info new of player
-            socket.broadcast.emit('join', playerData);
+            socket.broadcast.emit('player-join', playerData);
             socket.username = playerData.name;
+            
+            let dataString = '{';
+            for(let player in playerList){
+                if(dataString.length > 1)
+                    dataString += ',';
+                dataString += `"${player}":${JSON.stringify(playerList[player].data)}`;
+            }
+            dataString+='}'
+
+            console.log(dataString);
+
             // server tell new player info of exist player(s)
-            socket.emit('join-succeeded',
+            socket.emit('player-join-succeeded',
                 {
                     // stringify to speed up pass data
-                    playerList: JSON.stringify(playerList)
+                    playerList: dataString
                 }
             );
-            playerList[playerData.name] = playerData;
-            /*socket.broadcast.emit('newplayer',
-            {
-                name:data.name
-            });*/
+
+            // server store new player info
+            playerList[playerData.name] = {
+                // data about player
+                data: playerData,
+                // socket between server and player
+                socket: socket
+            };
+        });
+        
+        // new player tell server to get monster
+        socket.on('monster-join', function(nameData){
+            // find exist user to sync monster
+            let findOther = false;
+            for(let player in playerList){
+                if(player != nameData.name){
+                    playerList[player].socket.emit('monster-join', nameData);
+                    findOther = true;
+                    break;
+                }
+            }
+           
+            if(!findOther) {
+                socket.emit('monster-join-succeeded',
+                    {
+                        findOther: false
+                    }
+                );
+            }
+        });
+
+        socket.on('monster-join-succeeded', function(monsterData){
+            playerList[monsterData.requestName].socket.emit('monster-join-succeeded',
+                {
+                    findOther: true,
+                    monsterGroup: monsterData.monsterGroup
+                }
+            );
         });
 
         socket.on('move',function(datamove){
@@ -41,13 +85,7 @@ module.exports = function(server){
                         name:socket.username
                     });
         });
-
-        socket.on('monsterSpawn',function(monsterStat){
-            socket.broadcast.emit('monsterSpawn',monsterStat);
-        });
-
     });
 
     return io;
-
 };

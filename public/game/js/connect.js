@@ -1,7 +1,7 @@
 let socket = io();
 
 // server tell current player info of new player
-socket.on('join', function(newPlayerData){
+socket.on('player-join', function(newPlayerData){
     // create new player
     Game.players[newPlayerData.name] = new PlayerSetup(
         newPlayerData.name,
@@ -12,7 +12,7 @@ socket.on('join', function(newPlayerData){
 });
 
 // server tell new player info of exist player(s)
-socket.on('join-succeeded', function(playerData){
+socket.on('player-join-succeeded', function(playerData){
     // need to decode because server encode to speed up
     let playerList = JSON.parse(playerData.playerList);
     // create existed player(s)
@@ -26,6 +26,122 @@ socket.on('join-succeeded', function(playerData){
     }
 });
 
+socket.on('monster-join', function(nameData){
+
+    let dataString = '{';
+    for(let monsterType in Game.monsters)
+    {
+        if(dataString.length > 1)
+            dataString += ',';
+
+        dataString += `"${monsterType}":[`
+        
+        let children = Game.monsters[monsterType].children;
+        for(let i = 0; i < children.length; ++i)
+        {
+            if(i != 0)
+                dataString += ',';
+            dataString += '{'
+            dataString += '"x":'+children[i].position.x + ',';
+            dataString += '"y":'+children[i].position.y + ',';
+            dataString += '"vx":'+children[i].body.velocity.x + ',';
+            dataString += '"vy":'+children[i].body.velocity.y + ',';
+            dataString += '"sx":'+children[i].spawn.x + ',';
+            dataString += '"sy":'+children[i].spawn.y;
+            dataString += '}'
+        }
+
+        dataString += ']'
+    }
+    dataString += '}';
+
+    console.log(dataString);
+
+    // return monster info
+    socket.emit('monster-join-succeeded',
+        {
+            requestName: nameData.name,
+            monsterGroup: dataString
+        }
+    );
+});
+
+socket.on('monster-join-succeeded', function(monsterData){
+    // create monster
+    console.log('monster-join-succeeded');
+
+    // first one join game
+    if(!monsterData.findOther)
+    {
+        Game.monsters = new MonsterSetup(
+            Game.map,
+            Map.structure[0]
+        )
+    }
+    else
+    {
+        monsterData = JSON.parse(monsterData.monsterGroup);
+        
+        console.log(monsterData);
+
+
+        Game.monsters = {};
+        for(let monsterType in monsterData)
+        {
+            console.log('---------------'+monsterType+'-----------');
+            Game.monsters[monsterType] = Game.engine.add.group();
+            Game.monsters[monsterType].enableBody = true;
+
+            monsterData[monsterType].forEach(function(monster)
+            {
+                console.log(monster);
+                let spawnMonster = Game.engine.add.sprite(
+                    monster.x,
+                    monster.y,
+                    monsterType
+                );
+                
+                Game.engine.physics.enable(spawnMonster);
+                spawnMonster.body.enable = true;
+                spawnMonster.body.velocity.x = monster.vx;
+                spawnMonster.body.velocity.y = monster.vy;
+                
+                spawnMonster.name = monsterType;
+                spawnMonster.spawn = {
+                    x: monster.sx,
+                    y: monster.sy 
+                }
+
+                Game.monsters[monsterType].add(spawnMonster);
+            });
+
+            Game.monsters[monsterType].callAll(
+                'animations.add',
+                'animations',
+                'walk',
+                Monster[monsterType].animation.walk,
+                Monster[monsterType].animation.frame_rate,
+                true
+            )
+            
+            Game.monsters[monsterType].callAll(
+                'animations.add',
+                'animations',
+                'die',
+                Monster[monsterType].animation.die,
+                Monster[monsterType].animation.frame_rate,
+                true
+            );
+            
+            Game.monsters[monsterType].callAll('animations.play', 'animations', 'walk');
+            Game.monsters[monsterType].setAll('body.gravity.y', Monster[monsterType].gravity.y);
+            Game.monsters[monsterType].setAll('body.bounce.x', 1);
+        }
+    
+    }
+
+});
+
 socket.on('move',function(datamove){
     Game.players[datamove.name].cursor[datamove.move].isDown=true;
 });
@@ -33,16 +149,10 @@ socket.on('move',function(datamove){
 socket.on('stop',function(datamove){
     Game.players[datamove.name].cursor[datamove.move].isDown=false;
 });
+
 // delete other players
 socket.on('userdis',function(dele){
     Game.players[dele.name].character.destroy();
     Game.players[dele.name].name.destroy();
     delete Game.players[dele.name];
-});
-
-socket.on('monsterSpawn',function(monsterStat){
-    console.log(monsterStat.monsterType);
-    let x=10;
-    let y=10;
-    Monster[monsterStat.monsterType].spawnFromServer(monsterStat);
 });

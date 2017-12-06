@@ -120,12 +120,6 @@ function create()
     // start loop map music
     Game.map.music.loopFull();
 
-    // create monster
-    Game.monsters = new MonsterSetup(
-        Game.map,
-        Map.structure[0]
-    );
-
     // create item
     Game.items = new ItemSetup(
         Game.map,
@@ -145,7 +139,7 @@ function create()
 
     // new player tell server to join game
     socket.emit(
-        'join', 
+        'player-join', 
         {
             name: Config.currentUserName,
             typeName: Player.mario.spriteName,
@@ -153,7 +147,18 @@ function create()
             y: Game.players[Config.currentUserName].y
         }
     );
-    //Game.engine.time.events.loop(Phaser.Timer.SECOND*10,updatapla,this);
+    
+    // create monster
+    /*Game.monsters = new MonsterSetup(
+        Game.map,
+        Map.structure[0]
+    );*/
+    socket.emit(
+        'monster-join',
+        {
+            name: Config.currentUserName
+        }
+    );
 }
 
 
