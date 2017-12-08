@@ -148,20 +148,20 @@ socket.on('move',function(datamove){
 
     if(datamove.name in Game.players)
     {
-        Game.players[datamove.name].cursor[datamove.move].isDown=true;
+        Game.players[datamove.name].character.cursor[datamove.move].isDown=true;
     }
 });
 
 socket.on('stop',function(datamove){
     if(datamove.name in Game.players)
     {
-        Game.players[datamove.name].cursor[datamove.move].isDown=false;
+        Game.players[datamove.name].character.cursor[datamove.move].isDown=false;
     }
 });
 
 // delete other players
 socket.on('userdis',function(dele){
+    Game.players[dele.name].character.name.destroy();
     Game.players[dele.name].character.destroy();
-    Game.players[dele.name].name.destroy();
     delete Game.players[dele.name];
 });
