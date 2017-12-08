@@ -4,11 +4,13 @@
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
+/*
 //set service worker
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/service-worker.js')
     .then(function(){ console.log('Service Worker registed.'); })
 }
+*/
 
 (function($) {
 
