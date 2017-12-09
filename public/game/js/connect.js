@@ -24,7 +24,7 @@ socket.on('toExistPlayer', function(newPlayerData){
 });
 
 // server tell new player info of exist player(s)
-socket.on('toNewplayer', function(playerData){
+socket.on('toNewPlayer', function(playerData){
     // need to decode because server encode to speed up
     // create existed player(s)
     Game.players[playerData.name] = new PlayerSetup(
