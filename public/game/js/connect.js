@@ -3,12 +3,14 @@ let socket = io();
 // server tell current player info of new player
 socket.on('toExistPlayer', function(newPlayerData){
     // create new player
-    Game.players[newPlayerData.name] = new PlayerSetup(
-        newPlayerData.name,
-        Player[newPlayerData.typeName],
-        newPlayerData.x,
-        newPlayerData.y
-    )
+    Game.players.hash[newPlayerData.name] = Game.players.others.add(
+        new PlayerSetup(
+            newPlayerData.name,
+            Player[newPlayerData.typeName],
+            newPlayerData.x,
+            newPlayerData.y
+        )
+    );
 
     socket.emit('toNewPlayer',
         {
@@ -16,8 +18,8 @@ socket.on('toExistPlayer', function(newPlayerData){
             data: {
                 name: Config.currentUserName,
                 typeName: Player.mario.spriteName,
-                x: Game.players[Config.currentUserName].character.x,
-                y: Game.players[Config.currentUserName].character.y
+                x: Game.players.current.position.x,
+                y: Game.players.current.position.y
             }
         }
     );
@@ -27,12 +29,28 @@ socket.on('toExistPlayer', function(newPlayerData){
 socket.on('toNewPlayer', function(playerData){
     // need to decode because server encode to speed up
     // create existed player(s)
-    Game.players[playerData.name] = new PlayerSetup(
-        playerData.name,
-        Player[playerData.typeName],
-        playerData.x,
-        playerData.y
+    Game.players.hash[playerData.name] = Game.players.others.add(
+        new PlayerSetup(
+            playerData.name,
+            Player[playerData.typeName],
+            playerData.x,
+            playerData.y
+        )
     );
+    /* need vx vy ????????????????????????????????????????? */
+});
+
+socket.on('spawnMonster', function(monsterData){
+    Game.monsters = {};
+    if (monsterData.superUser)
+    {
+        MonsterSetup(Map.structure[0]);
+    }
+    else
+    {
+        monsterData = JSON.parse(monsterData.monsterGroup);
+        MonsterSetup(Map.structure[0], monsterData);
+    }
 });
 
 socket.on('getMonsterInfo', function(nameData){
@@ -73,36 +91,24 @@ socket.on('getMonsterInfo', function(nameData){
     );
 });
 
-socket.on('spawnMonsterServer', function(monsterData){
-        Game.monsters ={};
-        MonsterSetup(Game.map,Map.structure[0]);
-
-});
-
-socket.on('spawnMonsterClient', function(monsterData){
-        Game.monsters = {};
-        monsterSetupClient(monsterData);
-
-});
-
 socket.on('move',function(datamove){
 
-    if(datamove.name in Game.players)
+    if(datamove.name in Game.players.hash)
     {
-        Game.players[datamove.name].character.cursor[datamove.move].isDown=true;
+        Game.players.hash[datamove.name].cursor[datamove.move].isDown = true;
     }
 });
 
 socket.on('stop',function(datamove){
-    if(datamove.name in Game.players)
+    if(datamove.name in Game.players.hash)
     {
-        Game.players[datamove.name].character.cursor[datamove.move].isDown=false;
+        Game.players.hash[datamove.name].cursor[datamove.move].isDown = false;
     }
 });
 
 // delete other players
 socket.on('playerDelete',function(dele){
-    Game.players[dele.name].character.name.destroy();
-    Game.players[dele.name].character.destroy();
-    delete Game.players[dele.name];
+    Game.players.hash[dele.name].name.destroy();
+    Game.players.hash[dele.name].destroy();
+    delete Game.players.hash[dele.name];
 });

@@ -319,87 +319,80 @@ const Monster = {
 
 }
 
-function MonsterSetup(map, structure)
+function MonsterSetup(structure=null, monsterData=null)
 {
     for(let monsterType in Monster)
     {
         Game.monsters[monsterType] = Game.engine.add.group();
         Game.monsters[monsterType].enableBody = true;
-
-        map.tileMap.createFromTiles(
+        
+        // create monster from map
+        Game.map.tileMap.createFromTiles(
             Monster[monsterType].tileNumber,
             null,
             monsterType,
             structure.layer.monster,
             Game.monsters[monsterType]
         );
-
+        
         for(let i = 0; i < Game.monsters[monsterType].length; ++i)
         {
-            let child=Game.monsters[monsterType].children[i];
-            child.name=monsterType;
-            child.spawn={
-                x: child.position.x,
-                y: child.position.y
+            let child = Game.monsters[monsterType].children[i];
+            child.name = monsterType;
+            if(monsterData)
+            {
+                child.position.x = monsterData[monsterType][i].x;
+                child.position.y = monsterData[monsterType][i].y;
+                child.body.velocity.x = monsterData[monsterType][i].vx;
+                child.body.velocity.y = monsterData[monsterType][i].vy;
+                child.spawn = {
+                    x: monsterData[monsterType][i].sx,
+                    y: monsterData[monsterType][i].sy
+                };
+            }
+            else
+            {
+                child.body.velocity.x = Monster[monsterType].velocity.x;
+                child.body.velocity.y = Monster[monsterType].velocity.y;
+                child.spawn = {
+                    x: child.position.x,
+                    y: child.position.y
+                };
             }
         }
-        monsterInit(monsterType);
+        
+        Game.monsters[monsterType].callAll(
+            'animations.add',
+            'animations',
+            'walk',
+            Monster[monsterType].animation.walk,
+            Monster[monsterType].animation.frame_rate,
+            true
+        );
+
+        Game.monsters[monsterType].callAll(
+            'animations.add',
+            'animations',
+            'die',
+            Monster[monsterType].animation.die,
+            Monster[monsterType].animation.frame_rate,
+            true
+        );
+        
+        Game.monsters[monsterType].callAll(
+            'animations.play',
+            'animations',
+            'walk'
+        );
+        
+        Game.monsters[monsterType].setAll(
+            'body.gravity.y',
+            Monster[monsterType].gravity.y
+        );
+
+        Game.monsters[monsterType].setAll(
+            'body.bounce.x',
+            1
+        );
     }
-}
-function monsterSetupClient(monsterData)
-{
-    monsterData = JSON.parse(monsterData.monsterGroup);
-    for(let monsterType in monsterData)
-    {
-        Game.monsters[monsterType] = Game.engine.add.group();
-        Game.monsters[monsterType].enableBody = true;
-
-        monsterData[monsterType].forEach(function(monster)
-        {
-            let spawnMonster = Game.engine.add.sprite(
-                monster.x,
-                monster.y,
-                monsterType
-            );
-            
-            Game.engine.physics.enable(spawnMonster);
-            spawnMonster.body.enable = true;
-            spawnMonster.body.velocity.x = monster.vx;
-            spawnMonster.body.velocity.y = monster.vy;
-            
-            spawnMonster.name = monsterType;
-            spawnMonster.spawn = {
-                x: monster.sx,
-                y: monster.sy 
-            }
-            Game.monsters[monsterType].add(spawnMonster);
-        });
-        monsterInit(monsterType);
-    }
-}
-function monsterInit(monsterType)
-{
-
-    Game.monsters[monsterType].callAll(
-        'animations.add',
-        'animations',
-        'walk',
-        Monster[monsterType].animation.walk,
-        Monster[monsterType].animation.frame_rate,
-        true
-    );
-
-    Game.monsters[monsterType].callAll(
-        'animations.add',
-        'animations',
-        'die',
-        Monster[monsterType].animation.die,
-        Monster[monsterType].animation.frame_rate,
-        true
-    );
-    
-    Game.monsters[monsterType].callAll('animations.play', 'animations', 'walk');
-    Game.monsters[monsterType].setAll('body.velocity.x', Monster[monsterType].velocity.x);
-    Game.monsters[monsterType].setAll('body.gravity.y', Monster[monsterType].gravity.y);
-    Game.monsters[monsterType].setAll('body.bounce.x', 1);
 }

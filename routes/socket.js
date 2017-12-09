@@ -13,15 +13,6 @@ module.exports = function(server){
             // server tell existed player(s) info new of player
             socket.broadcast.emit('toExistPlayer', playerData);
             socket.username = playerData.name;
-            /*
-            let dataString = '{';
-            for(let player in playerList){
-                if(dataString.length > 1)
-                    dataString += ',';
-                dataString += `"${player}":${JSON.stringify(playerList[player].data)}`;
-            }
-            dataString+='}'
-            */
 
             // server store new player info
             playerList[playerData.name] = {
@@ -39,7 +30,6 @@ module.exports = function(server){
                 playerData.data
             );
         });
-
         
         // new player tell server to get monster
         socket.on('requestMonster', function(nameData){
@@ -47,9 +37,15 @@ module.exports = function(server){
             if(superUser == null)
             {
                superUser = nameData.name;
-               socket.emit('spawnMonsterServer');
+               socket.emit(
+                   'spawnMonster',
+                   {
+                       superUser: true
+                   }
+               );
             }
-            else{
+            else
+            {
                 playerList[superUser].socket.emit(
                     'getMonsterInfo', 
                     nameData
@@ -59,8 +55,9 @@ module.exports = function(server){
         });
 
         socket.on('parseMonsterInfo', function(monsterData){
-            playerList[monsterData.requestName].socket.emit('spawnMonsterClient',
+            playerList[monsterData.requestName].socket.emit('spawnMonster',
                 {
+                    superUser: false,
                     monsterGroup: monsterData.monsterGroup
                 }
             );
@@ -74,12 +71,14 @@ module.exports = function(server){
             socket.broadcast.emit('stop',datamove);
         });
 
-        socket.on('disconnect',function(){
-            if(socket.username == superUser){
+        socket.on('disconnect', function(){
+            if(socket.username == superUser)
+            {
                 let findOther = false;
                 for(let player in playerList)
                 {
-                    if(player != superUser){
+                    if(player != superUser)
+                    {
                         findOther = true;
                         superUser = player;
                         break;
