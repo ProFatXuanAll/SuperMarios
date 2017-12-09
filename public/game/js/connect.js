@@ -1,7 +1,7 @@
 let socket = io();
 
 // server tell current player info of new player
-socket.on('player-join', function(newPlayerData){
+socket.on('toExistPlayer', function(newPlayerData){
     // create new player
     Game.players[newPlayerData.name] = new PlayerSetup(
         newPlayerData.name,
@@ -10,7 +10,7 @@ socket.on('player-join', function(newPlayerData){
         newPlayerData.y
     )
 
-    socket.emit('player-join-succeeded',
+    socket.emit('toNewPlayer',
         {
             requestName: newPlayerData.name,
             data: {
@@ -24,7 +24,7 @@ socket.on('player-join', function(newPlayerData){
 });
 
 // server tell new player info of exist player(s)
-socket.on('player-join-succeeded', function(playerData){
+socket.on('toNewplayer', function(playerData){
     // need to decode because server encode to speed up
     // create existed player(s)
     Game.players[playerData.name] = new PlayerSetup(
@@ -35,7 +35,7 @@ socket.on('player-join-succeeded', function(playerData){
     );
 });
 
-socket.on('monster-join', function(nameData){
+socket.on('getMonsterInfo', function(nameData){
 
     let dataString = '{';
     for(let monsterType in Game.monsters)
@@ -65,7 +65,7 @@ socket.on('monster-join', function(nameData){
     dataString += '}';
 
     // return monster info
-    socket.emit('monster-join-succeeded',
+    socket.emit('parseMonsterInfo',
         {
             requestName: nameData.name,
             monsterGroup: dataString
@@ -73,20 +73,15 @@ socket.on('monster-join', function(nameData){
     );
 });
 
-socket.on('monster-join-succeeded', function(monsterData){
-    // create monster
-    console.log('monster-join-succeeded');
-    // first one join game
-    if(monsterData.superUser)
-    {
+socket.on('spawnMonsterServer', function(monsterData){
         Game.monsters ={};
         MonsterSetup(Game.map,Map.structure[0]);
-    }
-    else
-    {
+
+});
+
+socket.on('spawnMonsterClient', function(monsterData){
         Game.monsters = {};
         monsterSetupClient(monsterData);
-    }
 
 });
 
@@ -106,7 +101,7 @@ socket.on('stop',function(datamove){
 });
 
 // delete other players
-socket.on('userdis',function(dele){
+socket.on('playerDelete',function(dele){
     Game.players[dele.name].character.name.destroy();
     Game.players[dele.name].character.destroy();
     delete Game.players[dele.name];
