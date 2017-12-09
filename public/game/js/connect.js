@@ -1,7 +1,7 @@
 let socket = io();
 
 // server tell current player info of new player
-socket.on('player-join', function(newPlayerData){
+socket.on('toExistPlayer', function(newPlayerData){
     // create new player
     Game.players[newPlayerData.name] = new PlayerSetup(
         newPlayerData.name,
@@ -10,7 +10,7 @@ socket.on('player-join', function(newPlayerData){
         newPlayerData.y
     )
 
-    socket.emit('player-join-succeeded',
+    socket.emit('toNewPlayer',
         {
             requestName: newPlayerData.name,
             data: {
@@ -24,7 +24,7 @@ socket.on('player-join', function(newPlayerData){
 });
 
 // server tell new player info of exist player(s)
-socket.on('player-join-succeeded', function(playerData){
+socket.on('toNewPlayer', function(playerData){
     // need to decode because server encode to speed up
     // create existed player(s)
     Game.players[playerData.name] = new PlayerSetup(
@@ -35,7 +35,7 @@ socket.on('player-join-succeeded', function(playerData){
     );
 });
 
-socket.on('monster-join', function(nameData){
+socket.on('getMonsterInfo', function(nameData){
 
     let dataString = '{';
     for(let monsterType in Game.monsters)
@@ -65,7 +65,7 @@ socket.on('monster-join', function(nameData){
     dataString += '}';
 
     // return monster info
-    socket.emit('monster-join-succeeded',
+    socket.emit('parseMonsterInfo',
         {
             requestName: nameData.name,
             monsterGroup: dataString
@@ -73,74 +73,15 @@ socket.on('monster-join', function(nameData){
     );
 });
 
-socket.on('monster-join-succeeded', function(monsterData){
-    // create monster
-    console.log('monster-join-succeeded');
+socket.on('spawnMonsterServer', function(monsterData){
+        Game.monsters ={};
+        MonsterSetup(Game.map,Map.structure[0]);
 
-    // first one join game
-    if(monsterData.superUser)
-    {
-        Game.monsters = new MonsterSetup(
-            Game.map,
-            Map.structure[0]
-        )
-    }
-    else
-    {
-        monsterData = JSON.parse(monsterData.monsterGroup);
-        
+});
+
+socket.on('spawnMonsterClient', function(monsterData){
         Game.monsters = {};
-        for(let monsterType in monsterData)
-        {
-            Game.monsters[monsterType] = Game.engine.add.group();
-            Game.monsters[monsterType].enableBody = true;
-
-            monsterData[monsterType].forEach(function(monster)
-            {
-                let spawnMonster = Game.engine.add.sprite(
-                    monster.x,
-                    monster.y,
-                    monsterType
-                );
-                
-                Game.engine.physics.enable(spawnMonster);
-                spawnMonster.body.enable = true;
-                spawnMonster.body.velocity.x = monster.vx;
-                spawnMonster.body.velocity.y = monster.vy;
-                
-                spawnMonster.name = monsterType;
-                spawnMonster.spawn = {
-                    x: monster.sx,
-                    y: monster.sy 
-                }
-
-                Game.monsters[monsterType].add(spawnMonster);
-            });
-
-            Game.monsters[monsterType].callAll(
-                'animations.add',
-                'animations',
-                'walk',
-                Monster[monsterType].animation.walk,
-                Monster[monsterType].animation.frame_rate,
-                true
-            )
-            
-            Game.monsters[monsterType].callAll(
-                'animations.add',
-                'animations',
-                'die',
-                Monster[monsterType].animation.die,
-                Monster[monsterType].animation.frame_rate,
-                true
-            );
-            
-            Game.monsters[monsterType].callAll('animations.play', 'animations', 'walk');
-            Game.monsters[monsterType].setAll('body.gravity.y', Monster[monsterType].gravity.y);
-            Game.monsters[monsterType].setAll('body.bounce.x', 1);
-        }
-    
-    }
+        monsterSetupClient(monsterData);
 
 });
 
@@ -148,20 +89,20 @@ socket.on('move',function(datamove){
 
     if(datamove.name in Game.players)
     {
-        Game.players[datamove.name].cursor[datamove.move].isDown=true;
+        Game.players[datamove.name].character.cursor[datamove.move].isDown=true;
     }
 });
 
 socket.on('stop',function(datamove){
     if(datamove.name in Game.players)
     {
-        Game.players[datamove.name].cursor[datamove.move].isDown=false;
+        Game.players[datamove.name].character.cursor[datamove.move].isDown=false;
     }
 });
 
 // delete other players
-socket.on('userdis',function(dele){
+socket.on('playerDelete',function(dele){
+    Game.players[dele.name].character.name.destroy();
     Game.players[dele.name].character.destroy();
-    Game.players[dele.name].name.destroy();
     delete Game.players[dele.name];
 });

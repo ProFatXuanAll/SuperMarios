@@ -117,9 +117,6 @@ function create()
         Map.music[2]
     );
 
-    // start loop map music
-    Game.map.music.loopFull();
-
     // create item
     Game.items = new ItemSetup(
         Game.map,
@@ -136,10 +133,9 @@ function create()
         Map.structure[0].start[0].y,
         true
     );
-
     // new player tell server to join game
     socket.emit(
-        'player-join', 
+        'join', 
         {
             name: Config.currentUserName,
             typeName: Player.mario.spriteName,
@@ -148,13 +144,8 @@ function create()
         }
     );
     
-    // create monster
-    /*Game.monsters = new MonsterSetup(
-        Game.map,
-        Map.structure[0]
-    );*/
     socket.emit(
-        'monster-join',
+        'requestMonster',
         {
             name: Config.currentUserName
         }
@@ -225,7 +216,7 @@ function update()
         }
 
         // set each players' title on head
-        let name = Game.players[player].name;
+        let name = Game.players[player].character.name;
         name.x = Math.floor(character.x);
         name.y = Math.floor(character.y-character.height/3);
 
@@ -238,8 +229,7 @@ function update()
     for(let player in Game.players)
     {
         let character = Game.players[player].character;
-        let cursor = Game.players[player].cursor;
-        let action = Game.players[player].action;
+        let cursor = Game.players[player].character.cursor;
         let velocity = character.body.velocity;
         let currentType = character.currentType;
 
@@ -277,59 +267,61 @@ function update()
     }
 
     // current player key press and release event
-    // press up
-    if(Game.players[Config.currentUserName].cursor.up.isDown && Game.players[Config.currentUserName].ispressed.up == false)
+    let currentPlayerCursor=Game.players[Config.currentUserName].character.cursor;
+    let currentPlayerIspressed=Game.players[Config.currentUserName].character.ispressed;
+
+    if(currentPlayerCursor.up.isDown &&  currentPlayerIspressed.up == false)
     {
         socket.emit('move',{
             name: Config.currentUserName,
             move:'up'
         });
-        Game.players[Config.currentUserName].ispressed.up = true;
+         currentPlayerIspressed.up = true;
     }
     // release up
-    if(!Game.players[Config.currentUserName].cursor.up.isDown && Game.players[Config.currentUserName].ispressed.up == true)
+    if(!currentPlayerCursor.up.isDown &&  currentPlayerIspressed.up == true)
     {
         socket.emit('stop',{
             name: Config.currentUserName,
             move:'up'
         });
-        Game.players[Config.currentUserName].ispressed.up = false;
+         currentPlayerIspressed.up = false;
     }
     // press left
-    if(Game.players[Config.currentUserName].cursor.left.isDown && Game.players[Config.currentUserName].ispressed.left == false)
+    if(currentPlayerCursor.left.isDown &&  currentPlayerIspressed.left == false)
     {
         socket.emit('move',{
             name: Config.currentUserName,
             move:'left'
         });
-        Game.players[Config.currentUserName].ispressed.left = true;
+         currentPlayerIspressed.left = true;
     }
     // release left
-    if(!Game.players[Config.currentUserName].cursor.left.isDown && Game.players[Config.currentUserName].ispressed.left == true)
+    if(!currentPlayerCursor.left.isDown &&  currentPlayerIspressed.left == true)
     {
         socket.emit('stop',{
             name: Config.currentUserName,
             move:'left'
         });
-        Game.players[Config.currentUserName].ispressed.left = false;
+         currentPlayerIspressed.left = false;
     }
     // press right
-    if(Game.players[Config.currentUserName].cursor.right.isDown && Game.players[Config.currentUserName].ispressed.right == false)
+    if(currentPlayerCursor.right.isDown &&  currentPlayerIspressed.right == false)
     {
         socket.emit('move',{
             name: Config.currentUserName,
             move:'right'
         });
-        Game.players[Config.currentUserName].ispressed.right = true;
+         currentPlayerIspressed.right = true;
     }
     // release right
-    if(!Game.players[Config.currentUserName].cursor.right.isDown && Game.players[Config.currentUserName].ispressed.right == true)
+    if(!currentPlayerCursor.right.isDown &&  currentPlayerIspressed.right == true)
     {
         socket.emit('stop',{
             name: Config.currentUserName,
             move:'right'
         });
-        Game.players[Config.currentUserName].ispressed.right = false;
+         currentPlayerIspressed.right = false;
     }
 }
 

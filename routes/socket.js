@@ -9,9 +9,9 @@ module.exports = function(server){
         console.log('----------------------no fuck----------------------');
         
         // new player tell server to join game
-        socket.on('player-join', function(playerData){
+        socket.on('join', function(playerData){
             // server tell existed player(s) info new of player
-            socket.broadcast.emit('player-join', playerData);
+            socket.broadcast.emit('toExistPlayer', playerData);
             socket.username = playerData.name;
             /*
             let dataString = '{';
@@ -33,39 +33,34 @@ module.exports = function(server){
         });
         
         // server tell new player info of exist player(s)
-        socket.on('player-join-succeeded', function(playerData){
+        socket.on('toNewPlayer', function(playerData){
             playerList[playerData.requestName].socket.emit(
-                'player-join-succeeded',
+                'toNewPlayer',
                 playerData.data
             );
         });
 
         
         // new player tell server to get monster
-        socket.on('monster-join', function(nameData){
+        socket.on('requestMonster', function(nameData){
             // find exist user to sync monster
             if(superUser == null)
             {
                superUser = nameData.name;
-               socket.emit('monster-join-succeeded',
-                   {
-                       superUser: true
-                   }
-               );
+               socket.emit('spawnMonsterServer');
             }
             else{
                 playerList[superUser].socket.emit(
-                    'monster-join', 
+                    'getMonsterInfo', 
                     nameData
                 );
             }
            
         });
 
-        socket.on('monster-join-succeeded', function(monsterData){
-            playerList[monsterData.requestName].socket.emit('monster-join-succeeded',
+        socket.on('parseMonsterInfo', function(monsterData){
+            playerList[monsterData.requestName].socket.emit('spawnMonsterClient',
                 {
-                    superUser: false,
                     monsterGroup: monsterData.monsterGroup
                 }
             );
@@ -96,7 +91,7 @@ module.exports = function(server){
             }
 
             delete playerList[socket.username];
-            socket.broadcast.emit('userdis',
+            socket.broadcast.emit('playerDelete',
                     {
                         name:socket.username
                     });

@@ -175,6 +175,9 @@ function MapSetup(structure, tileset, background, music)
     //add backgroundmusic
     this.music = Game.engine.add.audio(music.name);
 
+    // start loop map music
+    this.music.loopFull();
+
     //resize game window when initialize the game
     resizeGameWindow();
 }

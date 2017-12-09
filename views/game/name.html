@@ -1,0 +1,28 @@
+{% extends "game/base.html" %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block content %}
+<div class="box">
+    <form method="POST" action="">
+        <h2><b>Your Name?</b></h2>
+        <input type="text" id="account" class="inputbox" name="account" placeholder="Username"><br>
+        <input type="submit" class="btn" value="Login">
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function(){
+    $("form").submit(function(e){
+        if($("#account").val() == ""){
+            e.preventDefault();
+            window.alert("Please enter your user name.");
+            return false;
+        };
+    });
+})
+</script>
+{% endblock %}

@@ -1,5 +1,5 @@
-const config = require('./config');
-const model = require('./models/game_model');
+const config = require('../../config');
+const model = require('../game_model');
 const mongoose = require('mongoose');
 
 const url = `mongodb://${config.mongo.user}:${config.mongo.password}@localhost:27017/${config.mongo.dbname}`

@@ -19,13 +19,6 @@ const Player = {
             die: [ 8 ],
             frameRate: 10
         },
-        velocity: {
-            left: -200,
-            right: 200,
-            up: -600,
-            idle: 0
-        },
-        gravity: 20,
         width: 32,
         height: 56,
         ispressed: {
@@ -81,24 +74,20 @@ const Player = {
 
 function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
 {
-    function SyncCursor()
-    {
-        this.up = {isDown: false};
-        this.down = {isDown: false};
-        this.left = {isDown: false};
-        this.right = {isDown: false};
-    }
-
-    this.playerType = playerType;
+    //set up player type 
+    // the ultimate goal is to define things inside character and make it become a group
     
-    this.ispressed = playerType.ispressed;
-    
+    //add character sprite
     this.character = Game.engine.add.sprite(
         x,
         y,
-        this.playerType.spriteName
+        playerType.spriteName
     );
 
+    //test whether player is pressed or not (for socket.io)
+    this.character.ispressed = playerType.ispressed;
+
+    //player's initial velocity, must be initial inside or other will get its reference
     this.character.currentType = {
         velocity: {
             left: -200,
@@ -110,30 +99,38 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
     };
 
     if(controlable) {
-        this.cursor = Game.engine.input.keyboard.createCursorKeys();
+        this.character.cursor = Game.engine.input.keyboard.createCursorKeys();
         Game.engine.camera.follow(this.character);
     }
     else {
-        this.cursor = new SyncCursor();
+        this.character.cursor = new SyncCursor();
+    }
+
+    function SyncCursor()
+    {
+        this.up = {isDown: false};
+        this.down = {isDown: false};
+        this.left = {isDown: false};
+        this.right = {isDown: false};
     }
 
     Game.engine.physics.enable(this.character);
-
     this.character.body.collideWorldBounds = false;
     // set up animations by Phaser engine
-    this.character.animations.add('left', this.playerType.animation.left, this.playerType.animation.frameRate, true);
-    this.character.animations.add('idle', this.playerType.animation.idle, this.playerType.animation.frameRate, true);
-    this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
-    this.character.animations.add('right', this.playerType.animation.right, this.playerType.animation.frameRate, true);
+    this.character.animations.add('left', playerType.animation.left, playerType.animation.frameRate, true);
+    this.character.animations.add('idle', playerType.animation.idle, playerType.animation.frameRate, true);
+    this.character.animations.add('right', playerType.animation.right, playerType.animation.frameRate, true);
+    this.character.animations.add('right', playerType.animation.right, playerType.animation.frameRate, true);
     this.character.dieyet = false;
-    this.name = Game.engine.add.text(
+
+    this.character.sound = {
+        die: Game.engine.add.audio(playerType.music.die.name)
+    };
+    this.character.name= Game.engine.add.text(
         x,
         y,
         playerName,
         Config.font.Arial
     );
-
-    this.character.sound = {
-        die: Game.engine.add.audio(playerType.music.die.name)
-    };
+    this.name =playerName;
 }
