@@ -144,11 +144,6 @@ function create()
         }
     );
     
-    // create monster
-    /*Game.monsters = new MonsterSetup(
-        Game.map,
-        Map.structure[0]
-    );*/
     socket.emit(
         'monster-join',
         {

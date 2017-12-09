@@ -76,70 +76,16 @@ socket.on('monster-join', function(nameData){
 socket.on('monster-join-succeeded', function(monsterData){
     // create monster
     console.log('monster-join-succeeded');
-
     // first one join game
     if(monsterData.superUser)
     {
-        Game.monsters = new MonsterSetup(
-            Game.map,
-            Map.structure[0]
-        )
+        Game.monsters ={};
+        MonsterSetup(Game.map,Map.structure[0]);
     }
     else
     {
-        monsterData = JSON.parse(monsterData.monsterGroup);
-        
         Game.monsters = {};
-        for(let monsterType in monsterData)
-        {
-            Game.monsters[monsterType] = Game.engine.add.group();
-            Game.monsters[monsterType].enableBody = true;
-
-            monsterData[monsterType].forEach(function(monster)
-            {
-                let spawnMonster = Game.engine.add.sprite(
-                    monster.x,
-                    monster.y,
-                    monsterType
-                );
-                
-                Game.engine.physics.enable(spawnMonster);
-                spawnMonster.body.enable = true;
-                spawnMonster.body.velocity.x = monster.vx;
-                spawnMonster.body.velocity.y = monster.vy;
-                
-                spawnMonster.name = monsterType;
-                spawnMonster.spawn = {
-                    x: monster.sx,
-                    y: monster.sy 
-                }
-
-                Game.monsters[monsterType].add(spawnMonster);
-            });
-
-            Game.monsters[monsterType].callAll(
-                'animations.add',
-                'animations',
-                'walk',
-                Monster[monsterType].animation.walk,
-                Monster[monsterType].animation.frame_rate,
-                true
-            )
-            
-            Game.monsters[monsterType].callAll(
-                'animations.add',
-                'animations',
-                'die',
-                Monster[monsterType].animation.die,
-                Monster[monsterType].animation.frame_rate,
-                true
-            );
-            
-            Game.monsters[monsterType].callAll('animations.play', 'animations', 'walk');
-            Game.monsters[monsterType].setAll('body.gravity.y', Monster[monsterType].gravity.y);
-            Game.monsters[monsterType].setAll('body.bounce.x', 1);
-        }
-    
+        monsterSetupClient(monsterData);
     }
 
 });

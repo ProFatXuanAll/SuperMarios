@@ -95,6 +95,7 @@ module.exports = function(server){
                     superUser = null;
             }
 
+
             delete playerList[socket.username];
             socket.broadcast.emit('userdis',
                     {
