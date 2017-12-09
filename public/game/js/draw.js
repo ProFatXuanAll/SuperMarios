@@ -135,7 +135,7 @@ function create()
     );
     // new player tell server to join game
     socket.emit(
-        'player-join', 
+        'Join', 
         {
             name: Config.currentUserName,
             typeName: Player.mario.spriteName,
@@ -145,7 +145,7 @@ function create()
     );
     
     socket.emit(
-        'monster-join',
+        'requestMonster',
         {
             name: Config.currentUserName
         }
