@@ -24,7 +24,7 @@ router.get('/name', UrlSetting,function(req,res,next){
 router.post('/name', UrlSetting,function(req,res,next){
     var sess = req.session;
     sess.userName = req.body.account;
-    res.redirect('/game');
+    res.redirect('/game');	
 });
     
 router.get('/pedia', UrlSetting, function(req, res, next) {

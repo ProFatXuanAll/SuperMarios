@@ -29,7 +29,7 @@ const Monster = {
         overlap: function(character, monster) {
             if(character.body.touching.down && !character.body.touching.up)
             {
-                socket.emit('monsterdead',{
+                socket.emit('monsterDead',{
                     kind:monster.name,
                     id:monster.id
                 });
@@ -47,44 +47,15 @@ const Monster = {
             else if(character==Game.players.current) Player[character.key].respawn(character);
         },
         respawn: function(monster){
-            let spawnedMonster = Game.engine.add.sprite(
-                monster.spawn.x,
-                monster.spawn.y,
-                monster.name
-            );
+	    monster.body.enable=true;
+            monster.animations.play('walk');
+	    monster.position.x=monster.spawn.x;
+	    monster.position.y=monster.spawn.y;
 
-            spawnedMonster.animations.add(
-                'walk',
-                Monster[monster.name].animation.walk,
-                Monster[monster.name].animation.frame_rate,
-                true
-            );
-
-            spawnedMonster.animations.add(
-                'die',
-                Monster[monster.name].animation.die,
-                Monster[monster.name].animation.frame_rate,
-                true
-            );
-
-            spawnedMonster.animations.play('walk');
-
-            //reassign spawnpoint
-            spawnedMonster.name=monster.name;
-            spawnedMonster.spawn={
-                x: monster.spawn.x,
-                y: monster.spawn.y 
-            }
-            spawnedMonster.id=monster.id;
-            console.log(spawnedMonster.id);
-            //set physic
-            Game.engine.physics.enable(spawnedMonster);
-            spawnedMonster.body.enable=true;
-            spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;
-            spawnedMonster.body.gravity.y=Monster[monster.name].gravity.y;
-            spawnedMonster.body.bounce.x=1;
-            Game.monsters[monster.name].add(spawnedMonster);
-            monster.destroy();
+	    socket.emit('monsterRespawned',{
+		kind : monster.name,
+		id : monster.id
+	    });
         }
     },
     caveTurtle:{

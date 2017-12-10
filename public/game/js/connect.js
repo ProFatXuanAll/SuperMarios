@@ -45,6 +45,19 @@ socket.on('spawnMonster', function(monsterData){
     if (monsterData.superUser)
     {
         MonsterSetup(Map.structure[0]);
+
+        let monsterList="{";
+        for(let monsterType in Game.monsters)
+        {
+            monsterList+= `"${monsterType}"`+":"+Game.monsters[monsterType].children.length;
+            if(monsterType!="ironFlower") monsterList+=",";
+        }
+        monsterList+="}";
+        socket.emit('getMonsterList',
+            {
+            monsterData:monsterList
+            }
+        );
     }
     else
     {
@@ -112,15 +125,15 @@ socket.on('playerDelete',function(dele){
     Game.players.hash[dele.name].destroy();
     delete Game.players.hash[dele.name];
 });
+
 socket.on('someOneDie',function(die){
     Game.players.hash[die.name].dieyet==true;
     console.log(die.name,'dieeeeee')
     Player['mario'].respawn(Game.players.hash[die.name]);
 });
-socket.on('monsterdead',function(monsterdata){
-    console.log(monsterdata);
+
+socket.on('monsterDead',function(monsterdata){
     let deadmonster=Game.monsters[monsterdata.kind].children[monsterdata.id];
-    console.log(deadmonster);
     deadmonster.animations.stop();
     deadmonster.animations.play('die');
     deadmonster.body.enable=false;
@@ -129,3 +142,8 @@ socket.on('monsterdead',function(monsterdata){
     Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
             {
                 Monster[monsterdata.kind].respawn(deadmonster);
+	    }
+    );
+    console.log(monsterdata.kind + monsterdata.id + 'has respawned');
+    
+});
