@@ -162,6 +162,17 @@ function update()
     * how to optimize ??? *
     **********************/
 
+    Game.engine.physics.arcade.collide(
+        Game.players.current,
+        Game.players.others
+    );
+    
+    // other player collide with other player
+    Game.engine.physics.arcade.collide(
+        Game.players.others,
+        Game.players.others
+    );
+    
     // current player collide with solid layer
     Game.engine.physics.arcade.collide(
         Game.players.current,
@@ -175,16 +186,7 @@ function update()
     );
 
     // current player collide with other player
-    Game.engine.physics.arcade.collide(
-        Game.players.current,
-        Game.players.others
-    );
     
-    // other player collide with other player
-    Game.engine.physics.arcade.collide(
-        Game.players.others,
-        Game.players.others
-    );
 
     for(let monsterType in Game.monsters)
     {
