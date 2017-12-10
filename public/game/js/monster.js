@@ -29,6 +29,10 @@ const Monster = {
         overlap: function(character, monster) {
             if(character.body.touching.down && !character.body.touching.up)
             {
+                socket.emit('monsterdead',{
+                    kind:monster.name,
+                    id:monster.id
+                });
                 monster.animations.stop();
                 monster.animations.play('die');
                 monster.body.enable = false;
@@ -40,10 +44,9 @@ const Monster = {
                     Monster.goomba.respawn(monster);
                 });
             }
-            else  Player[character.key].respawn(character);
+            else if(character==Game.players.current) Player[character.key].respawn(character);
         },
-        respawn: function(monster)
-        {
+        respawn: function(monster){
             let spawnedMonster = Game.engine.add.sprite(
                 monster.spawn.x,
                 monster.spawn.y,
@@ -72,7 +75,8 @@ const Monster = {
                 x: monster.spawn.x,
                 y: monster.spawn.y 
             }
-
+            spawnedMonster.id=monster.id;
+            console.log(spawnedMonster.id);
             //set physic
             Game.engine.physics.enable(spawnedMonster);
             spawnedMonster.body.enable=true;
@@ -126,7 +130,7 @@ const Monster = {
                     monster.destroy();
                 });
             }
-            else Player[character.key].respawn(character);
+            else if(character==Game.players.current) Player[character.key].respawn(character);
         },
         respawn: function(monster)
         {
@@ -201,7 +205,7 @@ const Monster = {
             y:0
         },
         overlap: function(character, monster){
-            Player[character.key].respawn(character);
+            if(character==Game.players.current) Player[character.key].respawn(character);
         },
         respawn: function(monster)  //function(monster,monstertype)
         {  
@@ -273,7 +277,7 @@ const Monster = {
             y: 500
         },
         overlap: function(character, monster){
-            Player[character.key].respawn(character);
+            if(character==Game.players.current) Player[character.key].respawn(character);
         },
         respawn: function(monster)
         {
@@ -339,6 +343,7 @@ function MonsterSetup(structure=null, monsterData=null)
         {
             let child = Game.monsters[monsterType].children[i];
             child.name = monsterType;
+            child.id=i;
             if(monsterData)
             {
                 child.position.x = monsterData[monsterType][i].x;

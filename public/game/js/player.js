@@ -25,7 +25,8 @@ const Player = {
             up:false,
             down:false,
             left:false,
-            right:false
+            right:false,
+            die:false
         },
         respawn: function(character)
         {
