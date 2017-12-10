@@ -202,18 +202,6 @@ function update()
             monsterGroup,
             Monster[monsterType].overlap
         );
-        let mycharacter=Game.players.current;
-        if(mycharacter.dieyet==true&&mycharacter.ispressed.die==false)
-        {
-            mycharacter.ispressed.die=true;
-            socket.emit('someOneDie',{
-                name:Config.currentUserName
-            });
-        }
-        if(mycharacter.dieyet==false&&mycharacter.ispressed.die==true)
-        {
-            mycharacter.ispressed.die=false;
-        }
         // detect each monster fall through world bound
         for(let i = 0; i < monsterGroup.length; i++)
         {
