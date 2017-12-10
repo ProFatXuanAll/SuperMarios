@@ -129,5 +129,3 @@ socket.on('monsterdead',function(monsterdata){
     Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
             {
                 Monster[monsterdata.kind].respawn(deadmonster);
-            });
-});
