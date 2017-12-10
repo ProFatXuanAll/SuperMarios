@@ -112,3 +112,20 @@ socket.on('playerDelete',function(dele){
     Game.players.hash[dele.name].destroy();
     delete Game.players.hash[dele.name];
 });
+socket.on('someOneDie',function(die){
+    Game.players.hash[die.name].dieyet==true;
+    console.log(die.name,'dieeeeee')
+    Player['mario'].respawn(Game.players.hash[die.name]);
+});
+socket.on('monsterdead',function(monsterdata){
+    console.log(monsterdata);
+    let deadmonster=Game.monsters[monsterdata.kind].children[monsterdata.id];
+    console.log(deadmonster);
+    deadmonster.animations.stop();
+    deadmonster.animations.play('die');
+    deadmonster.body.enable=false;
+    let sfx=Game.engine.add.audio(Monster[monsterdata.kind].music.die.name);
+    sfx.play();
+    Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
+            {
+                Monster[monsterdata.kind].respawn(deadmonster);

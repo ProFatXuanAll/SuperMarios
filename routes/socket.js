@@ -95,6 +95,12 @@ module.exports = function(server){
                         name:socket.username
                     });
         });
+        socket.on('someOneDie',function(die){
+            socket.broadcast.emit('someOneDie',die);
+        });
+        socket.on('monsterdead',function(monsterdie){
+            socket.broadcast.emit('monsterdead',monsterdie);
+        });
     });
 
     return io;
