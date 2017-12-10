@@ -75,8 +75,7 @@ const Monster = {
                 x: monster.spawn.x,
                 y: monster.spawn.y 
             }
-            spawnedMonster.id=monster.id;
-            console.log(spawnedMonster.id);
+            spawnedMonster.id=Game.monsters[monster.name].children.length;
             //set physic
             Game.engine.physics.enable(spawnedMonster);
             spawnedMonster.body.enable=true;
