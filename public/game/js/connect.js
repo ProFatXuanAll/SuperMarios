@@ -143,6 +143,5 @@ socket.on('monsterDead',function(monsterdata){
                 Monster[monsterdata.kind].respawn(deadmonster);
 	    }
     );
-    console.log(monsterdata.kind + monsterdata.id + 'has respawned');
     
 });

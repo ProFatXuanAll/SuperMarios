@@ -5,7 +5,6 @@ module.exports = function(server){
     let playerList = {};
     let monsterList = {};
     let superUser = null;
-    let successCounter = 0;
 
     io.on('connection', function(socket){
         // new player tell server to join game
@@ -20,7 +19,9 @@ module.exports = function(server){
                 // data about player
                 data: playerData,
                 // socket between server and player
-                socket: socket
+                socket: socket,
+                // respawn success flag
+                respawnSuccess : false
             };
         });
         
@@ -110,24 +111,32 @@ module.exports = function(server){
             socket.broadcast.emit('someOneDie',die);
         });
         socket.on('monsterDead',function(monsterDie){
-	    if(monsterList[monsterDie.kind][monsterDie.id].valid)
-	    {
-		monsterList[monsterDie.kind][monsterDie.id].valid = false;
-		console.log(monsterDie.kind + monsterDie.id + ' has died');
-            	io.emit('monsterDead',monsterDie);
-	    }
+            if(monsterList[monsterDie.kind][monsterDie.id].valid)
+            {
+                monsterList[monsterDie.kind][monsterDie.id].valid = false;
+                console.log(monsterDie.kind + monsterDie.id + ' has died');
+                io.emit('monsterDead',monsterDie);
+                setTimeout(checkAllRespawned,1000,monsterDie.kind,monsterDie.id);
+            }
         });
-	socket.on('monsterRespawned',function(monsterDestroyed){
-	    ++successCounter;
-	    console.log('Now have '+Object.keys(playerList).length+' players, Counter is '+successCounter);
-	    if(successCounter >= Object.keys(playerList).length)
-	    {
-		monsterList[monsterDestroyed.kind][monsterDestroyed.id].valid = true;
-		console.log(monsterDestroyed.kind + monsterDestroyed.id + ' ready');
-		successCounter = 0;
-	    };
-	});
+        socket.on('monsterRespawned',function(user){
+            playerList[user.name].respawnSuccess = true;
+            console.log(user.name+' have respawned');
+        });
     });
+
+    function checkAllRespawned(kind,id){
+        for(let player in playerList){
+            if(!playerList[player].respawnSuccess){
+                setTimeout(checkAllRespawned,1000,kind,id);
+                return;
+            };
+        };
+        monsterList[kind][id].valid = true;
+        for(let player in playerList){
+            playerList[player].respawnSuccess = false;
+        };
+    };
 
     return io;
 };

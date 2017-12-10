@@ -39,23 +39,19 @@ const Monster = {
                 character.body.velocity.y = -300;
                 let sfx = Game.engine.add.audio(Monster.goomba.music.die.name);
                 sfx.play();
-                Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
-                {
-                    Monster[monster.name].respawn(monster);
-                });
             }
             else if(character==Game.players.current) Player[character.key].respawn(character);
         },
         respawn: function(monster){
-	    monster.body.enable=true;
+	        monster.body.enable=true;
             monster.animations.play('walk');
-	    monster.position.x=monster.spawn.x;
-	    monster.position.y=monster.spawn.y;
+	        monster.position.x=monster.spawn.x;
+	        monster.position.y=monster.spawn.y;
 
-	    socket.emit('monsterRespawned',{
-		kind : monster.name,
-		id : monster.id
-	    });
+	        socket.emit('monsterRespawned',{
+                name : Config.currentUserName
+            });
+            console.log(monster.name + monster.id + ' has respawned');            
         }
     },
     caveTurtle:{
