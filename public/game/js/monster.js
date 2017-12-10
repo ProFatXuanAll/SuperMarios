@@ -41,7 +41,7 @@ const Monster = {
                 sfx.play();
                 Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
                 {
-                    Monster.goomba.respawn(monster);
+                    Monster[monster.name].respawn(monster);
                 });
             }
             else if(character==Game.players.current) Player[character.key].respawn(character);
@@ -90,15 +90,15 @@ const Monster = {
             y:0
         },
         overlap: function(character, monster){
-            if (character.body.touching.down&&!character.body.touching.up&&!character.body.touching.left&&!character.body.touching.right)
+            if (character.body.touching.down&&!character.body.touching.up)
             {
                 monster.animations.stop();
-                monster.frame = Monster.caveTurtle.animation.die[0];
+                monster.animations.play('die');
                 monster.body.enable = false;
-                character.body.velocity.y = -80;
+                character.body.velocity.y = -300;
                 Game.engine.time.events.add(Phaser.Timer.SECOND, function()
                 {
-                    monster.destroy();
+                    //Monster[monster.name].respawn(monster);
                 });
             }
             else if(character==Game.players.current) Player[character.key].respawn(character);

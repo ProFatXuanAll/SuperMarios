@@ -49,8 +49,9 @@ socket.on('spawnMonster', function(monsterData){
         let monsterList="{";
         for(let monsterType in Game.monsters)
         {
+            if(monsterList.length > 1)
+            monsterList+= ',';
             monsterList+= `"${monsterType}"`+":"+Game.monsters[monsterType].children.length;
-            if(monsterType!="ironFlower") monsterList+=",";
         }
         monsterList+="}";
         socket.emit('getMonsterList',
@@ -90,11 +91,9 @@ socket.on('getMonsterInfo', function(nameData){
             dataString += '"sy":'+children[i].spawn.y;
             dataString += '}'
         }
-
         dataString += ']'
     }
     dataString += '}';
-
     // return monster info
     socket.emit('parseMonsterInfo',
         {

@@ -162,6 +162,17 @@ function update()
     * how to optimize ??? *
     **********************/
 
+    Game.engine.physics.arcade.collide(
+        Game.players.current,
+        Game.players.others
+    );
+    
+    // other player collide with other player
+    Game.engine.physics.arcade.collide(
+        Game.players.others,
+        Game.players.others
+    );
+    
     // current player collide with solid layer
     Game.engine.physics.arcade.collide(
         Game.players.current,
@@ -175,16 +186,7 @@ function update()
     );
 
     // current player collide with other player
-    Game.engine.physics.arcade.collide(
-        Game.players.current,
-        Game.players.others
-    );
     
-    // other player collide with other player
-    Game.engine.physics.arcade.collide(
-        Game.players.others,
-        Game.players.others
-    );
 
     for(let monsterType in Game.monsters)
     {
@@ -200,18 +202,6 @@ function update()
             monsterGroup,
             Monster[monsterType].overlap
         );
-        let mycharacter=Game.players.current;
-        if(mycharacter.dieyet==true&&mycharacter.ispressed.die==false)
-        {
-            mycharacter.ispressed.die=true;
-            socket.emit('someOneDie',{
-                name:Config.currentUserName
-            });
-        }
-        if(mycharacter.dieyet==false&&mycharacter.ispressed.die==true)
-        {
-            mycharacter.ispressed.die=false;
-        }
         // detect each monster fall through world bound
         for(let i = 0; i < monsterGroup.length; i++)
         {
