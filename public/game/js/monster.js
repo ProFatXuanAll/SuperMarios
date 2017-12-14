@@ -33,9 +33,7 @@ const Monster = {
                     kind:monster.name,
                     id:monster.id
                 });
-                monster.animations.stop();
-                monster.animations.play('die');
-                monster.body.enable = false;
+		console.log('overlap: '+monster.name+monster.id);
                 character.body.velocity.y = -300;
                 let sfx = Game.engine.add.audio(Monster.goomba.music.die.name);
                 sfx.play();
@@ -44,13 +42,13 @@ const Monster = {
         },
         respawn: function(monster){
 	        monster.body.enable=true;
-            monster.animations.play('walk');
+                monster.animations.play('walk');
 	        monster.position.x=monster.spawn.x;
 	        monster.position.y=monster.spawn.y;
 
 	        socket.emit('monsterRespawned',{
-                name : Config.currentUserName
-            });
+                    name : Config.currentUserName
+	        });
             console.log(monster.name + monster.id + ' has respawned');            
         }
     },

@@ -300,7 +300,11 @@ function update()
     {
         socket.emit('move',{
             name: Config.currentUserName,
-            move:'up'
+            move:'up',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.up = true;
     }
@@ -309,7 +313,11 @@ function update()
     {
         socket.emit('stop',{
             name: Config.currentUserName,
-            move:'up'
+            move:'up',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.up = false;
     }
@@ -318,7 +326,11 @@ function update()
     {
         socket.emit('move',{
             name: Config.currentUserName,
-            move:'left'
+            move:'left',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.left = true;
     }
@@ -327,7 +339,11 @@ function update()
     {
         socket.emit('stop',{
             name: Config.currentUserName,
-            move:'left'
+            move:'left',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.left = false;
     }
@@ -336,7 +352,11 @@ function update()
     {
         socket.emit('move',{
             name: Config.currentUserName,
-            move:'right'
+            move:'right',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.right = true;
     }
@@ -345,7 +365,11 @@ function update()
     {
         socket.emit('stop',{
             name: Config.currentUserName,
-            move:'right'
+            move:'right',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.right = false;
     }
