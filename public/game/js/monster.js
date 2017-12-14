@@ -30,8 +30,8 @@ const Monster = {
             if(character.body.touching.down && !character.body.touching.up)
             {
                 socket.emit('monsterDead',{
-                    kind:monster.name,
-                    id:monster.id
+                    kind: monster.name,
+                    id: monster.id
                 });
 		console.log('overlap: '+monster.name+monster.id);
                 character.body.velocity.y = -300;
@@ -42,12 +42,13 @@ const Monster = {
         },
         respawn: function(monster){
 	        monster.body.enable=true;
-                monster.animations.play('walk');
+            monster.animations.play('walk');
 	        monster.position.x=monster.spawn.x;
 	        monster.position.y=monster.spawn.y;
 
 	        socket.emit('monsterRespawned',{
-                    name : Config.currentUserName
+                    monsterType: monster.name,
+                    id: monster.id
 	        });
             console.log(monster.name + monster.id + ' has respawned');            
         }
