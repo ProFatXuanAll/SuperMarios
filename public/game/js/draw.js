@@ -82,23 +82,26 @@ function preload()
             Monster[monsterType].picture.width,
             Monster[monsterType].picture.height
         );
-        Game.engine.load.audio(
-            Monster[monsterType].music.die.name,
-            Monster[monsterType].music.die.src
-        );
+        for(let musicType in Monster[monsterType].music)
+        {
+            Game.engine.load.audio(
+                Monster[monsterType].music[musicType].name,
+                Monster[monsterType].music[musicType].src
+            );
+        }
     }
     // load all item spritesheet and music
-    for(let itemType in Items)
+    for(let itemType in Item)
     {
         Game.engine.load.spritesheet(
-            Items[itemType].spriteName,
-            Items[itemType].picture.src,
-            Items[itemType].picture.width,
-            Items[itemType].picture.height
+            Item[itemType].spriteName,
+            Item[itemType].picture.src,
+            Item[itemType].picture.width,
+            Item[itemType].picture.height
         );
         Game.engine.load.audio(
-            Items[itemType].music.get.name,
-            Items[itemType].music.get.src
+            Item[itemType].music.get.name,
+            Item[itemType].music.get.src
         );
     }
 }
@@ -122,6 +125,13 @@ function create()
         Map.structure[0]
     );
 
+    for(let playerType in Player)
+    {
+        for(let musicType in Player[playerType].music)
+        {
+            Player[playerType].music[musicType].play = Player[playerType].music[musicType].create();
+        }
+    }
     // create players' container
     Game.players = {
         current: new PlayerSetup(
@@ -135,7 +145,7 @@ function create()
         hash: {}
     };
     Game.players.hash[Config.currentUserName] = Game.players.current;
-    
+
     // new player tell server to join game
     socket.emit(
         'join', 
@@ -197,7 +207,7 @@ function update()
             monsterGroup,
             Game.map.solid
         );
-        // monster collide with character
+        // monster overlap with character
         Game.engine.physics.arcade.overlap(
             Game.players.current,
             monsterGroup,
@@ -225,28 +235,15 @@ function update()
         Game.engine.physics.arcade.overlap(
             Game.players.current,
             itemGroup,
-            Items[itemType].overlap
+            Item[itemType].overlap
         );
     }
 
-    // emit i die message
-    let mycharacter = Game.players.current;
-    if(mycharacter.dieyet == true && mycharacter.ispressed.die == false)
-    {
-        mycharacter.ispressed.die = true;
-        socket.emit(
-            'someOneDie',
-            {
-            name:Config.currentUserName
-            }
-        );
-    }
-    if(mycharacter.dieyet == false && mycharacter.ispressed.die == true)
-    {
-        mycharacter.ispressed.die = false;
-    }
+    Map.detectPlayerWorldBound(Game.players.current);
+    Map.detectFinished(Game.players.current);
+
     // player movement update
-    let all_players = Game.players.others.children.concat(Game.players.current); 
+    let all_players = Game.players.hash;
     for(let player in all_players)
     {
         // set each players' title on head
@@ -254,30 +251,33 @@ function update()
         name.x = Math.floor(all_players[player].position.x);
         name.y = Math.floor(all_players[player].position.y - all_players[player].height / 3);
         // detect character walk through world bond
-        Map.detectPlayerWorldBound(all_players[player]);
-        Map.detectFinished(all_players[player]);
+        
 
         let character = all_players[player];
         let cursor = all_players[player].cursor;
         let velocity = character.body.velocity;
-        let currentType = character.currentType;
-
+        let playerTypeVelocity = Player[character.key].velocity;
+        let item = all_players[player].item;
+        let facing;
+        
         // stop moving to left or right
-        velocity.x = currentType.velocity.idle;
+        
+        if(!character.body.onFloor())
+            velocity.y += playerTypeVelocity.vertical.gravity;
+
         if (cursor.up.isDown)
         {
             if(character.body.onFloor())
-                velocity.y = currentType.velocity.up;
+                velocity.y = playerTypeVelocity.vertical.jump;
         }
-        if(!character.body.onFloor())
-            velocity.y += currentType.gravity;
         if(cursor.left.isDown)
         {
             if(!character.dieyet)
             {
-                velocity.x = currentType.velocity.left;
-                if(character.body.blocked.left)
-                    velocity.x = 0;
+                facing = Config.state.left;
+                velocity.x = facing * (item.coin*50+playerTypeVelocity.horizontal.move);
+                //if(character.body.blocked.left)
+                //    velocity.x =  facing * playerTypeVelocity.horizontal.bounce;
                 character.animations.play('left');
             }
         }
@@ -285,10 +285,12 @@ function update()
         {
             if(!character.dieyet)
             {
-                velocity.x = currentType.velocity.right;
-                if(character.body.blocked.right)
-                    velocity.x = 0;
+                facing = Config.state.right;
+                velocity.x = facing * (item.coin*50+playerTypeVelocity.horizontal.move);
+                //if(character.body.blocked.right)
+                //    velocity.x = facing * playerTypeVelocity.horizontal.bounce;
                 character.animations.play('right');
+
             }
         }
         else if (cursor.down.isDown)
@@ -298,15 +300,27 @@ function update()
         else
         {
             if(!character.dieyet)
-                character.animations.play('idle');
+            {
+                if(velocity.x >= 0)
+                {
+                    facing = Config.state.right;
+                    character.animations.play('rightIdle');
+                }
+                else
+                {
+                    facing = Config.state.left;
+                    character.animations.play('leftIdle');
+                }
+                velocity.x = facing * playerTypeVelocity.horizontal.idle;
+            }
         }
     }
 
     // current player key press and release event
-    let currentPlayerCursor = Game.players.current.cursor;
-    let currentPlayerIspressed = Game.players.current.ispressed;
+    let currentCharacterCursor = Game.players.current.cursor;
+    let currentCharacterIspressed = Game.players.current.ispressed;
 
-    if(currentPlayerCursor.up.isDown &&  currentPlayerIspressed.up == false && currentPlayerIspressed.die == false)
+    if(currentCharacterCursor.up.isDown &&  currentCharacterIspressed.up == false && currentCharacterIspressed.die == false)
     {
         socket.emit(
             'move',
@@ -319,10 +333,10 @@ function update()
                 vy: Game.players.current.body.velocity.y
             }
         );
-        currentPlayerIspressed.up = true;
+        currentCharacterIspressed.up = true;
     }
     // release up
-    if(!currentPlayerCursor.up.isDown &&  currentPlayerIspressed.up == true)
+    if(!currentCharacterCursor.up.isDown &&  currentCharacterIspressed.up == true)
     {
         socket.emit(
             'stop',
@@ -335,10 +349,10 @@ function update()
                 vy: Game.players.current.body.velocity.y
             }
         );
-        currentPlayerIspressed.up = false;
+        currentCharacterIspressed.up = false;
     }
     // press left
-    if(currentPlayerCursor.left.isDown &&  currentPlayerIspressed.left == false && currentPlayerIspressed.die == false)
+    if(currentCharacterCursor.left.isDown &&  currentCharacterIspressed.left == false && currentCharacterIspressed.die == false)
     {
         socket.emit(
             'move',
@@ -351,10 +365,10 @@ function update()
                 vy: Game.players.current.body.velocity.y
             }
         );
-        currentPlayerIspressed.left = true;
+        currentCharacterIspressed.left = true;
     }
     // release left
-    if(!currentPlayerCursor.left.isDown &&  currentPlayerIspressed.left == true)
+    if(!currentCharacterCursor.left.isDown &&  currentCharacterIspressed.left == true)
     {
         socket.emit(
             'stop',
@@ -367,10 +381,10 @@ function update()
                 vy: Game.players.current.body.velocity.y
             }
         );
-        currentPlayerIspressed.left = false;
+        currentCharacterIspressed.left = false;
     }
     // press right
-    if(currentPlayerCursor.right.isDown &&  currentPlayerIspressed.right == false && currentPlayerIspressed.die == false)
+    if(currentCharacterCursor.right.isDown &&  currentCharacterIspressed.right == false && currentCharacterIspressed.die == false)
     {
         socket.emit(
             'move',
@@ -383,10 +397,10 @@ function update()
                 vy: Game.players.current.body.velocity.y
             }
         );
-        currentPlayerIspressed.right = true;
+        currentCharacterIspressed.right = true;
     }
     // release right
-    if(!currentPlayerCursor.right.isDown &&  currentPlayerIspressed.right == true)
+    if(!currentCharacterCursor.right.isDown &&  currentCharacterIspressed.right == true)
     {
         socket.emit(
             'stop',
@@ -399,7 +413,7 @@ function update()
                 vy: Game.players.current.body.velocity.y
             }
         );
-        currentPlayerIspressed.right = false;
+        currentCharacterIspressed.right = false;
     }
 }
 

@@ -9,15 +9,33 @@ const Player = {
         music: {
             die: {
                 name: 'marioDie',
-                src: '/game/assets/sounds/die.wav'
+                src: '/game/assets/sounds/die.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Player.mario.music.die.name);
+                    return () => {
+                        sfx.play();
+                    }
+                }
             }
         },
         animation: {
             left: [ 0, 1, 2, 3 ],
-            idle: [ 4 ],
+            leftIdle: [ 0 ],
             right: [ 4, 5, 6, 7 ],
+            rightIdle: [ 4 ],
             die: [ 8 ],
             frameRate: 10
+        },
+        velocity: {
+            horizontal: {
+                move: 200,
+                idle: 0.1
+            },
+            vertical: {
+                bounce: -200,
+                jump: -600,
+                gravity: 20   
+            }
         },
         width: 32,
         height: 56,
@@ -40,8 +58,8 @@ const Player = {
             character.immovable = false;
             character.dieyet = false;
         },
-        collide: function(player, otherCharacter){
-            if (player.body.touching.down)
+        collide: function(character, otherCharacter){
+            if (character.body.touching.down)
             {
                 console.log(Config.currentUserName+"is touching down");
                 
@@ -51,17 +69,17 @@ const Player = {
                         name: otherCharacter.name._text
                     }
                 );
-                player.body.velocity.y-= 200;
+                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
             }
-            if(player.body.touching.left)
+            if(character.body.touching.left)
             {
                 //console.log(Config.currentUserName+"is touching left");
             }
-            if(player.body.touching.up)
+            if(character.body.touching.up)
             {
                 //console.log(Config.currentUserName+"is touching up");
             }
-            if(player.body.touching.right)
+            if(character.body.touching.right)
             {
                 //console.log(Config.currentUserName+"is touching right");
             }
@@ -83,17 +101,6 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
 
     //test whether player is pressed or not (for socket.io)
     character.ispressed = playerType.ispressed;
-
-    //player's initial velocity, must be initial inside or other will get its reference
-    character.currentType = {
-        velocity: {
-            left: -200,
-            right: 200,
-            up: -600,
-            idle: 0.1
-        },
-        gravity: 20
-    };
 
     if(controlable)
     {
@@ -117,20 +124,23 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
     character.body.collideWorldBounds = false;
     // set up animations by Phaser engine
     character.animations.add('left', playerType.animation.left, playerType.animation.frameRate, true);
-    character.animations.add('idle', playerType.animation.idle, playerType.animation.frameRate, true);
     character.animations.add('right', playerType.animation.right, playerType.animation.frameRate, true);
+    character.animations.add('leftIdle', playerType.animation.leftIdle, playerType.animation.frameRate, true);
+    character.animations.add('rightIdle', playerType.animation.rightIdle, playerType.animation.frameRate, true);
     character.animations.add('die', playerType.animation.die, playerType.animation.frameRate, true);
     character.dieyet = false;
 
-    character.sound = {
-        die: Game.engine.add.audio(playerType.music.die.name)
-    };
     character.name = Game.engine.add.text(
         x,
         y,
         playerName,
         Config.font.Arial
     );
+    character.item = {};
+    for(let itemType in Item)
+    {
+        character.item[itemType] = 0;
+    }
 
     return character;
 }

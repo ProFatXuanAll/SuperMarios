@@ -10,7 +10,13 @@ const Monster = {
         music: {
             die: {
                 name: 'goombaDie',
-                src:'/game/assets/sounds/hit.wav'
+                src:'/game/assets/sounds/hit.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Monster.goomba.music.die.name);
+                    return () => {
+                        sfx.play();
+                    }
+                }
             }
         },
         animation: {
@@ -36,11 +42,18 @@ const Monster = {
                         id: monster.id
                     }
                 );
-                character.body.velocity.y = -300;
-                let sfx = Game.engine.add.audio(Monster.goomba.music.die.name);
-                sfx.play();
+                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                Monster.goomba.music.die.play();
             }
-            else if(character==Game.players.current) Player[character.key].respawn(character);
+            else
+            {
+                socket.emit(
+                    'someOneDie',
+                    {
+                        name: character.name._text
+                    }
+                );
+            }
         },
         respawn: function(monster){
 	        monster.body.enable = true;
@@ -68,7 +81,13 @@ const Monster = {
         music: {
             die: {
                 name: 'caveTurtleDie',
-                src:'/game/assets/sounds/hit.wav'
+                src:'/game/assets/sounds/hit.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Monster.caveTurtle.music.die.name);
+                    return () => {
+                        sfx.play();
+                    }
+                }
             }
         },
         animation: {
@@ -160,7 +179,13 @@ const Monster = {
         music: {
             die: {
                 name: 'spikeTurtleDie',
-                src:'/game/assets/sounds/hit.wav'
+                src:'/game/assets/sounds/hit.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Monster.spikeTurtle.music.die.name);
+                    return () => {
+                        sfx.play();
+                    }
+                }
             }
         },
         velocity: {
@@ -229,10 +254,6 @@ const Monster = {
             height: 32
         },
         music: {
-            die: {
-                name: 'ironFlowerDie',
-                src:'/game/assets/sounds/hit.wav'
-            }
         },
         animation: {
             walk: [ 0, 1 ],
@@ -300,7 +321,11 @@ function MonsterSetup(structure=null, monsterData=null)
     {
         Game.monsters[monsterType] = Game.engine.add.group();
         Game.monsters[monsterType].enableBody = true;
-        
+        for(let musicType in Monster[monsterType].music)
+        {
+            Monster[monsterType].music[musicType].play = Monster[monsterType].music[musicType].create();
+        }
+
         // create monster from map
         Game.map.tileMap.createFromTiles(
             Monster[monsterType].tileNumber,

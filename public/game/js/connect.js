@@ -141,7 +141,7 @@ socket.on('someOneDie',function(die){
     let deadPlayer = Game.players.hash[die.name];
     deadPlayer.dieyet=true;
     Game.map.music.stop();
-    deadPlayer.sound.die.play();
+    Player[deadPlayer.key].music.die.play();
     deadPlayer.animations.stop();
     deadPlayer.animations.play('die');
     deadPlayer.body.enable = false;

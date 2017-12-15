@@ -114,8 +114,17 @@ const Map = {
     {
         if(character.y + character.height >= Game.map.size.y)
         {
-           Player[character.key].respawn(character);
-           character.y = Game.map.size.y - character.height;
+            if(!character.dieyet)
+            {
+                character.dieyet=true;
+                socket.emit(
+                    'someOneDie',
+                    {
+                        name: character.name._text
+                    }
+                );
+            }
+           
         }
         if(character.x <= 0)
         {

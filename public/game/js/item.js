@@ -1,4 +1,4 @@
-const Items = {
+const Item = {
     coin:{
         tileNumber: 60,
         spriteName: 'coin',
@@ -10,7 +10,13 @@ const Items = {
         music : {
             get : {
                 name: 'coinGet',
-                src:'/game/assets/sounds/get.wav'
+                src:'/game/assets/sounds/get.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Item.coin.music.get.name);
+                    return () => {
+                        sfx.play();
+                    }
+                }
             }
         },
         bounce: {
@@ -24,18 +30,15 @@ const Items = {
         },
         overlap: function(character, item)
         {
-            character.currentType.velocity.left -= 50;
-            character.currentType.velocity.right += 50;
-            let sfx = Game.engine.add.audio(Items.coin.music.get.name);
-            sfx.play();
+            character.item.coin += 1;
+            Item.coin.music.get.play();
             item.destroy();
             Game.engine.time.events.add(
                 Phaser.Timer.SECOND * 3,
                 function()
                 {
-                    character.currentType.velocity.left += 50;
-                    character.currentType.velocity.right -= 50;
-                    Items.coin.respawn(item);
+                    character.item.coin -= 1;
+                    Item.coin.respawn(item);
                 }
             );
         },
@@ -60,21 +63,26 @@ const Items = {
         }
     },
 }
-
+// i = Item.coin.velocity.mario = 50
+// p = Player.mario.velocity.right = 200
+// g = Game.players.current.velocity.x = p + character.c*i;
 function ItemSetup(map, structure)
 {
-    for(let itemType in Items)
+    for(let itemType in Item)
     {
         this[itemType] = Game.engine.add.group();
         this[itemType].enableBody = true;
+        for(let musicType in Item[itemType].music)
+        {
+            Item[itemType].music[musicType].play = Item[itemType].music[musicType].create();
+        }
 
         map.tileMap.createFromTiles(
-            Items[itemType].tileNumber,
+            Item[itemType].tileNumber,
             null,
             itemType,
             structure.layer.item,
             this[itemType]);
-
             for(let i = 0;i<this[itemType].length;i++)
             {
                 let child = this[itemType].children[i];
@@ -85,8 +93,8 @@ function ItemSetup(map, structure)
                 }
             }
     
-        this[itemType].setAll('body.gravity.y', Items[itemType].gravity.y);
-        this[itemType].setAll('body.bounce.x', Items[itemType].bounce.x);
-        this[itemType].setAll('body.bounce.y', Items[itemType].bounce.y);
+        this[itemType].setAll('body.gravity.y', Item[itemType].gravity.y);
+        this[itemType].setAll('body.bounce.x', Item[itemType].bounce.x);
+        this[itemType].setAll('body.bounce.y', Item[itemType].bounce.y);
     }
 }

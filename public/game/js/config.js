@@ -19,5 +19,9 @@ const Config = {
             align: "center"
         }
     },
+    state:{
+        left: -1,
+        right: 1
+    },
     currentUserName: $("#userName").html()
 }
