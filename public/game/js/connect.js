@@ -20,7 +20,7 @@ socket.on('toExistPlayer', function(newPlayerData){
                 name: Config.currentUserName,
                 typeName: Player.mario.spriteName,
                 x: Game.players.current.position.x,
-                y: Game.players.current.position.y
+                y: Game.players.current.position.y,
             }
         }
     );
@@ -35,7 +35,7 @@ socket.on('toNewPlayer', function(playerData){
             playerData.name,
             Player[playerData.typeName],
             playerData.x,
-            playerData.y
+            playerData.y,
         )
     );
     /* need vx vy ????????????????????????????????????????? */

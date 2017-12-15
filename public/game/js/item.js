@@ -63,10 +63,8 @@ const Item = {
         }
     },
 }
-// i = Item.coin.velocity.mario = 50
-// p = Player.mario.velocity.right = 200
-// g = Game.players.current.velocity.x = p + character.c*i;
-function ItemSetup(map, structure)
+
+function ItemSetup(structure)
 {
     for(let itemType in Item)
     {
@@ -77,7 +75,7 @@ function ItemSetup(map, structure)
             Item[itemType].music[musicType].play = Item[itemType].music[musicType].create();
         }
 
-        map.tileMap.createFromTiles(
+        Game.map.tileMap.createFromTiles(
             Item[itemType].tileNumber,
             null,
             itemType,

@@ -43,8 +43,7 @@ const Player = {
             up:false,
             down:false,
             left:false,
-            right:false,
-            die:false
+            right:false
         },
         respawn: function(character)
         {
@@ -136,6 +135,7 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
         playerName,
         Config.font.Arial
     );
+
     character.item = {};
     for(let itemType in Item)
     {

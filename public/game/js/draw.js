@@ -121,7 +121,6 @@ function create()
 
     // create item
     Game.items = new ItemSetup(
-        Game.map,
         Map.structure[0]
     );
 
@@ -168,10 +167,6 @@ function create()
 
 function update()
 {
-    /**********************
-    * how to optimize ??? *
-    **********************/
-
     // current player collide with other player
     Game.engine.physics.arcade.collide(
         Game.players.current,
@@ -182,7 +177,7 @@ function update()
     // other player collide with other player
     Game.engine.physics.arcade.collide(
         Game.players.others,
-        Game.players.others,
+        Game.players.others
     );
 
     // current player collide with solid layer
@@ -320,100 +315,115 @@ function update()
     let currentCharacterCursor = Game.players.current.cursor;
     let currentCharacterIspressed = Game.players.current.ispressed;
 
-    if(currentCharacterCursor.up.isDown &&  currentCharacterIspressed.up == false && currentCharacterIspressed.die == false)
+    // press or release up
+    if(currentCharacterCursor.up.isDown != currentCharacterIspressed.up)
     {
-        socket.emit(
-            'move',
-            {
-                name: Config.currentUserName,
-                move:'up',
-                x: Game.players.current.position.x,
-                y: Game.players.current.position.y,
-                vx: Game.players.current.body.velocity.x,
-                vy: Game.players.current.body.velocity.y
-            }
-        );
-        currentCharacterIspressed.up = true;
+        // press up
+        if(currentCharacterCursor.up.isDown)
+        {
+            socket.emit(
+                'move',
+                {
+                    name: Config.currentUserName,
+                    move:'up',
+                    x: Game.players.current.position.x,
+                    y: Game.players.current.position.y,
+                    vx: Game.players.current.body.velocity.x,
+                    vy: Game.players.current.body.velocity.y
+                }
+            );
+            currentCharacterIspressed.up = true;
+        }
+        // release up
+        else
+        {
+            socket.emit(
+                'stop',
+                {
+                    name: Config.currentUserName,
+                    move:'up',
+                    x: Game.players.current.position.x,
+                    y: Game.players.current.position.y,
+                    vx: Game.players.current.body.velocity.x,
+                    vy: Game.players.current.body.velocity.y
+                }
+            );
+            currentCharacterIspressed.up = false;
+        }
     }
-    // release up
-    if(!currentCharacterCursor.up.isDown &&  currentCharacterIspressed.up == true)
+
+    // press or release left
+    else if(currentCharacterCursor.left.isDown != currentCharacterIspressed.left)
     {
-        socket.emit(
-            'stop',
-            {
-                name: Config.currentUserName,
-                move:'up',
-                x: Game.players.current.position.x,
-                y: Game.players.current.position.y,
-                vx: Game.players.current.body.velocity.x,
-                vy: Game.players.current.body.velocity.y
-            }
-        );
-        currentCharacterIspressed.up = false;
+        // press left
+        if(currentCharacterCursor.left.isDown)
+        {
+            socket.emit(
+                'move',
+                {
+                    name: Config.currentUserName,
+                    move:'left',
+                    x: Game.players.current.position.x,
+                    y: Game.players.current.position.y,
+                    vx: Game.players.current.body.velocity.x,
+                    vy: Game.players.current.body.velocity.y
+                }
+            );
+            currentCharacterIspressed.left = true;
+        }
+        // release left
+        else
+        {
+            socket.emit(
+                'stop',
+                {
+                    name: Config.currentUserName,
+                    move:'left',
+                    x: Game.players.current.position.x,
+                    y: Game.players.current.position.y,
+                    vx: Game.players.current.body.velocity.x,
+                    vy: Game.players.current.body.velocity.y
+                }
+            );
+            currentCharacterIspressed.left = false;
+        }
     }
-    // press left
-    if(currentCharacterCursor.left.isDown &&  currentCharacterIspressed.left == false && currentCharacterIspressed.die == false)
+
+    // press or release right
+    else if(currentCharacterCursor.right.isDown != currentCharacterIspressed.right)
     {
-        socket.emit(
-            'move',
-            {
-                name: Config.currentUserName,
-                move:'left',
-                x: Game.players.current.position.x,
-                y: Game.players.current.position.y,
-                vx: Game.players.current.body.velocity.x,
-                vy: Game.players.current.body.velocity.y
-            }
-        );
-        currentCharacterIspressed.left = true;
-    }
-    // release left
-    if(!currentCharacterCursor.left.isDown &&  currentCharacterIspressed.left == true)
-    {
-        socket.emit(
-            'stop',
-            {
-                name: Config.currentUserName,
-                move:'left',
-                x: Game.players.current.position.x,
-                y: Game.players.current.position.y,
-                vx: Game.players.current.body.velocity.x,
-                vy: Game.players.current.body.velocity.y
-            }
-        );
-        currentCharacterIspressed.left = false;
-    }
-    // press right
-    if(currentCharacterCursor.right.isDown &&  currentCharacterIspressed.right == false && currentCharacterIspressed.die == false)
-    {
-        socket.emit(
-            'move',
-            {
-                name: Config.currentUserName,
-                move:'right',
-                x: Game.players.current.position.x,
-                y: Game.players.current.position.y,
-                vx: Game.players.current.body.velocity.x,
-                vy: Game.players.current.body.velocity.y
-            }
-        );
-        currentCharacterIspressed.right = true;
-    }
-    // release right
-    if(!currentCharacterCursor.right.isDown &&  currentCharacterIspressed.right == true)
-    {
-        socket.emit(
-            'stop',
-            {
-                name: Config.currentUserName,
-                move:'right',
-                x: Game.players.current.position.x,
-                y: Game.players.current.position.y,
-                vx: Game.players.current.body.velocity.x,
-                vy: Game.players.current.body.velocity.y
-            }
-        );
-        currentCharacterIspressed.right = false;
+        // press right
+        if(currentCharacterCursor.right.isDown)
+        {
+            socket.emit(
+                'move',
+                {
+                    name: Config.currentUserName,
+                    move:'right',
+                    x: Game.players.current.position.x,
+                    y: Game.players.current.position.y,
+                    vx: Game.players.current.body.velocity.x,
+                    vy: Game.players.current.body.velocity.y
+                }
+            );
+            currentCharacterIspressed.right = true;
+        }
+        // release right
+        else
+        {
+            socket.emit(
+                'stop',
+                {
+                    name: Config.currentUserName,
+                    move:'right',
+                    x: Game.players.current.position.x,
+                    y: Game.players.current.position.y,
+                    vx: Game.players.current.body.velocity.x,
+                    vy: Game.players.current.body.velocity.y
+                }
+            );
+            currentCharacterIspressed.right = false;
+        }
     }
 }
 
