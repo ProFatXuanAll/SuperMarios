@@ -9,7 +9,7 @@ module.exports = function(server){
     io.on('connection', function(socket){
         // new player tell server to join game
         socket.on('join', function(playerData){
-	    console.log(playerData.name + ' join');
+            console.log(playerData.name + ' join');
             // server tell existed player(s) info new of player
             socket.broadcast.emit('toExistPlayer', playerData);
             socket.username = playerData.name;
@@ -20,8 +20,8 @@ module.exports = function(server){
                 data: playerData,
                 // socket between server and player
                 socket: socket,
-                // respawn success flag
-                respawnSuccess : false
+                // respawn monster list
+                respawnList: {}
             };
         });
         
@@ -56,17 +56,22 @@ module.exports = function(server){
            
         });
 
-	socket.on('getMonsterList', function(monsterData){
-	    monsterData = JSON.parse(monsterData.monsterData);
-	    for(let type in monsterData){
-		monsterList[type]=[];
-		for(let i=0; i<monsterData[type]; ++i){
-		   monsterList[type].push({valid : true});
-		};
-	    };
-	});
+        socket.on('getMonsterList', function(monsterData){
+            monsterData = JSON.parse(monsterData.monsterData);
+            for(let monsterType in monsterData){
+                monsterList[monsterType] = (new Array(monsterData[monsterType])).fill(0);
+                playerList[superUser].respawnList[monsterType] = [];
+            }
+        });
 
         socket.on('parseMonsterInfo', function(monsterData){
+            for(let monsterType in playerList[superUser].respawnList)
+            {
+                playerList[monsterData.requestName].respawnList[monsterType] = [];
+                console.log('------------------------');
+                console.log(playerList[monsterData.requestName].respawnList[monsterType]);
+                console.log('------------------------');
+            }
             playerList[monsterData.requestName].socket.emit('spawnMonster',
                 {
                     superUser: false,
@@ -101,42 +106,50 @@ module.exports = function(server){
                     superUser = null;
             }
 
+            for(let monsterType in playerList[socket.username].respawnList)
+            {
+                playerList[socket.username].respawnList[monsterType].forEach((id) => {
+                    monsterList[monsterType][id] -= 1;
+                });
+            }
+
             delete playerList[socket.username];
             socket.broadcast.emit('playerDelete',
                     {
                         name:socket.username
                     });
         });
-        socket.on('someOneDie',function(die){
+
+        socket.on('someOneDie', function(die){
             socket.broadcast.emit('someOneDie',die);
         });
-        socket.on('monsterDead',function(monsterDie){
-            if(monsterList[monsterDie.kind][monsterDie.id].valid)
+
+        socket.on('monsterDead', function(monsterDie){
+            if(monsterList[monsterDie.kind][monsterDie.id] === 0)
             {
-                monsterList[monsterDie.kind][monsterDie.id].valid = false;
-                console.log(monsterDie.kind + monsterDie.id + ' has died');
-                io.emit('monsterDead',monsterDie);
-                setTimeout(checkAllRespawned,1000,monsterDie.kind,monsterDie.id);
+                monsterList[monsterDie.kind][monsterDie.id] = Object.keys(playerList).length;
+                console.log(socket.username + " tell server:" + monsterDie.kind + monsterDie.id + ' has died');
+                for(let playerName in playerList)
+                {
+                    console.log(playerName + ' before push: '+playerList[playerName].respawnList[monsterDie.kind]);
+                    console.log('kind: '+ monsterDie.kind + ', id: ' +monsterDie.id);
+                    playerList[playerName].respawnList[monsterDie.kind].push(monsterDie.id);
+                    console.log(playerName + ' after push: '+playerList[playerName].respawnList[monsterDie.kind]);
+                }
+                //io.emit('monsterDead',monsterDie);
+                socket.broadcast.emit('monsterDead',monsterDie);
+                socket.emit('monsterDead',monsterDie);
+                // ??? setTimeout(checkAllRespawned,1000,monsterDie.kind,monsterDie.id);
             }
         });
-        socket.on('monsterRespawned',function(user){
-            playerList[user.name].respawnSuccess = true;
-            console.log(user.name+' have respawned');
+
+        socket.on('monsterRespawned', function(monsterData){
+            let index = playerList[socket.username].respawnList[monsterData.monsterType].indexOf(monsterData.id);
+            playerList[socket.username].respawnList[monsterData.monsterType].splice(index, 1);
+            monsterList[monsterData.monsterType][monsterData.id] -= 1;
+            console.log(socket.username + ' have respawned');
         });
     });
-
-    function checkAllRespawned(kind,id){
-        for(let player in playerList){
-            if(!playerList[player].respawnSuccess){
-                setTimeout(checkAllRespawned,1000,kind,id);
-                return;
-            };
-        };
-        monsterList[kind][id].valid = true;
-        for(let player in playerList){
-            playerList[player].respawnSuccess = false;
-        };
-    };
 
     return io;
 };

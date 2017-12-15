@@ -46,14 +46,14 @@ socket.on('spawnMonster', function(monsterData){
     {
         MonsterSetup(Map.structure[0]);
 
-        let monsterList="{";
+        let monsterList = "{";
         for(let monsterType in Game.monsters)
         {
             if(monsterList.length > 1)
-            monsterList+= ',';
-            monsterList+= `"${monsterType}"`+":"+Game.monsters[monsterType].children.length;
+            	monsterList += ',';
+            monsterList += `"${monsterType}":${Game.monsters[monsterType].children.length}`;
         }
-        monsterList+="}";
+        monsterList += "}";
         socket.emit('getMonsterList',
             {
             monsterData:monsterList
@@ -89,6 +89,7 @@ socket.on('getMonsterInfo', function(nameData){
             dataString += '"vy":'+children[i].body.velocity.y + ',';
             dataString += '"sx":'+children[i].spawn.x + ',';
             dataString += '"sy":'+children[i].spawn.y;
+            // dataString += 'bodyenable'
             dataString += '}'
         }
         dataString += ']'
@@ -108,6 +109,10 @@ socket.on('move',function(datamove){
     if(datamove.name in Game.players.hash)
     {
         Game.players.hash[datamove.name].cursor[datamove.move].isDown = true;
+        Game.players.hash[datamove.name].position.x = datamove.x;
+        Game.players.hash[datamove.name].position.y = datamove.y;
+        Game.players.hash[datamove.name].body.velocity.x = datamove.vx;
+        Game.players.hash[datamove.name].body.velocity.y = datamove.vy;
     }
 });
 
@@ -115,6 +120,10 @@ socket.on('stop',function(datamove){
     if(datamove.name in Game.players.hash)
     {
         Game.players.hash[datamove.name].cursor[datamove.move].isDown = false;
+        Game.players.hash[datamove.name].position.x = datamove.x;
+        Game.players.hash[datamove.name].position.y = datamove.y;
+        Game.players.hash[datamove.name].body.velocity.x = datamove.vx;
+        Game.players.hash[datamove.name].body.velocity.y = datamove.vy;
     }
 });
 
@@ -126,13 +135,13 @@ socket.on('playerDelete',function(dele){
 });
 
 socket.on('someOneDie',function(die){
-    Game.players.hash[die.name].dieyet==true;
+    Game.players.hash[die.name].dieyet == true;
     console.log(die.name,'dieeeeee')
     Player['mario'].respawn(Game.players.hash[die.name]);
 });
 
 socket.on('monsterDead',function(monsterdata){
-    let deadmonster=Game.monsters[monsterdata.kind].children[monsterdata.id];
+    let deadmonster = Game.monsters[monsterdata.kind].children[monsterdata.id];
     deadmonster.animations.stop();
     deadmonster.animations.play('die');
     deadmonster.body.enable=false;

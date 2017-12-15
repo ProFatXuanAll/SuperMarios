@@ -229,6 +229,19 @@ function update()
     }
 
 
+    // emit i die message
+    let mycharacter=Game.players.current;
+    if(mycharacter.dieyet==true&&mycharacter.ispressed.die==false)
+    {
+        mycharacter.ispressed.die=true;
+        socket.emit('someOneDie',{
+            name:Config.currentUserName
+        });
+    }
+    if(mycharacter.dieyet==false&&mycharacter.ispressed.die==true)
+    {
+        mycharacter.ispressed.die=false;
+    }
     // player movement update
     let all_players = Game.players.others.children.concat(Game.players.current); 
     for(let player in all_players)
@@ -283,11 +296,15 @@ function update()
     let currentPlayerCursor = Game.players.current.cursor;
     let currentPlayerIspressed = Game.players.current.ispressed;
 
-    if(currentPlayerCursor.up.isDown &&  currentPlayerIspressed.up == false)
+    if(currentPlayerCursor.up.isDown &&  currentPlayerIspressed.up == false && currentPlayerIspressed.die==false)
     {
         socket.emit('move',{
             name: Config.currentUserName,
-            move:'up'
+            move:'up',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.up = true;
     }
@@ -296,16 +313,24 @@ function update()
     {
         socket.emit('stop',{
             name: Config.currentUserName,
-            move:'up'
+            move:'up',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.up = false;
     }
     // press left
-    if(currentPlayerCursor.left.isDown &&  currentPlayerIspressed.left == false)
+    if(currentPlayerCursor.left.isDown &&  currentPlayerIspressed.left == false && currentPlayerIspressed.die==false)
     {
         socket.emit('move',{
             name: Config.currentUserName,
-            move:'left'
+            move:'left',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.left = true;
     }
@@ -314,16 +339,24 @@ function update()
     {
         socket.emit('stop',{
             name: Config.currentUserName,
-            move:'left'
+            move:'left',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.left = false;
     }
     // press right
-    if(currentPlayerCursor.right.isDown &&  currentPlayerIspressed.right == false)
+    if(currentPlayerCursor.right.isDown &&  currentPlayerIspressed.right == false && currentPlayerIspressed.die==false)
     {
         socket.emit('move',{
             name: Config.currentUserName,
-            move:'right'
+            move:'right',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.right = true;
     }
@@ -332,7 +365,11 @@ function update()
     {
         socket.emit('stop',{
             name: Config.currentUserName,
-            move:'right'
+            move:'right',
+            x: Game.players.current.position.x,
+            y: Game.players.current.position.y,
+            vx: Game.players.current.body.velocity.x,
+            vy: Game.players.current.body.velocity.y
         });
         currentPlayerIspressed.right = false;
     }
