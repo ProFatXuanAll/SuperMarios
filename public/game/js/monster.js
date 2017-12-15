@@ -26,14 +26,16 @@ const Monster = {
             x: 0,
             y: 500
         },
-        overlap: function(character, monster) {
+        overlap: function(character, monster){
             if(character.body.touching.down && !character.body.touching.up)
             {
-                socket.emit('monsterDead',{
-                    kind: monster.name,
-                    id: monster.id
-                });
-		console.log('overlap: '+monster.name+monster.id);
+                socket.emit(
+                    'monsterDead',
+                    {
+                        monsterType: monster.name,
+                        id: monster.id
+                    }
+                );
                 character.body.velocity.y = -300;
                 let sfx = Game.engine.add.audio(Monster.goomba.music.die.name);
                 sfx.play();
@@ -41,16 +43,18 @@ const Monster = {
             else if(character==Game.players.current) Player[character.key].respawn(character);
         },
         respawn: function(monster){
-	        monster.body.enable=true;
+	        monster.body.enable = true;
             monster.animations.play('walk');
-	        monster.position.x=monster.spawn.x;
-	        monster.position.y=monster.spawn.y;
+	        monster.position.x = monster.spawn.x;
+	        monster.position.y = monster.spawn.y;
 
-	        socket.emit('monsterRespawned',{
+	        socket.emit(
+                'monsterRespawned',
+                {
                     monsterType: monster.name,
                     id: monster.id
-	        });
-            console.log(monster.name + monster.id + ' has respawned');            
+                }
+            );        
         }
     },
     caveTurtle:{
@@ -85,7 +89,7 @@ const Monster = {
             y:0
         },
         overlap: function(character, monster){
-            if (character.body.touching.down&&!character.body.touching.up)
+            if (character.body.touching.down && !character.body.touching.up)
             {
                 monster.animations.stop();
                 monster.animations.play('die');
@@ -96,7 +100,8 @@ const Monster = {
                     //Monster[monster.name].respawn(monster);
                 });
             }
-            else if(character==Game.players.current) Player[character.key].respawn(character);
+            else if(character == Game.players.current)
+                Player[character.key].respawn(character);
         },
         respawn: function(monster)
         {
@@ -123,18 +128,18 @@ const Monster = {
             spawnedMonster.animations.play('walk');
 
             //reassign spawnpoint
-            spawnedMonster.name=monster.name;
-            spawnedMonster.spawn={
+            spawnedMonster.name = monster.name;
+            spawnedMonster.spawn = {
                 x: monster.spawn.x,
                 y: monster.spawn.y 
             }
 
             //set physic
             Game.engine.physics.enable(spawnedMonster);
-            spawnedMonster.body.enable=true;
-            spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;
-            spawnedMonster.body.gravity.y=Monster[monster.name].gravity.y;
-            spawnedMonster.body.bounce.x=1;
+            spawnedMonster.body.enable = true;
+            spawnedMonster.body.velocity.x = Monster[monster.name].velocity.x;
+            spawnedMonster.body.gravity.y = Monster[monster.name].gravity.y;
+            spawnedMonster.body.bounce.x = 1;
             Game.monsters[monster.name].add(spawnedMonster);
             monster.destroy();
         }

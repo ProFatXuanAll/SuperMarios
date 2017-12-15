@@ -12,7 +12,8 @@ socket.on('toExistPlayer', function(newPlayerData){
         )
     );
 
-    socket.emit('toNewPlayer',
+    socket.emit(
+        'toNewPlayer',
         {
             requestName: newPlayerData.name,
             data: {
@@ -54,7 +55,8 @@ socket.on('spawnMonster', function(monsterData){
             monsterList += `"${monsterType}":${Game.monsters[monsterType].children.length}`;
         }
         monsterList += "}";
-        socket.emit('getMonsterList',
+        socket.emit(
+            'getMonsterList',
             {
             monsterData:monsterList
             }
@@ -96,7 +98,8 @@ socket.on('getMonsterInfo', function(nameData){
     }
     dataString += '}';
     // return monster info
-    socket.emit('parseMonsterInfo',
+    socket.emit(
+        'parseMonsterInfo',
         {
             requestName: nameData.name,
             monsterGroup: dataString
@@ -135,21 +138,32 @@ socket.on('playerDelete',function(dele){
 });
 
 socket.on('someOneDie',function(die){
-    Game.players.hash[die.name].dieyet == true;
-    console.log(die.name,'dieeeeee')
-    Player['mario'].respawn(Game.players.hash[die.name]);
+    let deadPlayer = Game.players.hash[die.name];
+    deadPlayer.dieyet=true;
+    Game.map.music.stop();
+    deadPlayer.sound.die.play();
+    deadPlayer.animations.stop();
+    deadPlayer.animations.play('die');
+    deadPlayer.body.enable = false;
+    deadPlayer.immovable = true;
+
+    Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
+        {
+            Player[deadPlayer.key].respawn(deadPlayer);
+	    }
+    );
 });
 
-socket.on('monsterDead',function(monsterdata){
-    let deadmonster = Game.monsters[monsterdata.kind].children[monsterdata.id];
-    deadmonster.animations.stop();
-    deadmonster.animations.play('die');
-    deadmonster.body.enable=false;
-    let sfx=Game.engine.add.audio(Monster[monsterdata.kind].music.die.name);
+socket.on('monsterDead',function(monsterData){
+    let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
+    deadMonster.animations.stop();
+    deadMonster.animations.play('die');
+    deadMonster.body.enable = false;
+    let sfx=Game.engine.add.audio(Monster[monsterData.monsterType].music.die.name);
     sfx.play();
     Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
-            {
-                Monster[monsterdata.kind].respawn(deadmonster);
+        {
+            Monster[monsterData.monsterType].respawn(deadMonster);
 	    }
     );
     

@@ -33,8 +33,8 @@ const Items = {
                 Phaser.Timer.SECOND * 3,
                 function()
                 {
-                    character.currentType.velocity.left+=50;
-                    character.currentType.velocity.right-=50;
+                    character.currentType.velocity.left += 50;
+                    character.currentType.velocity.right -= 50;
                     Items.coin.respawn(item);
                 }
             );
@@ -47,14 +47,14 @@ const Items = {
                 item.name
             );
             //reassign spawnpoint
-            spawnedItem.name=item.name;
-            spawnedItem.spawn={
+            spawnedItem.name = item.name;
+            spawnedItem.spawn = {
                 x: item.spawn.x,
                 y: item.spawn.y 
             }
             //set physic
             Game.engine.physics.enable(spawnedItem);
-            spawnedItem.body.enable=true;
+            spawnedItem.body.enable = true;
             Game.items[item.name].add(spawnedItem);
             item.destroy();
         }
@@ -75,11 +75,11 @@ function ItemSetup(map, structure)
             structure.layer.item,
             this[itemType]);
 
-            for(let i=0;i<this[itemType].length;i++)
+            for(let i = 0;i<this[itemType].length;i++)
             {
-                let child=this[itemType].children[i];
-                child.name=itemType;
-                child.spawn={
+                let child = this[itemType].children[i];
+                child.name = itemType;
+                child.spawn = {
                     x: child.position.x,
                     y: child.position.y
                 }

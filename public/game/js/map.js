@@ -98,16 +98,16 @@ const Map = {
     ],
     detectFinished: function(character)
     {
-        if(character.y >= Game.map.finish.y && character.x >= Game.map.finish.x&& Game.map.finish.isFinished==false)
+        if(character.y >= Game.map.finish.y && character.x >= Game.map.finish.x && Game.map.finish.isFinished == false)
         {
-            let finishText=Game.engine.add.text(
+            let finishText = Game.engine.add.text(
                 $( window ).width()/3,
                 $( window ).height()/2-100,
-                character.name._text+'has finished!',
+                character.name._text + 'has finished!',
                 Config.font.Bold
             );
-            finishText.fixedToCamera=true;
-            Game.map.finish.isFinished=true;
+            finishText.fixedToCamera = true;
+            Game.map.finish.isFinished = true;
         }
     },
     detectPlayerWorldBound: function(character)
@@ -115,13 +115,13 @@ const Map = {
         if(character.y + character.height >= Game.map.size.y)
         {
            Player[character.key].respawn(character);
-           character.y = Game.map.size.y-character.height;
+           character.y = Game.map.size.y - character.height;
         }
-        if(character.x<=0)
+        if(character.x <= 0)
         {
             character.position.x = 0;
         }
-        if(character.position.x+character.width >= Game.map.size.x)
+        if(character.position.x + character.width >= Game.map.size.x)
         {
             character.position.x = Game.map.size.x - character.width;
         }
@@ -142,18 +142,17 @@ const Map = {
             Monster[monsterName].respawn(monster);        
         }
     },
-    overlap:function(player,map)
+    overlap:function(player, map)
     {
         if (player.body.blocked.down)
         {
             //console.log(Config.currentUserName+"is touching down");
-            player.body.velocity.y=0;
             //Player.mario.respawn(otherCharacter);
         }
         if(player.body.blocked.left)
         {
             //console.log(Config.currentUserName+"is touching left");
-            player.body.velocity.x=0;
+            player.body.velocity.x = 0;
         }
         if(player.body.blocked.up)
         {
@@ -162,7 +161,7 @@ const Map = {
         if(player.body.blocked.right)
         {
             //console.log(Config.currentUserName+"is touching right");
-            player.body.velocity.x=0;
+            player.body.velocity.x = 0;
         }
     }
 }
@@ -179,10 +178,10 @@ function MapSetup(structure, tileset, background, music)
     );
 
     //give map size(use to detect collide worldbound or not)
-    this.size=structure.size;
+    this.size = structure.size;
 
     //give map finish point
-    this.finish=structure.finish;
+    this.finish = structure.finish;
 
     // background camera fixed to center
     this.background.fixedToCamera = true;

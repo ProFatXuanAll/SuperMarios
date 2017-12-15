@@ -30,43 +30,32 @@ const Player = {
         },
         respawn: function(character)
         {
-            if(!character.dieyet)
-            {
-                // need promise object
-                character.immovable = true;
-                character.body.moves=false;
-                character.animations.stop();
-                character.frame=8;
-                Game.map.music.stop();
-                character.sound.die.play();
-                character.dieyet=true;
-
-                Game.engine.time.events.add(Phaser.Timer.SECOND*3, function()
-                {
-                    Game.map.music.loopFull();
-                    character.body.velocity.x=0;
-                    character.body.velocity.y=0;
-                    character.x=Map.structure[0].start[0].x;
-                    character.y=Map.structure[0].start[0].y;
-                    character.body.moves=true;
-                    character.immovable = false;
-                    character.animations.play();
-                    character.dieyet=false;
-                });
-            }
-            else return;
+            // need promise object
+            Game.map.music.loopFull();
+            character.body.velocity.x = 0;
+            character.body.velocity.y = 0;
+            character.x = Map.structure[0].start[0].x;
+            character.y = Map.structure[0].start[0].y;
+            character.body.enable = true;
+            character.immovable = false;
+            character.dieyet = false;
         },
-        overlap: function(player,otherCharacter)
-        {
+        collide: function(player, otherCharacter){
             if (player.body.touching.down)
             {
-                //console.log(Config.currentUserName+"is touching down");
-                //Player.mario.respawn(otherCharacter);
+                console.log(Config.currentUserName+"is touching down");
+                
+                socket.emit(
+                    'someOneDie',
+                    {
+                        name: otherCharacter.name._text
+                    }
+                );
+                player.body.velocity.y-= 200;
             }
             if(player.body.touching.left)
             {
                 //console.log(Config.currentUserName+"is touching left");
-                //player.body.velocity.x+=20;
             }
             if(player.body.touching.up)
             {
@@ -75,7 +64,6 @@ const Player = {
             if(player.body.touching.right)
             {
                 //console.log(Config.currentUserName+"is touching right");
-                //player.body.velocity.x-=20;
             }
         }
     }
@@ -83,7 +71,7 @@ const Player = {
 
 function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
 {
-    //set up player type 
+    //set up player type
     // the ultimate goal is to define things inside character and make it become a group
     
     //add character sprite
@@ -102,16 +90,18 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
             left: -200,
             right: 200,
             up: -600,
-            idle: 0
+            idle: 0.1
         },
         gravity: 20
     };
 
-    if(controlable) {
+    if(controlable)
+    {
         character.cursor = Game.engine.input.keyboard.createCursorKeys();
         Game.engine.camera.follow(character);
     }
-    else {
+    else
+    {
         character.cursor = new SyncCursor();
     }
 
@@ -129,7 +119,7 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
     character.animations.add('left', playerType.animation.left, playerType.animation.frameRate, true);
     character.animations.add('idle', playerType.animation.idle, playerType.animation.frameRate, true);
     character.animations.add('right', playerType.animation.right, playerType.animation.frameRate, true);
-    character.animations.add('right', playerType.animation.right, playerType.animation.frameRate, true);
+    character.animations.add('die', playerType.animation.die, playerType.animation.frameRate, true);
     character.dieyet = false;
 
     character.sound = {
