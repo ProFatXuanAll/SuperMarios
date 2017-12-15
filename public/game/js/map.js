@@ -141,6 +141,29 @@ const Map = {
         {
             Monster[monsterName].respawn(monster);        
         }
+    },
+    overlap:function(player,map)
+    {
+        if (player.body.blocked.down)
+        {
+            //console.log(Config.currentUserName+"is touching down");
+            player.body.velocity.y=0;
+            //Player.mario.respawn(otherCharacter);
+        }
+        if(player.body.blocked.left)
+        {
+            //console.log(Config.currentUserName+"is touching left");
+            player.body.velocity.x=0;
+        }
+        if(player.body.blocked.up)
+        {
+            //console.log(Config.currentUserName+"is touching up");
+        }
+        if(player.body.blocked.right)
+        {
+            //console.log(Config.currentUserName+"is touching right");
+            player.body.velocity.x=0;
+        }
     }
 }
 

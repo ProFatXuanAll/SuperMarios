@@ -162,31 +162,33 @@ function update()
     * how to optimize ??? *
     **********************/
 
-    Game.engine.physics.arcade.collide(
-        Game.players.current,
-        Game.players.others
-    );
-    
-    // other player collide with other player
-    Game.engine.physics.arcade.collide(
-        Game.players.others,
-        Game.players.others
-    );
-    
     // current player collide with solid layer
     Game.engine.physics.arcade.collide(
         Game.players.current,
-        Game.map.solid
+        Game.map.solid,
+        Map.overlap
     );
     
     // other player collide with solid layer
     Game.engine.physics.arcade.collide(
         Game.players.others,
-        Game.map.solid
+        Game.map.solid,
+        Map.overlap
     );
 
     // current player collide with other player
+    Game.engine.physics.arcade.collide(
+        Game.players.current,
+        Game.players.others,
+        Player.mario.overlap
+    );
     
+    // other player collide with other player
+    Game.engine.physics.arcade.collide(
+        Game.players.others,
+        Game.players.others,
+        Player.mario.overlap
+    );
 
     for(let monsterType in Game.monsters)
     {
@@ -271,6 +273,7 @@ function update()
             if(!character.dieyet)
             {
                 velocity.x = currentType.velocity.left;
+                if(character.body.blocked.left) velocity.x=0;
                 character.animations.play('left');
             }
         }
@@ -279,6 +282,7 @@ function update()
             if(!character.dieyet)
             {
                 velocity.x = currentType.velocity.right;
+                if(character.body.blocked.right) velocity.x=0;
                 character.animations.play('right');
             }
         }

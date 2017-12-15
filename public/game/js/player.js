@@ -58,16 +58,24 @@ const Player = {
         },
         overlap: function(player,otherCharacter)
         {
-            if(player==otherCharacter){
-                return;
-            }
             if (player.body.touching.down)
             {
-                player.body.velocity.y = -150;
+                //console.log(Config.currentUserName+"is touching down");
+                //Player.mario.respawn(otherCharacter);
             }
-            else if(player.body.touching.left)
+            if(player.body.touching.left)
             {
-                //someone do something.
+                //console.log(Config.currentUserName+"is touching left");
+                //player.body.velocity.x+=20;
+            }
+            if(player.body.touching.up)
+            {
+                //console.log(Config.currentUserName+"is touching up");
+            }
+            if(player.body.touching.right)
+            {
+                //console.log(Config.currentUserName+"is touching right");
+                //player.body.velocity.x-=20;
             }
         }
     }
