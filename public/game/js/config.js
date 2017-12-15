@@ -12,6 +12,11 @@ const Config = {
             font: "16px Arial",
             fill: "#000000",
             align: "center"
+        },
+        Bold: {
+            font: "64px Arial",
+            fill: "#000000",
+            align: "center"
         }
     },
     currentUserName: $("#userName").html()

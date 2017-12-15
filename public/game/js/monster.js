@@ -175,7 +175,7 @@ const Monster = {
             if(character==Game.players.current) Player[character.key].respawn(character);
         },
         respawn: function(monster)  //function(monster,monstertype)
-        {  
+        {
             //add sprite and animation
             let spawnedMonster = Game.engine.add.sprite(
                 monster.spawn.x,

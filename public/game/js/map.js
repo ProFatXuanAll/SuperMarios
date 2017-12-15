@@ -16,7 +16,8 @@ const Map = {
             ],
             finish: {
                 x: 9500,
-                y:0
+                y:0,
+                isFinished:false
             },
             size: {
                 x:9600,
@@ -97,9 +98,16 @@ const Map = {
     ],
     detectFinished: function(character)
     {
-        if(character.y >= Game.map.finish.y && character.x >= Game.map.finish.x)
+        if(character.y >= Game.map.finish.y && character.x >= Game.map.finish.x&& Game.map.finish.isFinished==false)
         {
-            console.log('finished');
+            let finishText=Game.engine.add.text(
+                $( window ).width()/3,
+                $( window ).height()/2-100,
+                character.name._text+'has finished!',
+                Config.font.Bold
+            );
+            finishText.fixedToCamera=true;
+            Game.map.finish.isFinished=true;
         }
     },
     detectPlayerWorldBound: function(character)
