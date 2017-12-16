@@ -9,7 +9,7 @@ const Player = {
         music: {
             die: {
                 name: 'marioDie',
-                src: '/game/assets/sounds/die.wav',
+                src: '/game/assets/player/sound/die.wav',
                 create: () => {
                     let sfx = Game.engine.add.audio(Player.mario.music.die.name);
                     return () => {

@@ -10,7 +10,7 @@ const Monster = {
         music: {
             die: {
                 name: 'goombaDie',
-                src:'/game/assets/sounds/hit.wav',
+                src:'/game/assets/monster/sound/hit.wav',
                 create: () => {
                     let sfx = Game.engine.add.audio(Monster.goomba.music.die.name);
                     return () => {
@@ -73,7 +73,7 @@ const Monster = {
         music: {
             die: {
                 name: 'caveTurtleDie',
-                src:'/game/assets/sounds/hit.wav',
+                src:'/game/assets/monster/sound/hit.wav',
                 create: () => {
                     let sfx = Game.engine.add.audio(Monster.caveTurtle.music.die.name);
                     return () => {
@@ -165,13 +165,13 @@ const Monster = {
         },
         animation: {
             walk: [ 0, 1 ],
-            die: [ 2 ],
+            die: [ 1 ],
             frame_rate: 2
         },
         music: {
             die: {
                 name: 'spikeTurtleDie',
-                src:'/game/assets/sounds/hit.wav',
+                src: '/game/assets/monster/sound/empty.wav',
                 create: () => {
                     let sfx = Game.engine.add.audio(Monster.spikeTurtle.music.die.name);
                     return () => {
@@ -193,48 +193,18 @@ const Monster = {
             y:0
         },
         overlap: function(character, monster){
-            if(character==Game.players.current) Player[character.key].respawn(character);
+            socket.emit(
+                'someOneDie',
+                {
+                    name: character.name._text
+                }
+            );
         },
-        respawn: function(monster)  //function(monster,monstertype)
-        {
-            //add sprite and animation
-            let spawnedMonster = Game.engine.add.sprite(
-                monster.spawn.x,
-                monster.spawn.y,
-                monster.name
-            );
-
-            spawnedMonster.animations.add(
-                'walk',
-                Monster[monster.name].animation.walk,
-                Monster[monster.name].animation.frame_rate,
-                true
-            );
-
-            spawnedMonster.animations.add(
-                'die',
-                Monster[monster.name].animation.die,
-                Monster[monster.name].animation.frame_rate,
-                true
-            );
-
-            spawnedMonster.animations.play('walk');
-
-            //reassign spawnpoint
-            spawnedMonster.name=monster.name;
-            spawnedMonster.spawn={
-                x: monster.spawn.x,
-                y: monster.spawn.y 
-            }
-
-            //set physic
-            Game.engine.physics.enable(spawnedMonster);
-            spawnedMonster.body.enable=true;
-            spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;
-            spawnedMonster.body.gravity.y=Monster[monster.name].gravity.y;
-            spawnedMonster.body.bounce.x=1;
-            Game.monsters[monster.name].add(spawnedMonster);
-            monster.destroy();
+        respawn: function(monster){
+            monster.body.enable = true;
+            monster.animations.play('walk');
+            monster.position.x = monster.spawn.x;
+            monster.position.y = monster.spawn.y;       
         }
     },
     ironFlower:{

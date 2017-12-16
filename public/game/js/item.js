@@ -10,7 +10,7 @@ const Item = {
         music : {
             get : {
                 name: 'coinGet',
-                src:'/game/assets/sounds/get.wav',
+                src:'/game/assets/item/sound/coinget.wav',
                 create: () => {
                     let sfx = Game.engine.add.audio(Item.coin.music.get.name);
                     return () => {

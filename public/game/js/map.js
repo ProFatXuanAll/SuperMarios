@@ -140,15 +140,39 @@ const Map = {
         let monsterName = monster.name;
         if(monster.position.y + monster.height >= Game.map.size.y)
         {
-            Monster[monsterName].respawn(monster);        
+            monster.position.x = 100;
+            monster.position.y = 100;
+            socket.emit(
+                'monsterDead',
+                {
+                    monsterType: monster.name,
+                    id: monster.id
+                }
+            );
         }
-        if(monster.position.x <= 0)
+        else if(monster.position.x <= 0)
         {
-            Monster[monsterName].respawn(monster);        
+            monster.position.x = 100;
+            monster.position.y = 100;
+            socket.emit(
+                'monsterDead',
+                {
+                    monsterType: monster.name,
+                    id: monster.id
+                }
+            );     
         }
-        if(monster.position.x + monster.width >= Game.map.size.x)
+        else if(monster.position.x + monster.width >= Game.map.size.x)
         {
-            Monster[monsterName].respawn(monster);        
+            monster.position.x = 100;
+            monster.position.y = 100;
+            socket.emit(
+                'monsterDead',
+                {
+                    monsterType: monster.name,
+                    id: monster.id
+                }
+            );
         }
     },
     overlap:function(player, map)

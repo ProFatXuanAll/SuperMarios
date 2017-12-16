@@ -147,8 +147,93 @@ socket.on('07 spawnMonster', function(monsterData){
         // parse from monster list
         monsterData = JSON.parse(monsterData.monsterGroup);
         MonsterSetup(Map.structure[0], monsterData);
+        /*
+        socket.emit(
+            '08 requestMonster',
+            {
+                name: Config.currentUserName
+            }
+        );
+        */
     }
 });
+
+/*
+
+//ask server to get monster list
+socket.on('05 getMonsterInfo', function(nameData){
+
+    // update state if haven't reach
+    if(Config.state.current < Config.state.getMonsterInfo)
+    {
+        Config.state.current = Config.state.getMonsterInfo;
+    }
+
+    // stringify monster info
+    let dataString = '{';
+    for(let monsterType in Game.monsters)
+    {
+        if(dataString.length > 1)
+            dataString += ',';
+
+        dataString += `"${monsterType}":[`
+        
+        let children = Game.monsters[monsterType].children;
+        for(let i = 0; i < children.length; ++i)
+        {
+            if(i != 0)
+                dataString += ',';
+            dataString += '{'
+            dataString += '"x":'+children[i].position.x + ',';
+            dataString += '"y":'+children[i].position.y + ',';
+            dataString += '"vx":'+children[i].body.velocity.x + ',';
+            dataString += '"vy":'+children[i].body.velocity.y + ',';
+            dataString += '"sx":'+children[i].spawn.x + ',';
+            dataString += '"sy":'+children[i].spawn.y;
+            // dataString += 'bodyenable'
+            dataString += '}'
+        }
+        dataString += ']'
+    }
+    dataString += '}';
+    // return monster info
+    socket.emit(
+        '06 parseMonsterInfo',
+        {
+            requestName: nameData.name,
+            monsterGroup: dataString
+        }
+    );
+});
+
+//spawn monster in world
+socket.on('07 spawnMonster', function(monsterData){
+
+    // update state if haven't reach
+    if(Config.state.current < Config.state.spawnMonster)
+    {
+        Config.state.current = Config.state.spawnMonster;
+    }
+
+    Game.monsters = {};
+    
+    // if you're superuser, init the list and emit to server
+    // let server has a monster list
+    if (monsterData.superUser)
+    {
+        // spawn monster from tileset
+        MonsterSetup(Map.structure[0]);
+    }
+    // if you're not superuser then ask monster list from server
+    else
+    {
+        // parse from monster list
+        monsterData = JSON.parse(monsterData.monsterGroup);
+        MonsterSetup(Map.structure[0], monsterData);
+    }
+});
+
+*/
 
 // someone press key
 socket.on('move',function(datamove){
