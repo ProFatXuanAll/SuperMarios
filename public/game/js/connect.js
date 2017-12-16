@@ -21,6 +21,8 @@ socket.on('toExistPlayer', function(newPlayerData){
                 typeName: Player.mario.spriteName,
                 x: Game.players.current.position.x,
                 y: Game.players.current.position.y,
+                vx: Game.players.current.body.velocity.x,
+                vy: Game.players.current.body.velocity.y
             }
         }
     );
@@ -36,9 +38,10 @@ socket.on('toNewPlayer', function(playerData){
             Player[playerData.typeName],
             playerData.x,
             playerData.y,
+            playerData.vx,
+            playerData.vy
         )
     );
-    /* need vx vy ????????????????????????????????????????? */
 });
 
 socket.on('spawnMonster', function(monsterData){
@@ -102,11 +105,21 @@ socket.on('move',function(datamove){
 
     if(datamove.name in Game.players.hash)
     {
-        Game.players.hash[datamove.name].cursor[datamove.move].isDown = true;
-        Game.players.hash[datamove.name].position.x = datamove.x;
-        Game.players.hash[datamove.name].position.y = datamove.y;
-        Game.players.hash[datamove.name].body.velocity.x = datamove.vx;
-        Game.players.hash[datamove.name].body.velocity.y = datamove.vy;
+        if(datamove.move == 'up')
+        {
+            Game.players.hash[datamove.name].position.x = datamove.x;
+            Game.players.hash[datamove.name].position.y = datamove.y;
+            Game.players.hash[datamove.name].body.velocity.x = datamove.vx;
+            Game.players.hash[datamove.name].body.velocity.y = datamove.vy;
+        }
+        else
+        {
+            Game.players.hash[datamove.name].cursor[datamove.move].isDown = true;
+            Game.players.hash[datamove.name].position.x = datamove.x;
+            Game.players.hash[datamove.name].position.y = datamove.y;
+            Game.players.hash[datamove.name].body.velocity.x = datamove.vx;
+            Game.players.hash[datamove.name].body.velocity.y = datamove.vy;
+        }
     }
 });
 
@@ -128,7 +141,7 @@ socket.on('playerDelete',function(dele){
     delete Game.players.hash[dele.name];
 });
 
-socket.on('someOneDie',function(die){
+socket.on('someOneDie', function(die){
     let deadPlayer = Game.players.hash[die.name];
     deadPlayer.dieyet = true;
     Game.map.music.stop();
@@ -138,9 +151,14 @@ socket.on('someOneDie',function(die){
     deadPlayer.body.enable = false;
     deadPlayer.immovable = true;
 
-    Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
+    // respawn user
+    Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
         {
-            Player[deadPlayer.key].respawn(deadPlayer);
+            // avoid respawn after disconnect
+            if(die.name in Game.players.hash)
+            {
+                Player[deadPlayer.key].respawn(deadPlayer);
+            }
 	    }
     );
 });

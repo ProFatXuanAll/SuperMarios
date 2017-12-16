@@ -138,6 +138,8 @@ function create()
             Player.mario,
             Map.structure[0].start[0].x,
             Map.structure[0].start[0].y,
+            0,
+            0,
             true
         ),
         others: Game.engine.add.group(),
@@ -262,7 +264,9 @@ function update()
         if (cursor.up.isDown)
         {
             if(character.body.onFloor())
+            {
                 velocity.y = playerTypeVelocity.vertical.jump;
+            }
         }
         if(cursor.left.isDown)
         {
@@ -307,44 +311,24 @@ function update()
     }
 
     // current player key press and release event
-    let currentCharacterCursor = Game.players.current.cursor;
-    let currentCharacterIspressed = Game.players.current.ispressed;
+    let currentCharacter = Game.players.current;
+    let currentCharacterCursor = currentCharacter.cursor;
+    let currentCharacterIspressed = currentCharacter.ispressed;
 
-    // press or release up
-    if(currentCharacterCursor.up.isDown != currentCharacterIspressed.up)
+    // press up and on floor
+    if(currentCharacterCursor.up.isDown && currentCharacter.body.onFloor())
     {
-        // press up
-        if(currentCharacterCursor.up.isDown)
-        {
-            socket.emit(
-                'move',
-                {
-                    name: Config.currentUserName,
-                    move:'up',
-                    x: Game.players.current.position.x,
-                    y: Game.players.current.position.y,
-                    vx: Game.players.current.body.velocity.x,
-                    vy: Game.players.current.body.velocity.y
-                }
-            );
-            currentCharacterIspressed.up = true;
-        }
-        // release up
-        else
-        {
-            socket.emit(
-                'stop',
-                {
-                    name: Config.currentUserName,
-                    move:'up',
-                    x: Game.players.current.position.x,
-                    y: Game.players.current.position.y,
-                    vx: Game.players.current.body.velocity.x,
-                    vy: Game.players.current.body.velocity.y
-                }
-            );
-            currentCharacterIspressed.up = false;
-        }
+        socket.emit(
+            'move',
+            {
+                name: Config.currentUserName,
+                move: 'up',
+                x: currentCharacter.position.x,
+                y: currentCharacter.position.y,
+                vx: currentCharacter.body.velocity.x,
+                vy: currentCharacter.body.velocity.y
+            }
+        );
     }
 
     // press or release left
@@ -358,10 +342,10 @@ function update()
                 {
                     name: Config.currentUserName,
                     move:'left',
-                    x: Game.players.current.position.x,
-                    y: Game.players.current.position.y,
-                    vx: Game.players.current.body.velocity.x,
-                    vy: Game.players.current.body.velocity.y
+                    x: currentCharacter.position.x,
+                    y: currentCharacter.position.y,
+                    vx: currentCharacter.body.velocity.x,
+                    vy: currentCharacter.body.velocity.y
                 }
             );
             currentCharacterIspressed.left = true;
@@ -374,10 +358,10 @@ function update()
                 {
                     name: Config.currentUserName,
                     move:'left',
-                    x: Game.players.current.position.x,
-                    y: Game.players.current.position.y,
-                    vx: Game.players.current.body.velocity.x,
-                    vy: Game.players.current.body.velocity.y
+                    x: currentCharacter.position.x,
+                    y: currentCharacter.position.y,
+                    vx: currentCharacter.body.velocity.x,
+                    vy: currentCharacter.body.velocity.y
                 }
             );
             currentCharacterIspressed.left = false;
@@ -395,10 +379,10 @@ function update()
                 {
                     name: Config.currentUserName,
                     move:'right',
-                    x: Game.players.current.position.x,
-                    y: Game.players.current.position.y,
-                    vx: Game.players.current.body.velocity.x,
-                    vy: Game.players.current.body.velocity.y
+                    x: currentCharacter.position.x,
+                    y: currentCharacter.position.y,
+                    vx: currentCharacter.body.velocity.x,
+                    vy: currentCharacter.body.velocity.y
                 }
             );
             currentCharacterIspressed.right = true;
@@ -411,10 +395,10 @@ function update()
                 {
                     name: Config.currentUserName,
                     move:'right',
-                    x: Game.players.current.position.x,
-                    y: Game.players.current.position.y,
-                    vx: Game.players.current.body.velocity.x,
-                    vy: Game.players.current.body.velocity.y
+                    x: currentCharacter.position.x,
+                    y: currentCharacter.position.y,
+                    vx: currentCharacter.body.velocity.x,
+                    vy: currentCharacter.body.velocity.y
                 }
             );
             currentCharacterIspressed.right = false;

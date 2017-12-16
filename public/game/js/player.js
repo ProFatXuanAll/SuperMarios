@@ -39,12 +39,6 @@ const Player = {
         },
         width: 32,
         height: 56,
-        ispressed: {
-            up:false,
-            down:false,
-            left:false,
-            right:false
-        },
         respawn: function(character)
         {
             Game.map.music.loopFull();
@@ -88,17 +82,29 @@ const Player = {
     }
 };
 
-function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
+function PlayerSetup(playerName, playerType, x=0, y=0, vx=0, vy=0, controlable=false)
 {
-    //add character sprite
+    // uncontrolable character cursor simulator
+    function SyncCursor()
+    {
+        this.up = {isDown: false};
+        this.down = {isDown: false};
+        this.left = {isDown: false};
+        this.right = {isDown: false};
+    }
+
+    // add character sprite
     let character = Game.engine.add.sprite(
         x,
         y,
         playerType.spriteName
     );
 
-    //test whether player is pressed or not (for socket.io)
-    character.ispressed = playerType.ispressed;
+    // test whether player already pressed or not (for socket.io)
+    character.ispressed = {
+        left: false,
+        right: false
+    };
 
     if(controlable)
     {
@@ -110,16 +116,23 @@ function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
         character.cursor = new SyncCursor();
     }
 
-    function SyncCursor()
-    {
-        this.up = {isDown: false};
-        this.down = {isDown: false};
-        this.left = {isDown: false};
-        this.right = {isDown: false};
-    }
 
     Game.engine.physics.enable(character);
     character.body.collideWorldBounds = false;
+    character.body.velocity.x = vx;
+    character.body.velocity.y = vy;
+    // sync player key press event
+    if(Math.abs(vx) > Player[playerType.spriteName].velocity.horizontal.idle)
+    {
+        if(vx > 0)
+        {
+            character.cursor.right.isDown = true;
+        }
+        else
+        {
+            character.cursor.left.isDown = true;
+        }
+    }
     // set up animations by Phaser engine
     character.animations.add('left', playerType.animation.left, playerType.animation.frameRate, true);
     character.animations.add('right', playerType.animation.right, playerType.animation.frameRate, true);
