@@ -29,8 +29,12 @@ const Config = {
         requestMonster: 4,
         getMonsterInfo: 5,
         parseMonsterInfo: 6,
-        spawnMonster: 7,
-        finish: 7,
+        spawnItem: 7,
+        requestItem: 8,
+        getItemInfo: 9,
+        parseItemInfo: 10,
+        spawnItem: 11,
+        finish: 11,
         current: 0
     },
     status: {

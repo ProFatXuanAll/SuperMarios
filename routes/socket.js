@@ -56,14 +56,35 @@ module.exports = function(server){
                 );
             }
         });
-        
-        // parsing monster info
-        socket.on('06 parseMonsterInfo', function(monsterData){
-            playerList[monsterData.requestName].socket.emit(
-                '07 spawnMonster',
+
+        // new player tell server to get item
+        socket.on('08 requestItem', function(nameData){
+            // find exist user to sync item
+            if(superUser == socket.username)
+            {
+                socket.emit(
+                    '11 spawnItem',
+                    {
+                        superUser: true
+                    }
+                );
+            }
+            else
+            {
+                playerList[superUser].socket.emit(
+                    '09 getItemInfo',
+                    nameData
+                );
+            }
+        });
+
+        // parsing item info
+        socket.on('10 parseItemInfo', function(itemData){
+            playerList[itemData.requestName].socket.emit(
+                '11 spawnItem',
                 {
                     superUser: false,
-                    monsterGroup: monsterData.monsterGroup
+                    itemGroup: itemData.ItemGroup
                 }
             );
         });
@@ -121,6 +142,14 @@ module.exports = function(server){
             io.emit(
                 'monsterDead',
                 monsterDie
+            );
+        });
+
+        //some monster died
+        socket.on('itemDead', function(itemDie){
+            io.emit(
+                'itemDead',
+                itemDie
             );
         });
     });

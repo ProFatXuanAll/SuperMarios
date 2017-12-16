@@ -140,8 +140,9 @@ const Map = {
         let monsterName = monster.name;
         if(monster.position.y + monster.height >= Game.map.size.y)
         {
-            monster.position.x = 100;
-            monster.position.y = 100;
+            monster.position.x = 50;
+            monster.position.y = 50;
+            monster.body.velocity.y=0;
             socket.emit(
                 'monsterDead',
                 {
@@ -152,8 +153,9 @@ const Map = {
         }
         else if(monster.position.x <= 0)
         {
-            monster.position.x = 100;
-            monster.position.y = 100;
+            monster.position.x = 50;
+            monster.position.y = 50;
+            monster.body.velocity.y= 0;
             socket.emit(
                 'monsterDead',
                 {
@@ -164,8 +166,9 @@ const Map = {
         }
         else if(monster.position.x + monster.width >= Game.map.size.x)
         {
-            monster.position.x = 100;
-            monster.position.y = 100;
+            monster.position.x = 50;
+            monster.position.y = 50;
+            monster.body.velocity.y = 0;
             socket.emit(
                 'monsterDead',
                 {

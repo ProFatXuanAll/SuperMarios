@@ -147,38 +147,36 @@ socket.on('07 spawnMonster', function(monsterData){
         // parse from monster list
         monsterData = JSON.parse(monsterData.monsterGroup);
         MonsterSetup(Map.structure[0], monsterData);
-        /*
-        socket.emit(
-            '08 requestMonster',
-            {
-                name: Config.currentUserName
-            }
-        );
-        */
     }
+    socket.emit(
+        '08 requestItem',
+        {
+            name: Config.currentUserName
+        }
+    );
 });
 
-/*
 
-//ask server to get monster list
-socket.on('05 getMonsterInfo', function(nameData){
+
+//ask server to get item list
+socket.on('09 getItemInfo', function(nameData){
 
     // update state if haven't reach
-    if(Config.state.current < Config.state.getMonsterInfo)
+    if(Config.state.current < Config.state.getItemInfo)
     {
-        Config.state.current = Config.state.getMonsterInfo;
+        Config.state.current = Config.state.getItemInfo;
     }
 
-    // stringify monster info
+    // stringify item info
     let dataString = '{';
-    for(let monsterType in Game.monsters)
+    for(let itemType in Game.items)
     {
         if(dataString.length > 1)
             dataString += ',';
 
-        dataString += `"${monsterType}":[`
+        dataString += `"${itemType}":[`
         
-        let children = Game.monsters[monsterType].children;
+        let children = Game.items[itemType].children;
         for(let i = 0; i < children.length; ++i)
         {
             if(i != 0)
@@ -196,44 +194,42 @@ socket.on('05 getMonsterInfo', function(nameData){
         dataString += ']'
     }
     dataString += '}';
-    // return monster info
+    // return item info
     socket.emit(
-        '06 parseMonsterInfo',
+        '10 parseItemInfo',
         {
             requestName: nameData.name,
-            monsterGroup: dataString
+            itemGroup: dataString
         }
     );
 });
 
-//spawn monster in world
-socket.on('07 spawnMonster', function(monsterData){
+//spawn item in world
+socket.on('11 spawnItem', function(itemData){
 
     // update state if haven't reach
-    if(Config.state.current < Config.state.spawnMonster)
+    if(Config.state.current < Config.state.spawnItem)
     {
-        Config.state.current = Config.state.spawnMonster;
+        Config.state.current = Config.state.spawnItem;
     }
 
-    Game.monsters = {};
-    
+    Game.items = {};
     // if you're superuser, init the list and emit to server
-    // let server has a monster list
-    if (monsterData.superUser)
+    // let server has a item list
+    if (itemData.superUser)
     {
-        // spawn monster from tileset
-        MonsterSetup(Map.structure[0]);
+        // spawn item from tileset
+        ItemSetup(Map.structure[0]);
     }
-    // if you're not superuser then ask monster list from server
+    // if you're not superuser then ask item list from server
     else
     {
-        // parse from monster list
-        monsterData = JSON.parse(monsterData.monsterGroup);
-        MonsterSetup(Map.structure[0], monsterData);
+        // parse from item list
+        itemData = JSON.parse(itemData.itemGroup);
+        ItemSetup(Map.structure[0], itemData);
     }
 });
 
-*/
 
 // someone press key
 socket.on('move',function(datamove){
@@ -309,8 +305,11 @@ socket.on('someOneDie', function(die){
     //player die animation and player death sound
     let deadPlayer = Game.players.hash[die.name];
     deadPlayer.dieyet = true;
-    Game.map.music.stop();
-    Player[deadPlayer.key].music.die.play();
+    if(die.name == Config.currentUserName)
+    {
+        Game.map.music.stop();
+        Player[deadPlayer.key].music.die.play();
+    }
     deadPlayer.animations.stop();
     deadPlayer.animations.play('die');
     deadPlayer.body.enable = false;
@@ -349,6 +348,26 @@ socket.on('monsterDead',function(monsterData){
         {
             // respawn monster to its spawnpoint
             Monster[monsterData.monsterType].respawn(deadMonster);
+	    }
+    );
+});
+
+socket.on('itemDead',function(itemData){
+
+    // if not in finish state,then don't do anything
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
+    // set item's animation to die and play die sound
+    let deadItem = Game.items[itemData.itemType].children[itemData.id];
+    Item[itemData.itemType].music.get.play();
+    deadItem.body.enable = false;
+    deadItem.visible=false;
+    Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
+        {
+            // respawn item to its spawnpoint
+            Item[itemData.itemType].respawn(deadItem);
 	    }
     );
 });

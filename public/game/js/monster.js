@@ -43,7 +43,6 @@ const Monster = {
                     }
                 );
                 character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
-                Monster.goomba.music.die.play();
             }
             else
             {
@@ -59,7 +58,9 @@ const Monster = {
 	        monster.body.enable = true;
             monster.animations.play('walk');
 	        monster.position.x = monster.spawn.x;
-	        monster.position.y = monster.spawn.y;       
+            monster.position.y = monster.spawn.y;       
+            monster.body.velocity.x = Monster.goomba.velocity.x;
+            monster.body.velocity.y = Monster.goomba.velocity.y;
         }
     },
     caveTurtle:{
@@ -84,7 +85,7 @@ const Monster = {
         },
         animation: {
             walk: [ 0, 1 ],
-            die: [ 2 ],
+            die: [ 1 ],
             frame_rate: 2
         },
         velocity: {
@@ -100,59 +101,35 @@ const Monster = {
             y:0
         },
         overlap: function(character, monster){
-            if (character.body.touching.down && !character.body.touching.up)
+            if(character.body.touching.down && !character.body.touching.up)
             {
-                monster.animations.stop();
-                monster.animations.play('die');
-                monster.body.enable = false;
-                character.body.velocity.y = -300;
-                Game.engine.time.events.add(Phaser.Timer.SECOND, function()
-                {
-                    //Monster[monster.name].respawn(monster);
-                });
+                socket.emit(
+                    'monsterDead',
+                    {
+                        monsterType: monster.name,
+                        id: monster.id
+                    }
+                );
+                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
             }
-            else if(character == Game.players.current)
-                Player[character.key].respawn(character);
+            else
+            {
+                socket.emit(
+                    'someOneDie',
+                    {
+                        name: character.name._text
+                    }
+                );
+            }
         },
         respawn: function(monster)
         {
-            let spawnedMonster = Game.engine.add.sprite(
-                monster.spawn.x,
-                monster.spawn.y,
-                monster.name
-            );
-
-            spawnedMonster.animations.add(
-                'walk',
-                Monster[monster.name].animation.walk,
-                Monster[monster.name].animation.frame_rate,
-                true
-            );
-
-            spawnedMonster.animations.add(
-                'die',
-                Monster[monster.name].animation.die,
-                Monster[monster.name].animation.frame_rate,
-                true
-            );
-
-            spawnedMonster.animations.play('walk');
-
-            //reassign spawnpoint
-            spawnedMonster.name = monster.name;
-            spawnedMonster.spawn = {
-                x: monster.spawn.x,
-                y: monster.spawn.y 
-            }
-
-            //set physic
-            Game.engine.physics.enable(spawnedMonster);
-            spawnedMonster.body.enable = true;
-            spawnedMonster.body.velocity.x = Monster[monster.name].velocity.x;
-            spawnedMonster.body.gravity.y = Monster[monster.name].gravity.y;
-            spawnedMonster.body.bounce.x = 1;
-            Game.monsters[monster.name].add(spawnedMonster);
-            monster.destroy();
+	        monster.body.enable = true;
+            monster.animations.play('walk');
+	        monster.position.x = monster.spawn.x;
+            monster.position.y = monster.spawn.y;
+            monster.body.velocity.x = Monster.caveTurtle.velocity.x;
+            monster.body.velocity.y = Monster.caveTurtle.velocity.y;
         }
     },
     spikeTurtle:{
@@ -204,7 +181,9 @@ const Monster = {
             monster.body.enable = true;
             monster.animations.play('walk');
             monster.position.x = monster.spawn.x;
-            monster.position.y = monster.spawn.y;       
+            monster.position.y = monster.spawn.y;
+            monster.body.velocity.x = Monster.spikeTurtle.velocity.x;
+            monster.body.velocity.y = Monster.spikeTurtle.velocity.y;
         }
     },
     ironFlower:{
@@ -231,7 +210,12 @@ const Monster = {
             y: 500
         },
         overlap: function(character, monster){
-            if(character==Game.players.current) Player[character.key].respawn(character);
+            socket.emit(
+                'someOneDie',
+                {
+                    name: character.name._text
+                }
+            );
         },
         respawn: function(monster)
         {
@@ -256,13 +240,13 @@ const Monster = {
             );
 
             spawnedMonster.animations.play('walk');
-
+            monster.body.velocity.x = Monster.goomba.velocity.x;
             //reassign spawnpoint
             spawnedMonster.name=monster.name;
             spawnedMonster.spawn={
                 x: monster.spawn.x,
                 y: monster.spawn.y 
-            } 
+            }
 
             //set physic
             Game.engine.physics.enable(spawnedMonster);

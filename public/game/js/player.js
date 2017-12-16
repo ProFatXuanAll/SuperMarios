@@ -16,6 +16,16 @@ const Player = {
                         sfx.play();
                     }
                 }
+            },
+            hit: {
+                name: 'marioHit',
+                src: '/game/assets/player/sound/hit.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Player.mario.music.hit.name);
+                    return () => {
+                        sfx.play();
+                    }
+                }
             }
         },
         animation: {
@@ -41,7 +51,10 @@ const Player = {
         height: 56,
         respawn: function(character)
         {
-            Game.map.music.loopFull();
+            if(character.name._text == Config.currentUserName)
+            {
+                Game.map.music.loopFull();
+            }
             character.body.velocity.x = 0;
             character.body.velocity.y = 0;
             character.x = Map.structure[0].start[0].x;
@@ -65,6 +78,7 @@ const Player = {
                     }
                 );
                 character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                Player.mario.music.hit.play();
             }
             if(character.body.touching.left)
             {

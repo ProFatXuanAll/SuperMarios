@@ -68,10 +68,13 @@ function preload()
             Player[playerType].picture.width,
             Player[playerType].picture.height
         );
-        Game.engine.load.audio(
-            Player[playerType].music.die.name,
-            Player[playerType].music.die.src,
-        );
+        for(let musicType in Player[playerType].music)
+        {
+            Game.engine.load.audio(
+                Player[playerType].music[musicType].name,
+                Player[playerType].music[musicType].src
+            );
+        }
     }
     // load all monster spritesheet and music
     for(let monsterType in Monster)
@@ -117,11 +120,6 @@ function create()
         Map.tileset[0],
         Map.background[0],
         Map.music[2]
-    );
-
-    // create item
-    Game.items = new ItemSetup(
-        Map.structure[0]
     );
 
     for(let playerType in Player)
@@ -282,7 +280,7 @@ function update()
         }
         else if (cursor.down.isDown)
         {
-            /*temperary unusable */
+                    //temporary unusable for hacks
         }
         else
         {
