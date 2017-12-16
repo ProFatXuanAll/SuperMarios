@@ -149,19 +149,12 @@ function create()
 
     // new player tell server to join game
     socket.emit(
-        'join', 
+        '00 playerJoin', 
         {
             name: Config.currentUserName,
             typeName: Player.mario.spriteName,
             x: Game.players.current.position.x,
             y: Game.players.current.position.y
-        }
-    );
-    
-    socket.emit(
-        'requestMonster',
-        {
-            name: Config.currentUserName
         }
     );
 }
@@ -272,7 +265,7 @@ function update()
         {
             if(!character.dieyet)
             {
-                facing = Config.state.left;
+                facing = Config.status.left;
                 velocity.x = facing * (item.coin*50+playerTypeVelocity.horizontal.move);
                 character.animations.play('left');
             }
@@ -281,7 +274,7 @@ function update()
         {
             if(!character.dieyet)
             {
-                facing = Config.state.right;
+                facing = Config.status.right;
                 velocity.x = facing * (item.coin*50+playerTypeVelocity.horizontal.move);
                 character.animations.play('right');
 
@@ -297,12 +290,12 @@ function update()
             {
                 if(velocity.x >= 0)
                 {
-                    facing = Config.state.right;
+                    facing = Config.status.right;
                     character.animations.play('rightIdle');
                 }
                 else
                 {
-                    facing = Config.state.left;
+                    facing = Config.status.left;
                     character.animations.play('leftIdle');
                 }
                 velocity.x = facing * playerTypeVelocity.horizontal.idle;

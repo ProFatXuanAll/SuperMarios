@@ -7,11 +7,11 @@ module.exports = function(server){
 
     io.on('connection', function(socket){
         // new player tell server to join game
-        socket.on('join', function(playerData){
+        socket.on('00 playerJoin', function(playerData){
             console.log(playerData.name + ' join');
             // server tell existed player(s) info new of player
             socket.broadcast.emit(
-                'toExistPlayer',
+                '01 toExistPlayer',
                 playerData
                 );
             socket.username = playerData.name;
@@ -23,24 +23,27 @@ module.exports = function(server){
                 // socket between server and player
                 socket: socket
             };
+
+            // server tell new player join finish
+            socket.emit('03 playerJoinFinish');
         });
         
         // server tell new player info of exist player(s)
-        socket.on('toNewPlayer', function(playerData){
+        socket.on('02 toNewPlayer', function(playerData){
             playerList[playerData.requestName].socket.emit(
-                'toNewPlayer',
+                '02 toNewPlayer',
                 playerData.data
             );
         });
         
         // new player tell server to get monster
-        socket.on('requestMonster', function(nameData){
+        socket.on('04 requestMonster', function(nameData){
             // find exist user to sync monster
             if(superUser == null)
             {
                superUser = nameData.name;
                socket.emit(
-                    'spawnMonster',
+                    '07 spawnMonster',
                     {
                        superUser: true
                     }
@@ -49,15 +52,15 @@ module.exports = function(server){
             else
             {
                 playerList[superUser].socket.emit(
-                    'getMonsterInfo',
+                    '05 getMonsterInfo',
                     nameData
                 );
             }
         });
 
-        socket.on('parseMonsterInfo', function(monsterData){
+        socket.on('06 parseMonsterInfo', function(monsterData){
             playerList[monsterData.requestName].socket.emit(
-                'spawnMonster',
+                '07 spawnMonster',
                 {
                     superUser: false,
                     monsterGroup: monsterData.monsterGroup

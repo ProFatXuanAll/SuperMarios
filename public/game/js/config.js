@@ -19,7 +19,20 @@ const Config = {
             align: "center"
         }
     },
-    state:{
+    state: {
+        start: 0,
+        playerJoin: 0,
+        toExistPlayer: 1,
+        toNewPlayer: 2,
+        playerJoinFinish: 3,
+        requestMonster: 4,
+        getMonsterInfo: 5,
+        parseMonsterInfo: 6,
+        spawnMonster: 7,
+        finish: 7,
+        current: 0
+    },
+    status: {
         left: -1,
         right: 1
     },

@@ -1,7 +1,12 @@
 let socket = io();
 
 // server tell current player info of new player
-socket.on('toExistPlayer', function(newPlayerData){
+socket.on('01 toExistPlayer', function(newPlayerData){
+    if(Config.state.current < Config.state.toExistPlayer)
+    {
+        Config.state.current = Config.state.toExistPlayer;
+    }
+
     // create new player
     Game.players.hash[newPlayerData.name] = Game.players.others.add(
         new PlayerSetup(
@@ -13,7 +18,7 @@ socket.on('toExistPlayer', function(newPlayerData){
     );
 
     socket.emit(
-        'toNewPlayer',
+        '02 toNewPlayer',
         {
             requestName: newPlayerData.name,
             data: {
@@ -29,7 +34,12 @@ socket.on('toExistPlayer', function(newPlayerData){
 });
 
 // server tell new player info of exist player(s)
-socket.on('toNewPlayer', function(playerData){
+socket.on('02 toNewPlayer', function(playerData){
+    if(Config.state.current < Config.state.toNewPlayer)
+    {
+        Config.state.current = Config.state.toNewPlayer;
+    }
+
     // need to decode because server encode to speed up
     // create existed player(s)
     Game.players.hash[playerData.name] = Game.players.others.add(
@@ -44,26 +54,25 @@ socket.on('toNewPlayer', function(playerData){
     );
 });
 
-socket.on('spawnMonster', function(monsterData){
-    Game.monsters = {};
-    
-    // if you're superuser, init the list and emit to server
-    // let server has a monster list
-    if (monsterData.superUser)
+socket.on('03 playerJoinFinish', function(){
+    if(Config.state.current < Config.state.playerJoinFinish)
     {
-        // spawn monster from tileset
-        MonsterSetup(Map.structure[0]);
+        Config.state.current = Config.state.playerJoinFinish;
     }
-    // if you're not superuser then ask monster list from server
-    else
-    {
-        // parse from monster list
-        monsterData = JSON.parse(monsterData.monsterGroup);
-        MonsterSetup(Map.structure[0], monsterData);
-    }
+
+    socket.emit(
+        '04 requestMonster',
+        {
+            name: Config.currentUserName
+        }
+    );
 });
 
-socket.on('getMonsterInfo', function(nameData){
+socket.on('05 getMonsterInfo', function(nameData){
+    if(Config.state.current < Config.state.getMonsterInfo)
+    {
+        Config.state.current = Config.state.getMonsterInfo;
+    }
 
     let dataString = '{';
     for(let monsterType in Game.monsters)
@@ -93,7 +102,7 @@ socket.on('getMonsterInfo', function(nameData){
     dataString += '}';
     // return monster info
     socket.emit(
-        'parseMonsterInfo',
+        '06 parseMonsterInfo',
         {
             requestName: nameData.name,
             monsterGroup: dataString
@@ -101,7 +110,35 @@ socket.on('getMonsterInfo', function(nameData){
     );
 });
 
+socket.on('07 spawnMonster', function(monsterData){
+    if(Config.state.current < Config.state.spawnMonster)
+    {
+        Config.state.current = Config.state.spawnMonster;
+    }
+
+    Game.monsters = {};
+    
+    // if you're superuser, init the list and emit to server
+    // let server has a monster list
+    if (monsterData.superUser)
+    {
+        // spawn monster from tileset
+        MonsterSetup(Map.structure[0]);
+    }
+    // if you're not superuser then ask monster list from server
+    else
+    {
+        // parse from monster list
+        monsterData = JSON.parse(monsterData.monsterGroup);
+        MonsterSetup(Map.structure[0], monsterData);
+    }
+});
+
 socket.on('move',function(datamove){
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
 
     if(datamove.name in Game.players.hash)
     {
@@ -124,6 +161,11 @@ socket.on('move',function(datamove){
 });
 
 socket.on('stop',function(datamove){
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
+
     if(datamove.name in Game.players.hash)
     {
         Game.players.hash[datamove.name].cursor[datamove.move].isDown = false;
@@ -136,12 +178,22 @@ socket.on('stop',function(datamove){
 
 // delete other players
 socket.on('playerDelete',function(dele){
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
+
     Game.players.hash[dele.name].name.destroy();
     Game.players.hash[dele.name].destroy();
     delete Game.players.hash[dele.name];
 });
 
 socket.on('someOneDie', function(die){
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
+
     let deadPlayer = Game.players.hash[die.name];
     deadPlayer.dieyet = true;
     Game.map.music.stop();
@@ -164,6 +216,11 @@ socket.on('someOneDie', function(die){
 });
 
 socket.on('monsterDead',function(monsterData){
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
+
     let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
     deadMonster.animations.stop();
     deadMonster.animations.play('die');
