@@ -66,21 +66,26 @@ const Item = {
 
 function ItemSetup(structure)
 {
+    //setup each item group
     for(let itemType in Item)
     {
         this[itemType] = Game.engine.add.group();
         this[itemType].enableBody = true;
+
+        //set music for eack kind of item
         for(let musicType in Item[itemType].music)
         {
             Item[itemType].music[musicType].play = Item[itemType].music[musicType].create();
         }
 
+        //create item from tilemap
         Game.map.tileMap.createFromTiles(
             Item[itemType].tileNumber,
             null,
             itemType,
             structure.layer.item,
             this[itemType]);
+            //assign id to each sprite in group
             for(let i = 0;i<this[itemType].length;i++)
             {
                 let child = this[itemType].children[i];
@@ -90,7 +95,7 @@ function ItemSetup(structure)
                     y: child.position.y
                 }
             }
-    
+
         this[itemType].setAll('body.gravity.y', Item[itemType].gravity.y);
         this[itemType].setAll('body.bounce.x', Item[itemType].bounce.x);
         this[itemType].setAll('body.bounce.y', Item[itemType].bounce.y);

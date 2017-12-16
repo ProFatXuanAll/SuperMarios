@@ -59,15 +59,7 @@ const Monster = {
 	        monster.body.enable = true;
             monster.animations.play('walk');
 	        monster.position.x = monster.spawn.x;
-	        monster.position.y = monster.spawn.y;
-
-	        socket.emit(
-                'monsterRespawned',
-                {
-                    monsterType: monster.name,
-                    id: monster.id
-                }
-            );        
+	        monster.position.y = monster.spawn.y;       
         }
     },
     caveTurtle:{

@@ -156,7 +156,6 @@ const Map = {
         if (player.body.blocked.down)
         {
             //console.log(Config.currentUserName+"is touching down");
-            //Player.mario.respawn(otherCharacter);
         }
         if(player.body.blocked.left)
         {

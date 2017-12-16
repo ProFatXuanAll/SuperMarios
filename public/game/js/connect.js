@@ -43,27 +43,18 @@ socket.on('toNewPlayer', function(playerData){
 
 socket.on('spawnMonster', function(monsterData){
     Game.monsters = {};
+    
+    // if you're superuser, init the list and emit to server
+    // let server has a monster list
     if (monsterData.superUser)
     {
+        // spawn monster from tileset
         MonsterSetup(Map.structure[0]);
-
-        let monsterList = "{";
-        for(let monsterType in Game.monsters)
-        {
-            if(monsterList.length > 1)
-            	monsterList += ',';
-            monsterList += `"${monsterType}":${Game.monsters[monsterType].children.length}`;
-        }
-        monsterList += "}";
-        socket.emit(
-            'getMonsterList',
-            {
-            monsterData:monsterList
-            }
-        );
     }
+    // if you're not superuser then ask monster list from server
     else
     {
+        // parse from monster list
         monsterData = JSON.parse(monsterData.monsterGroup);
         MonsterSetup(Map.structure[0], monsterData);
     }
@@ -139,7 +130,7 @@ socket.on('playerDelete',function(dele){
 
 socket.on('someOneDie',function(die){
     let deadPlayer = Game.players.hash[die.name];
-    deadPlayer.dieyet=true;
+    deadPlayer.dieyet = true;
     Game.map.music.stop();
     Player[deadPlayer.key].music.die.play();
     deadPlayer.animations.stop();
@@ -158,13 +149,11 @@ socket.on('monsterDead',function(monsterData){
     let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
     deadMonster.animations.stop();
     deadMonster.animations.play('die');
+    Monster[monsterData.monsterType].music.die.play();
     deadMonster.body.enable = false;
-    let sfx=Game.engine.add.audio(Monster[monsterData.monsterType].music.die.name);
-    sfx.play();
     Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
         {
             Monster[monsterData.monsterType].respawn(deadMonster);
 	    }
     );
-    
 });

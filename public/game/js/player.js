@@ -47,7 +47,6 @@ const Player = {
         },
         respawn: function(character)
         {
-            // need promise object
             Game.map.music.loopFull();
             character.body.velocity.x = 0;
             character.body.velocity.y = 0;
@@ -56,12 +55,15 @@ const Player = {
             character.body.enable = true;
             character.immovable = false;
             character.dieyet = false;
+            for(let itemType in Item)
+            {
+                character.item[itemType] = 0;
+            }
         },
         collide: function(character, otherCharacter){
             if (character.body.touching.down)
             {
-                console.log(Config.currentUserName+"is touching down");
-                
+                //console.log(Config.currentUserName+"is touching down");
                 socket.emit(
                     'someOneDie',
                     {
@@ -88,9 +90,6 @@ const Player = {
 
 function PlayerSetup(playerName, playerType, x=0, y=0, controlable=false)
 {
-    //set up player type
-    // the ultimate goal is to define things inside character and make it become a group
-    
     //add character sprite
     let character = Game.engine.add.sprite(
         x,

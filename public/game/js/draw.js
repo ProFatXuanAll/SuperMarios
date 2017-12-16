@@ -183,15 +183,13 @@ function update()
     // current player collide with solid layer
     Game.engine.physics.arcade.collide(
         Game.players.current,
-        Game.map.solid,
-        Map.overlap
+        Game.map.solid
     );
     
     // other player collide with solid layer
     Game.engine.physics.arcade.collide(
         Game.players.others,
-        Game.map.solid,
-        Map.overlap
+        Game.map.solid
     );
 
     for(let monsterType in Game.monsters)
@@ -234,6 +232,8 @@ function update()
         );
     }
 
+    //detect player finish and fall out of the world
+    //only need to detect myself and emit
     Map.detectPlayerWorldBound(Game.players.current);
     Map.detectFinished(Game.players.current);
 
@@ -245,9 +245,8 @@ function update()
         let name = all_players[player].name;
         name.x = Math.floor(all_players[player].position.x);
         name.y = Math.floor(all_players[player].position.y - all_players[player].height / 3);
-        // detect character walk through world bond
-        
 
+        //render player's movement
         let character = all_players[player];
         let cursor = all_players[player].cursor;
         let velocity = character.body.velocity;
@@ -271,8 +270,6 @@ function update()
             {
                 facing = Config.state.left;
                 velocity.x = facing * (item.coin*50+playerTypeVelocity.horizontal.move);
-                //if(character.body.blocked.left)
-                //    velocity.x =  facing * playerTypeVelocity.horizontal.bounce;
                 character.animations.play('left');
             }
         }
@@ -282,8 +279,6 @@ function update()
             {
                 facing = Config.state.right;
                 velocity.x = facing * (item.coin*50+playerTypeVelocity.horizontal.move);
-                //if(character.body.blocked.right)
-                //    velocity.x = facing * playerTypeVelocity.horizontal.bounce;
                 character.animations.play('right');
 
             }
