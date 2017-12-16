@@ -36,22 +36,24 @@ const Item = {
             socket.emit(
                 'itemDead',
                 {
+                    itemOwner: Config.currentUserName,
                     itemType: item.name,
                     id: item.id
                 }
             );
             
         },
-        respawn: function(item)
+        respawn: function(item, character)
         {
-            item.visible=true;
+            character.status.coin -= 1;
+            item.visible = true;
 	        item.body.enable = true;
 	        item.position.x = item.spawn.x;
             item.position.y = item.spawn.y;
             item.body.velocity.x = Item.coin.velocity.x;
             item.body.velocity.y = Item.coin.velocity.y;
         }
-    },
+    }
 }
 
 function ItemSetup(structure=null, itemData=null)

@@ -138,6 +138,7 @@ function create()
             Map.structure[0].start[0].y,
             0,
             0,
+            null,
             true
         ),
         others: Game.engine.add.group(),
@@ -244,7 +245,8 @@ function update()
         let cursor = all_players[player].cursor;
         let velocity = character.body.velocity;
         let playerTypeVelocity = Player[character.key].velocity;
-        let item = all_players[player].item;
+        let status = all_players[player].status;
+        let coin = status.coin;
         let facing;
         
         // stop moving to left or right
@@ -264,7 +266,7 @@ function update()
             if(!character.dieyet)
             {
                 facing = Config.status.left;
-                velocity.x = facing * (item.coin*50+playerTypeVelocity.horizontal.move);
+                velocity.x = facing * (coin * 50 + playerTypeVelocity.horizontal.move);
                 character.animations.play('left');
             }
         }
@@ -273,7 +275,7 @@ function update()
             if(!character.dieyet)
             {
                 facing = Config.status.right;
-                velocity.x = facing * (item.coin*50+playerTypeVelocity.horizontal.move);
+                velocity.x = facing * (coin * 50 + playerTypeVelocity.horizontal.move);
                 character.animations.play('right');
 
             }

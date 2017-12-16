@@ -64,7 +64,7 @@ const Player = {
             character.dieyet = false;
             for(let itemType in Item)
             {
-                character.item[itemType] = 0;
+                character.status[itemType] = 0;
             }
         },
         collide: function(character, otherCharacter){
@@ -96,7 +96,15 @@ const Player = {
     }
 };
 
-function PlayerSetup(playerName, playerType, x=0, y=0, vx=0, vy=0, controlable=false)
+function PlayerSetup(
+    playerName,
+    playerType, 
+    x=0, 
+    y=0, 
+    vx=0,
+    vy=0,
+    status=null,
+    controlable=false)
 {
     // uncontrolable character cursor simulator
     function SyncCursor()
@@ -162,11 +170,20 @@ function PlayerSetup(playerName, playerType, x=0, y=0, vx=0, vy=0, controlable=f
         Config.font.Arial
     );
 
-    character.item = {};
-    for(let itemType in Item)
+    character.status = {};
+    if(status == null)
     {
-        character.item[itemType] = 0;
+        for(let itemType in Item)
+        {
+            character.status[itemType] = 0;
+        }
     }
-
+    else
+    {
+        for(let itemType in status)
+        {
+            character.status[itemType] = status[itemType];
+        }
+    }
     return character;
 }

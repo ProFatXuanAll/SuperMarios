@@ -30,7 +30,8 @@ socket.on('01 toExistPlayer', function(newPlayerData){
                 x: Game.players.current.position.x,
                 y: Game.players.current.position.y,
                 vx: Game.players.current.body.velocity.x,
-                vy: Game.players.current.body.velocity.y
+                vy: Game.players.current.body.velocity.y,
+                //status: Game.players.current.status
             }
         }
     );
@@ -54,7 +55,8 @@ socket.on('02 toNewPlayer', function(playerData){
             playerData.x,
             playerData.y,
             playerData.vx,
-            playerData.vy
+            playerData.vy,
+            //playerData.status
         )
     );
 });
@@ -156,8 +158,6 @@ socket.on('07 spawnMonster', function(monsterData){
     );
 });
 
-
-
 //ask server to get item list
 socket.on('09 getItemInfo', function(nameData){
 
@@ -229,7 +229,6 @@ socket.on('11 spawnItem', function(itemData){
         ItemSetup(Map.structure[0], itemData);
     }
 });
-
 
 // someone press key
 socket.on('move',function(datamove){
@@ -361,13 +360,15 @@ socket.on('itemDead',function(itemData){
     }
     // set item's animation to die and play die sound
     let deadItem = Game.items[itemData.itemType].children[itemData.id];
+    let character = Game.players.hash[itemData.itemOwner];
+    character.status.coin += 1;
     Item[itemData.itemType].music.get.play();
     deadItem.body.enable = false;
-    deadItem.visible=false;
+    deadItem.visible = false;
     Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
         {
             // respawn item to its spawnpoint
-            Item[itemData.itemType].respawn(deadItem);
+            Item[itemData.itemType].respawn(deadItem, character);
 	    }
     );
 });

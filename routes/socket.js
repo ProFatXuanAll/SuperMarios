@@ -57,6 +57,17 @@ module.exports = function(server){
             }
         });
 
+        // parsing item info
+        socket.on('06 parseMonsterInfo', function(monsterData){
+            playerList[monsterData.requestName].socket.emit(
+                '07 spawnMonster',
+                {
+                    superUser: false,
+                    monsterGroup: monsterData.monsterGroup
+                }
+            );
+        });
+
         // new player tell server to get item
         socket.on('08 requestItem', function(nameData){
             // find exist user to sync item
@@ -84,7 +95,7 @@ module.exports = function(server){
                 '11 spawnItem',
                 {
                     superUser: false,
-                    itemGroup: itemData.ItemGroup
+                    itemGroup: itemData.itemGroup
                 }
             );
         });
