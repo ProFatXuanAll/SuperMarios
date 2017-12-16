@@ -2,6 +2,8 @@ let socket = io();
 
 // server tell current player info of new player
 socket.on('01 toExistPlayer', function(newPlayerData){
+
+    // update state if haven't reach
     if(Config.state.current < Config.state.toExistPlayer)
     {
         Config.state.current = Config.state.toExistPlayer;
@@ -17,6 +19,7 @@ socket.on('01 toExistPlayer', function(newPlayerData){
         )
     );
 
+    //emit player's stats to new player
     socket.emit(
         '02 toNewPlayer',
         {
@@ -35,6 +38,8 @@ socket.on('01 toExistPlayer', function(newPlayerData){
 
 // server tell new player info of exist player(s)
 socket.on('02 toNewPlayer', function(playerData){
+
+    // update state if haven't reach
     if(Config.state.current < Config.state.toNewPlayer)
     {
         Config.state.current = Config.state.toNewPlayer;
@@ -54,12 +59,16 @@ socket.on('02 toNewPlayer', function(playerData){
     );
 });
 
+// a new player is finish join into playerlist
 socket.on('03 playerJoinFinish', function(){
+
+    // update state if haven't reach
     if(Config.state.current < Config.state.playerJoinFinish)
     {
         Config.state.current = Config.state.playerJoinFinish;
     }
 
+    //ask superuser to get monster list
     socket.emit(
         '04 requestMonster',
         {
@@ -68,12 +77,16 @@ socket.on('03 playerJoinFinish', function(){
     );
 });
 
+//ask server to get monster list
 socket.on('05 getMonsterInfo', function(nameData){
+
+    // update state if haven't reach
     if(Config.state.current < Config.state.getMonsterInfo)
     {
         Config.state.current = Config.state.getMonsterInfo;
     }
 
+    // stringify monster info
     let dataString = '{';
     for(let monsterType in Game.monsters)
     {
@@ -110,7 +123,10 @@ socket.on('05 getMonsterInfo', function(nameData){
     );
 });
 
+//spawn monster in world
 socket.on('07 spawnMonster', function(monsterData){
+
+    // update state if haven't reach
     if(Config.state.current < Config.state.spawnMonster)
     {
         Config.state.current = Config.state.spawnMonster;
@@ -134,7 +150,10 @@ socket.on('07 spawnMonster', function(monsterData){
     }
 });
 
+// someone press key
 socket.on('move',function(datamove){
+
+    // if not in finish state,then don't do anything  
     if(Config.state.current < Config.state.finish)
     {
         return;
@@ -160,7 +179,10 @@ socket.on('move',function(datamove){
     }
 });
 
+// someone release key
 socket.on('stop',function(datamove){
+
+    // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
     {
         return;
@@ -178,6 +200,8 @@ socket.on('stop',function(datamove){
 
 // delete other players
 socket.on('playerDelete',function(dele){
+
+    // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
     {
         return;
@@ -188,12 +212,16 @@ socket.on('playerDelete',function(dele){
     delete Game.players.hash[dele.name];
 });
 
+// someone died
 socket.on('someOneDie', function(die){
+
+    // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
     {
         return;
     }
 
+    //player die animation and player death sound
     let deadPlayer = Game.players.hash[die.name];
     deadPlayer.dieyet = true;
     Game.map.music.stop();
@@ -209,18 +237,24 @@ socket.on('someOneDie', function(die){
             // avoid respawn after disconnect
             if(die.name in Game.players.hash)
             {
+                //respawn player to his spawnpoint
                 Player[deadPlayer.key].respawn(deadPlayer);
             }
 	    }
     );
 });
 
+
+// some monster died
 socket.on('monsterDead',function(monsterData){
+
+    // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
     {
         return;
     }
 
+    // set monster's animation to die and play die sound
     let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
     deadMonster.animations.stop();
     deadMonster.animations.play('die');
@@ -228,6 +262,7 @@ socket.on('monsterDead',function(monsterData){
     deadMonster.body.enable = false;
     Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
         {
+            // respawn monster to its spawnpoint
             Monster[monsterData.monsterType].respawn(deadMonster);
 	    }
     );

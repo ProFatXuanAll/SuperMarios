@@ -19,6 +19,7 @@ const Config = {
             align: "center"
         }
     },
+    // Config.state is used verify state
     state: {
         start: 0,
         playerJoin: 0,

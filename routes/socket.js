@@ -4,7 +4,6 @@ module.exports = function(server){
 
     let playerList = {};
     let superUser = null;
-
     io.on('connection', function(socket){
         // new player tell server to join game
         socket.on('00 playerJoin', function(playerData){
@@ -57,7 +56,8 @@ module.exports = function(server){
                 );
             }
         });
-
+        
+        // parsing monster info
         socket.on('06 parseMonsterInfo', function(monsterData){
             playerList[monsterData.requestName].socket.emit(
                 '07 spawnMonster',
@@ -80,6 +80,7 @@ module.exports = function(server){
                 datamove);
         });
 
+        // someone disconnect
         socket.on('disconnect', function(){
             if(socket.username == superUser)
             {
@@ -98,6 +99,7 @@ module.exports = function(server){
             }
 
             delete playerList[socket.username];
+            // delete player from player list
             socket.broadcast.emit(
                 'playerDelete',
                 {
@@ -106,6 +108,7 @@ module.exports = function(server){
             );
         });
 
+        //someone died
         socket.on('someOneDie', function(die){
             io.emit(
                 'someOneDie',
@@ -113,6 +116,7 @@ module.exports = function(server){
             );
         });
 
+        //some monster died
         socket.on('monsterDead', function(monsterDie){
             io.emit(
                 'monsterDead',
