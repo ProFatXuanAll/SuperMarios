@@ -9,7 +9,7 @@ $(document).ready(function(){
         {
             var name = escape($("#account").val());
             $("#account").val(name);
-            $("form").submit();
+            return true;
         }
     });
 })
