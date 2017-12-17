@@ -391,41 +391,7 @@ function MonsterSetup(structure=null, monsterData=null)
                 child.animations.play('walkRight');
             }
         }
-        /*
-        Game.monsters[monsterType].callAll(
-            'animations.add',
-            'animations',
-            'walkLeft',
-            Monster[monsterType].animation.walkLeft,
-            Monster[monsterType].animation.frame_rate,
-            true
-        );
 
-        Game.monsters[monsterType].callAll(
-            'animations.add',
-            'animations',
-            'walkRight',
-            Monster[monsterType].animation.walkRight,
-            Monster[monsterType].animation.frame_rate,
-            true
-        );
-
-        Game.monsters[monsterType].callAll(
-            'animations.add',
-            'animations',
-            'die',
-            Monster[monsterType].animation.die,
-            Monster[monsterType].animation.frame_rate,
-            true
-        );
-        */
-        /*
-        Game.monsters[monsterType].callAll(
-            'animations.play',
-            'animations',
-            'walkLeft'
-        );
-        */
         Game.monsters[monsterType].setAll(
             'body.gravity.y',
             Monster[monsterType].gravity.y

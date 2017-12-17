@@ -2,73 +2,89 @@ let socket = io();
 
 // server tell current player info of new player
 socket.on('01 toExistPlayer', function(newPlayerData){
+    // to do action
+    function toDo(){
+        // delay to do if state not reach yet
+        if(Config.state.current < Config.state.toExistPlayer)
+        {
+            setTimeout(toDo, Config.delay);
+            return;
+        }
 
-    // update state if haven't reach
-    if(Config.state.current < Config.state.toExistPlayer)
-    {
-        Config.state.current = Config.state.toExistPlayer;
+        // avoid multiple signals
+        if(!(newPlayerData.name in Game.players.hash))
+        {
+            // create new player
+            Game.players.hash[newPlayerData.name] = Game.players.others.add(
+                new PlayerSetup(
+                    newPlayerData.name,
+                    Player[newPlayerData.typeName],
+                    newPlayerData.x,
+                    newPlayerData.y
+                )
+            );
+        }
+
+        // emit player's stats to new player
+        socket.emit(
+            '02 toNewPlayer',
+            {
+                requestName: newPlayerData.name,
+                data: {
+                    name: Config.currentUserName,
+                    typeName: Player.mario.spriteName,
+                    x: Game.players.current.position.x,
+                    y: Game.players.current.position.y,
+                    vx: Game.players.current.body.velocity.x,
+                    vy: Game.players.current.body.velocity.y,
+                    status: Game.players.current.status
+                }
+            }
+        );
     }
 
-    // create new player
-    Game.players.hash[newPlayerData.name] = Game.players.others.add(
-        new PlayerSetup(
-            newPlayerData.name,
-            Player[newPlayerData.typeName],
-            newPlayerData.x,
-            newPlayerData.y
-        )
-    );
-
-    //emit player's stats to new player
-    socket.emit(
-        '02 toNewPlayer',
-        {
-            requestName: newPlayerData.name,
-            data: {
-                name: Config.currentUserName,
-                typeName: Player.mario.spriteName,
-                x: Game.players.current.position.x,
-                y: Game.players.current.position.y,
-                vx: Game.players.current.body.velocity.x,
-                vy: Game.players.current.body.velocity.y,
-                status: Game.players.current.status
-            }
-        }
-    );
+    // run to do
+    toDo();
 });
 
 // server tell new player info of exist player(s)
 socket.on('02 toNewPlayer', function(playerData){
+    // to do action
+    function toDo(){
+        // delay to do if state not reach yet
+        if(Config.state.current < Config.state.toNewPlayer)
+        {
+            setTimeout(toDo, Config.delay);
+            return;
+        }
 
-    // update state if haven't reach
-    if(Config.state.current < Config.state.toNewPlayer)
-    {
-        Config.state.current = Config.state.toNewPlayer;
+        // avoid multiple signals
+        if(!(playerData.name in Game.players.hash))
+        {
+            // create existed player(s)
+            Game.players.hash[playerData.name] = Game.players.others.add(
+                new PlayerSetup(
+                    playerData.name,
+                    Player[playerData.typeName],
+                    playerData.x,
+                    playerData.y,
+                    playerData.vx,
+                    playerData.vy,
+                    playerData.status
+                )
+            );
+        }
     }
 
-    // need to decode because server encode to speed up
-    // create existed player(s)
-    Game.players.hash[playerData.name] = Game.players.others.add(
-        new PlayerSetup(
-            playerData.name,
-            Player[playerData.typeName],
-            playerData.x,
-            playerData.y,
-            playerData.vx,
-            playerData.vy,
-            playerData.status
-        )
-    );
+    // run to do
+    toDo();
 });
 
-// a new player is finish join into playerlist
+// new player finish join into playerlist
 socket.on('03 playerJoinFinish', function(){
 
-    // update state if haven't reach
-    if(Config.state.current < Config.state.playerJoinFinish)
-    {
-        Config.state.current = Config.state.playerJoinFinish;
-    }
+    // update state
+    Config.state.current = Config.state.playerJoinFinish;
 
     //ask superuser to get monster list
     socket.emit(
@@ -81,61 +97,62 @@ socket.on('03 playerJoinFinish', function(){
 
 //ask server to get monster list
 socket.on('05 getMonsterInfo', function(playerData){
-
-    // update state if haven't reach
-    if(Config.state.current < Config.state.getMonsterInfo)
-    {
-        Config.state.current = Config.state.getMonsterInfo;
-    }
-
-    // stringify monster info
-    let dataString = '{';
-    for(let monsterType in Game.monsters)
-    {
-        if(dataString.length > 1)
-            dataString += ',';
-
-        dataString += `"${monsterType}":[`
-        
-        let children = Game.monsters[monsterType].children;
-        for(let i = 0; i < children.length; ++i)
+    // to do action
+    function toDo(){
+        // delay to do if state not reach yet
+        if(Config.state.current < Config.state.getMonsterInfo)
         {
-            if(i != 0)
+            setTimeout(toDo, Config.delay);
+            return;
+        }
+
+        // stringify monster info
+        let dataString = '{';
+        for(let monsterType in Game.monsters)
+        {
+            if(dataString.length > 1)
                 dataString += ',';
-            dataString += '{'
-            dataString += '"x":'+children[i].position.x + ',';
-            dataString += '"y":'+children[i].position.y + ',';
-            dataString += '"vx":'+children[i].body.velocity.x + ',';
-            dataString += '"vy":'+children[i].body.velocity.y + ',';
-            dataString += '"sx":'+children[i].spawn.x + ',';
-            dataString += '"sy":'+children[i].spawn.y;
-            // dataString += 'bodyenable'
-            dataString += '}'
+
+            dataString += `"${monsterType}":[`
+            
+            let children = Game.monsters[monsterType].children;
+            for(let i = 0; i < children.length; ++i)
+            {
+                if(i != 0)
+                    dataString += ',';
+                dataString += '{'
+                dataString += '"x":'+children[i].position.x + ',';
+                dataString += '"y":'+children[i].position.y + ',';
+                dataString += '"vx":'+children[i].body.velocity.x + ',';
+                dataString += '"vy":'+children[i].body.velocity.y + ',';
+                dataString += '"sx":'+children[i].spawn.x + ',';
+                dataString += '"sy":'+children[i].spawn.y;
+                // dataString += 'bodyenable'
+                dataString += '}'
+            }
+            dataString += ']'
         }
-        dataString += ']'
+        dataString += '}';
+        // return monster info
+        socket.emit(
+            '06 parseMonsterInfo',
+            {
+                requestName: playerData.name,
+                monsterGroup: dataString
+            }
+        );
     }
-    dataString += '}';
-    // return monster info
-    socket.emit(
-        '06 parseMonsterInfo',
-        {
-            requestName: playerData.name,
-            monsterGroup: dataString
-        }
-    );
+    
+    // run to do
+    toDo();
 });
 
-//spawn monster in world
+// spawn monster in world
 socket.on('07 spawnMonster', function(monsterData){
 
-    // update state if haven't reach
-    if(Config.state.current < Config.state.spawnMonster)
-    {
-        Config.state.current = Config.state.spawnMonster;
-    }
+    // update state
+    Config.state.current = Config.state.spawnMonster;
 
-    Game.monsters = {};
-    
     // if you're superuser, init the list and emit to server
     // let server has a monster list
     if (monsterData.superUser)
@@ -158,62 +175,64 @@ socket.on('07 spawnMonster', function(monsterData){
     );
 });
 
-//ask server to get item list
+// ask server to get item list
 socket.on('09 getItemInfo', function(playerData){
-
-    // update state if haven't reach
-    if(Config.state.current < Config.state.getItemInfo)
-    {
-        Config.state.current = Config.state.getItemInfo;
-    }
-
-    // stringify item info
-    let dataString = '{';
-    for(let itemType in Game.items)
-    {
-        if(dataString.length > 1)
-            dataString += ',';
-
-        dataString += `"${itemType}":[`
-        
-        let children = Game.items[itemType].children;
-        for(let i = 0; i < children.length; ++i)
+    // to do action
+    function toDo(){
+        // delay to do if state not reach yet
+        if(Config.state.current < Config.state.getItemInfo)
         {
-            if(i != 0)
+            setTimeout(toDo, Config.delay);
+            return;
+        }
+
+        // stringify item info
+        let dataString = '{';
+        for(let itemType in Game.items)
+        {
+            if(dataString.length > 1)
                 dataString += ',';
-            dataString += '{'
-            dataString += '"x":'+children[i].position.x + ',';
-            dataString += '"y":'+children[i].position.y + ',';
-            dataString += '"vx":'+children[i].body.velocity.x + ',';
-            dataString += '"vy":'+children[i].body.velocity.y + ',';
-            dataString += '"sx":'+children[i].spawn.x + ',';
-            dataString += '"sy":'+children[i].spawn.y;
-            // dataString += 'bodyenable'
-            dataString += '}'
+
+            dataString += `"${itemType}":[`
+            
+            let children = Game.items[itemType].children;
+            for(let i = 0; i < children.length; ++i)
+            {
+                if(i != 0)
+                    dataString += ',';
+                dataString += '{'
+                dataString += '"x":'+children[i].position.x + ',';
+                dataString += '"y":'+children[i].position.y + ',';
+                dataString += '"vx":'+children[i].body.velocity.x + ',';
+                dataString += '"vy":'+children[i].body.velocity.y + ',';
+                dataString += '"sx":'+children[i].spawn.x + ',';
+                dataString += '"sy":'+children[i].spawn.y;
+                // dataString += 'bodyenable'
+                dataString += '}'
+            }
+            dataString += ']'
         }
-        dataString += ']'
+        dataString += '}';
+        // return item info
+        socket.emit(
+            '10 parseItemInfo',
+            {
+                requestName: playerData.name,
+                itemGroup: dataString
+            }
+        );
     }
-    dataString += '}';
-    // return item info
-    socket.emit(
-        '10 parseItemInfo',
-        {
-            requestName: playerData.name,
-            itemGroup: dataString
-        }
-    );
+
+    // run to do
+    toDo();
 });
 
 //spawn item in world
 socket.on('11 spawnItem', function(itemData){
 
-    // update state if haven't reach
-    if(Config.state.current < Config.state.spawnItem)
-    {
-        Config.state.current = Config.state.spawnItem;
-    }
+    // update state
+    Config.state.current = Config.state.spawnItem;
 
-    Game.items = {};
     // if you're superuser, init the list and emit to server
     // let server has a item list
     if (itemData.superUser)
@@ -287,7 +306,10 @@ socket.on('playerDelete',function(playerData){
         return;
     }
 
-    Game.players.hash[playerData.name].delete = true;
+    if(playerData.name in Game.players.hash)
+    {
+        Game.players.hash[playerData.name].delete = true;
+    }
 });
 
 // someone died
@@ -299,7 +321,7 @@ socket.on('playerDead', function(playerData){
         return;
     }
 
-    //player die animation and player death sound
+    // player die animation and player death sound
     let deadPlayer = Game.players.hash[playerData.name];
     if(playerData.name == Config.currentUserName)
     {
@@ -347,7 +369,7 @@ socket.on('monsterDead',function(monsterData){
     {
         return;
     }
-    if(monsterData.monsterKiller==Config.currentUserName)
+    if(monsterData.monsterKiller == Config.currentUserName)
     {
         Monster[monsterData.monsterType].music.die.play();
     }
@@ -378,7 +400,7 @@ socket.on('itemDead',function(itemData){
     // set item's animation to die and play die sound
     let deadItem = Game.items[itemData.itemType].children[itemData.id];
     let character = Game.players.hash[itemData.itemOwner];
-    if(itemData.itemOwner==Config.currentUserName)
+    if(itemData.itemOwner == Config.currentUserName)
     {
         Item.coin.music.get.play();
     }

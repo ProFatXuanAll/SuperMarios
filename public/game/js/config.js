@@ -41,5 +41,6 @@ const Config = {
         left: -1,
         right: 1
     },
+    delay: 200,
     currentUserName: $("#userName").html()
 }

@@ -145,6 +145,12 @@ function create()
         hash: {}
     };
     Game.players.hash[Config.currentUserName] = Game.players.current;
+    
+    // create monsters' container
+    Game.monsters = {};
+    
+    // create items' container
+    Game.items = {};
 
     // new player tell server to join game
     socket.emit(

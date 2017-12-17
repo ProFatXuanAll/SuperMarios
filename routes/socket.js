@@ -7,13 +7,16 @@ module.exports = function(server){
     io.on('connection', function(socket){
         // new player tell server to join game
         socket.on('00 playerJoin', function(playerData){
-            //if someone open multiple tabs
-            if(playerList[playerData.name] !== undefined)
+            
+            // if someone open multiple tabs
+            if(playerList[playerData.name])
             {
                 socket.emit('multipleConnection');
                 return;
             }
+
             console.log(playerData.name + ' join');
+            
             // server tell existed player(s) info new of player
             socket.broadcast.emit(
                 '01 toExistPlayer',
@@ -31,6 +34,11 @@ module.exports = function(server){
 
             // server tell new player join finish
             socket.emit('03 playerJoinFinish');
+            
+            if(superUser == null)
+            {
+                superUser = playerData.name;
+            }
         });
         
         // server tell new player info of exist player(s)
@@ -46,13 +54,22 @@ module.exports = function(server){
             // find exist user to sync monster
             if(superUser == null)
             {
-               superUser = playerData.name;
+                superUser = playerData.name;
+                socket.emit(
+                     '07 spawnMonster',
+                     {
+                         superUser: true
+                     }
+                );
+            }
+            else if(superUser == socket.username)
+            {
                socket.emit(
                     '07 spawnMonster',
                     {
                        superUser: true
                     }
-                );
+               );
             }
             else
             {
@@ -77,7 +94,17 @@ module.exports = function(server){
         // new player tell server to get item
         socket.on('08 requestItem', function(playerData){
             // find exist user to sync item
-            if(superUser == socket.username)
+            if(superUser == null)
+            {
+                superUser = playerData.name;
+                socket.emit(
+                    '11 spawnItem',
+                    {
+                        superUser: true
+                    }
+                );
+            }
+            else if(superUser == socket.username)
             {
                 socket.emit(
                     '11 spawnItem',
