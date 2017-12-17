@@ -130,7 +130,7 @@ const Monster = {
                 Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
                 {
                     // respawn monster to its spawnpoint
-                    Monster.caveTurtle.respawn(deadMonster);
+                    Monster.caveTurtle.respawn(monster);
                 }
             );
             }
@@ -275,14 +275,14 @@ const Monster = {
 
             spawnedMonster.animations.play('walk');
             monster.body.velocity.x = Monster.goomba.velocity.x;
-            //reassign spawnpoint
+            // reassign spawnpoint
             spawnedMonster.name=monster.name;
             spawnedMonster.spawn={
                 x: monster.spawn.x,
                 y: monster.spawn.y 
             }
 
-            //set physic
+            // set physic
             Game.engine.physics.enable(spawnedMonster);
             spawnedMonster.body.enable=true;
             spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;

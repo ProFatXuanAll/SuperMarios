@@ -231,7 +231,7 @@ socket.on('11 spawnItem', function(itemData){
 });
 
 // someone press key
-socket.on('move',function(playerData){
+socket.on('playerMove',function(playerData){
 
     // if not in finish state,then don't do anything  
     if(Config.state.current < Config.state.finish)
@@ -260,7 +260,7 @@ socket.on('move',function(playerData){
 });
 
 // someone release key
-socket.on('stop',function(playerData){
+socket.on('playerStop',function(playerData){
 
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
@@ -287,9 +287,7 @@ socket.on('playerDelete',function(playerData){
         return;
     }
 
-    Game.players.hash[playerData.name].name.destroy();
-    Game.players.hash[playerData.name].destroy();
-    delete Game.players.hash[playerData.name];
+    Game.players.hash[playerData.name].delete = true;
 });
 
 // someone died

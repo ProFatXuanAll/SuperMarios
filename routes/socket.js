@@ -106,15 +106,15 @@ module.exports = function(server){
             );
         });
 
-        socket.on('move',function(playerData){
+        socket.on('playerMove',function(playerData){
             socket.broadcast.emit(
-                'move',
+                'playerMove',
                 playerData);
         });
 
-        socket.on('stop',function(playerData){
+        socket.on('playerStop',function(playerData){
             socket.broadcast.emit(
-                'stop',
+                'playerStop',
                 playerData);
         });
 

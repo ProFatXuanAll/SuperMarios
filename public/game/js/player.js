@@ -161,7 +161,10 @@ function PlayerSetup(
     character.animations.add('leftIdle', playerType.animation.leftIdle, playerType.animation.frameRate, true);
     character.animations.add('rightIdle', playerType.animation.rightIdle, playerType.animation.frameRate, true);
     character.animations.add('die', playerType.animation.die, playerType.animation.frameRate, true);
+    // character status: die
     character.dieyet = false;
+    // character status: delete
+    character.delete = false;
 
     character.name = Game.engine.add.text(
         x,

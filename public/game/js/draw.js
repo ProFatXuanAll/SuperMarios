@@ -240,25 +240,33 @@ function update()
     let all_players = Game.players.hash;
     for(let player in all_players)
     {
-        // set each players' title on head
-        let name = all_players[player].name;
-        name.x = Math.floor(all_players[player].position.x);
-        name.y = Math.floor(all_players[player].position.y - all_players[player].height / 3);
-
         //render player's movement
         let character = all_players[player];
-        let cursor = all_players[player].cursor;
+        let name = character.name;
+        let cursor = character.cursor;
         let velocity = character.body.velocity;
         let playerTypeVelocity = Player[character.key].velocity;
-        let status = all_players[player].status;
+        let status = character.status;
         let coin = status.coin;
         let feather = status.feather;
         let facing;
         
-        // stop moving to left or right
+        // delete player if signaled
+        if(character.delete)
+        {
+            Game.players.hash[plater].name.destroy();
+            Game.players.hash[player].destroy();
+            delete Game.players.hash[player];
+            continue;
+        }
         
+        // set each players' title on head
+        name.x = Math.floor(all_players[player].position.x);
+        name.y = Math.floor(all_players[player].position.y - all_players[player].height / 3);
+
+        // stop moving to left or right
         if(!character.body.onFloor())
-            velocity.y += playerTypeVelocity.vertical.gravity - 10 * (feather % 2);
+            velocity.y += playerTypeVelocity.vertical.gravity - 10 * (feather >= 1 ? 1 : 0);
 
         if (cursor.up.isDown)
         {
@@ -318,7 +326,7 @@ function update()
     if(currentCharacterCursor.up.isDown && currentCharacter.body.onFloor())
     {
         socket.emit(
-            'move',
+            'playerMove',
             {
                 name: Config.currentUserName,
                 move: 'up',
@@ -337,10 +345,10 @@ function update()
         if(currentCharacterCursor.left.isDown)
         {
             socket.emit(
-                'move',
+                'playerMove',
                 {
                     name: Config.currentUserName,
-                    move:'left',
+                    move: 'left',
                     x: currentCharacter.position.x,
                     y: currentCharacter.position.y,
                     vx: currentCharacter.body.velocity.x,
@@ -353,10 +361,10 @@ function update()
         else
         {
             socket.emit(
-                'stop',
+                'playerStop',
                 {
                     name: Config.currentUserName,
-                    move:'left',
+                    move: 'left',
                     x: currentCharacter.position.x,
                     y: currentCharacter.position.y,
                     vx: currentCharacter.body.velocity.x,
@@ -374,10 +382,10 @@ function update()
         if(currentCharacterCursor.right.isDown)
         {
             socket.emit(
-                'move',
+                'playerMove',
                 {
                     name: Config.currentUserName,
-                    move:'right',
+                    move: 'right',
                     x: currentCharacter.position.x,
                     y: currentCharacter.position.y,
                     vx: currentCharacter.body.velocity.x,
@@ -390,10 +398,10 @@ function update()
         else
         {
             socket.emit(
-                'stop',
+                'playerStop',
                 {
                     name: Config.currentUserName,
-                    move:'right',
+                    move: 'right',
                     x: currentCharacter.position.x,
                     y: currentCharacter.position.y,
                     vx: currentCharacter.body.velocity.x,
