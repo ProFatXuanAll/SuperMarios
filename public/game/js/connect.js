@@ -311,6 +311,10 @@ socket.on('playerDead', function(playerData){
         Game.map.music.stop();
         Player[deadPlayer.key].music.die.play();
     }
+    else
+    {
+        Player.mario.music.hit.play();
+    }
     if(playerData.name in Game.players.hash)
     {
         Player[deadPlayer.key].destroy(deadPlayer);

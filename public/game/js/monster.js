@@ -141,8 +141,7 @@ const Monster = {
                 {
                     // respawn monster to its spawnpoint
                     Monster.caveTurtle.respawn(monster);
-                }
-            );
+                });
             }
             else
             {
@@ -289,46 +288,10 @@ const Monster = {
         },
         respawn: function(monster)
         {
-            let spawnedMonster = Game.engine.add.sprite(
-                monster.spawn.x,
-                monster.spawn.y,
-                monster.name
-            );
-
-            spawnedMonster.animations.add(
-                'walkLeft',
-                Monster[monster.name].animation.walk,
-                Monster[monster.name].animation.frame_rate,
-                true
-            );
-
-            spawnedMonster.animations.add(
-                'die',
-                Monster[monster.name].animation.die,
-                Monster[monster.name].animation.frame_rate,
-                true
-            );
-
-            spawnedMonster.animations.play('walkLeft');
-            monster.body.velocity.x = Monster.goomba.velocity.x;
-            // reassign spawnpoint
-            spawnedMonster.name=monster.name;
-            spawnedMonster.spawn={
-                x: monster.spawn.x,
-                y: monster.spawn.y 
-            }
-
-            // set physic
-            Game.engine.physics.enable(spawnedMonster);
-            spawnedMonster.body.enable=true;
-            spawnedMonster.body.velocity.x=Monster[monster.name].velocity.x;
-            spawnedMonster.body.gravity.y=Monster[monster.name].gravity.y;
-            spawnedMonster.body.bounce.x=1;
-            Game.monsters[monster.name].add(spawnedMonster);
-            monster.destroy();
+            //ironFlower never die!
+            return;
         }
-    },
-
+    }
 }
 
 function MonsterSetup(structure=null, monsterData=null)

@@ -51,7 +51,7 @@ const Player = {
         height: 56,
         destroy: function(character)
         {
-            if(character.dieyet==false)
+            if(character.dieyet == false)
             {
                 character.dieyet = true;
                 character.animations.stop();
@@ -89,7 +89,6 @@ const Player = {
                         name: character.name._text
                     }
                 );
-                Player.mario.music.hit.play();
                 Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
                     // respawn monster to its spawnpoint
                     socket.emit(
