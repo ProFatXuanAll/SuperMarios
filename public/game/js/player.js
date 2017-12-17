@@ -68,8 +68,8 @@ const Player = {
             }
             character.body.velocity.x = 0;
             character.body.velocity.y = 0;
-            character.x = Map.structure[0].start[0].x;
-            character.y = Map.structure[0].start[0].y;
+            character.x = character.spawn.x;
+            character.y = character.spawn.y;
             character.body.enable = true;
             character.immovable = false;
             character.dieyet = false;
@@ -122,6 +122,8 @@ function PlayerSetup(
     y=0, 
     vx=0,
     vy=0,
+    sx=Map.structure[0].start[0].x,
+    sy=Map.structure[0].start[0].y,
     status=null,
     controlable=false)
 {
@@ -157,11 +159,16 @@ function PlayerSetup(
         character.cursor = new SyncCursor();
     }
 
-
     Game.engine.physics.enable(character);
     character.body.collideWorldBounds = false;
     character.body.velocity.x = vx;
     character.body.velocity.y = vy;
+    character.spawn = {
+        id : 0,
+        x: sx,
+        y: sy
+    };
+
     // sync player key press event
     if(Math.abs(vx) > Player[playerType.spriteName].velocity.horizontal.idle)
     {

@@ -138,6 +138,8 @@ function create()
             Map.structure[0].start[0].y,
             0,
             0,
+            Map.structure[0].start[0].x,
+            Map.structure[0].start[0].y,
             null,
             true
         ),
@@ -241,6 +243,7 @@ function update()
     //detect player finish and fall out of the world
     //only need to detect myself and emit
     Map.detectPlayerWorldBound(Game.players.current);
+    Map.detectMidpoint(Game.players.current);
     Map.detectFinished(Game.players.current);
 
     // player movement update

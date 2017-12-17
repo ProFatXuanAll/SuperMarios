@@ -188,6 +188,13 @@ module.exports = function(server){
             );
         });
 
+        socket.on('playerMidpoint', function(playerData){
+            io.emit(
+                'playerMidpoint',
+                playerData
+            );
+        });
+
         socket.on('playerFinish', function(playerData){
             io.emit(
                 'playerFinish',

@@ -37,6 +37,8 @@ socket.on('01 toExistPlayer', function(newPlayerData){
                     y: Game.players.current.position.y,
                     vx: Game.players.current.body.velocity.x,
                     vy: Game.players.current.body.velocity.y,
+                    sx: Game.players.current.spawn.x,
+                    sy: Game.players.current.spawn.y,
                     status: Game.players.current.status
                 }
             }
@@ -70,6 +72,8 @@ socket.on('02 toNewPlayer', function(playerData){
                     playerData.y,
                     playerData.vx,
                     playerData.vy,
+                    playerData.sx,
+                    playerData.sy,
                     playerData.status
                 )
             );
@@ -357,6 +361,11 @@ socket.on('playerRespawn',function(playerData){
         //respawn player to his spawnpoint
         Player[deadPlayer.key].respawn(deadPlayer);
     }
+});
+
+socket.on('playerMidpoint',function(playerData){
+    Game.players.hash[playerData.name].spawn.x=Game.map.midpoint[0].x;
+    Game.players.hash[playerData.name].spawn.y=Game.map.midpoint[0].y;
 });
 
 socket.on('playerFinish',function(playerData){

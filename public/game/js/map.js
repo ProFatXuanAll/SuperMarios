@@ -14,10 +14,16 @@ const Map = {
                     y:1096
                 }
             ],
+            midpoint: [
+                {
+                    x: 5691,
+                    y: 1000
+                }
+            ],
             finish: {
                 x: 9500,
-                y:0,
-                isFinished:false
+                y: 0,
+                isFinished: false
             },
             size: {
                 x:9600,
@@ -96,17 +102,31 @@ const Map = {
             src: ['/game/assets/map/music/worldmap.wav']
         }
     ],
+    detectMidpoint: function(character)
+    {
+        if(character.y >= Game.map.midpoint[0].y && character.x >= Game.map.midpoint[0].x && character.spawn.id <= 0)
+        {
+            character.spawn.id=0;
+            socket.emit(
+                'playerMidpoint',
+                {
+                    name: character.name._text
+                }
+            );
+        }
+    },
     detectFinished: function(character)
     {
         if(character.y >= Game.map.finish.y && character.x >= Game.map.finish.x && Game.map.finish.isFinished == false)
         {
+            /*
             socket.emit(
                 'playerFinish',
                 {
                     name: character.name._text
                 }
             );
-
+            */
         }
     },
     detectPlayerWorldBound: function(character)
@@ -230,6 +250,8 @@ function MapSetup(structure, tileset, background, music)
     //give map size(use to detect collide worldbound or not)
     this.size = structure.size;
 
+    //give map midpoint
+    this.midpoint = structure.midpoint;
     //give map finish point
     this.finish = structure.finish;
 
