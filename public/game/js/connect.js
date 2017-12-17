@@ -358,6 +358,7 @@ socket.on('itemDead',function(itemData){
     {
         return;
     }
+
     // set item's animation to die and play die sound
     let deadItem = Game.items[itemData.itemType].children[itemData.id];
     let character = Game.players.hash[itemData.itemOwner];
@@ -365,10 +366,18 @@ socket.on('itemDead',function(itemData){
     Item[itemData.itemType].music.get.play();
     deadItem.body.enable = false;
     deadItem.visible = false;
-    Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
-        {
-            // respawn item to its spawnpoint
-            Item[itemData.itemType].respawn(deadItem, character);
-	    }
-    );
+});
+
+socket.on('playerStatusChange', function(itemData){
+
+    // if not in finish state,then don't do anything
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
+
+    // set item's animation to die and play die sound
+    let deadItem = Game.items[itemData.itemType].children[itemData.id];
+    let character = Game.players.hash[itemData.itemOwner];
+    Item[itemData.itemType].respawn(deadItem, character);
 });

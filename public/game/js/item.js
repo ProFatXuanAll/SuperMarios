@@ -41,7 +41,19 @@ const Item = {
                     id: item.id
                 }
             );
-            
+            Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
+                {
+                    // respawn item to its spawnpoint
+                    socket.emit(
+                        'playerStatusChange',
+                        {
+                            itemOwner: Config.currentUserName,
+                            itemType: 'coin',
+                            id: item.id
+                        }
+                    );
+                }
+            );
         },
         respawn: function(item, character)
         {
