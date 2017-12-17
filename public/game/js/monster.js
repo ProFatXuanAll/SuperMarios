@@ -44,7 +44,6 @@ const Monster = {
                         id: monster.id
                     }
                 );
-                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
                 Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
                     // respawn monster to its spawnpoint
                     socket.emit(
@@ -138,7 +137,6 @@ const Monster = {
                         id: monster.id
                     }
                 );
-                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
                 Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
                 {
                     // respawn monster to its spawnpoint

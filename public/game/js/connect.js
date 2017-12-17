@@ -299,6 +299,11 @@ socket.on('playerDead', function(playerData){
         return;
     }
 
+    let playerKiller = Game.players.hash[playerData.playerKiller];
+    if(playerData.playerKiller)
+    {
+        playerKiller.body.velocity.y = Player[playerKiller.key].velocity.vertical.bounce;
+    }
     //player die animation and player death sound
     let deadPlayer = Game.players.hash[playerData.name];
     if(playerData.name == Config.currentUserName)
@@ -318,7 +323,7 @@ socket.on('playerRespawn',function(playerData){
     {
         return;
     }
-
+    
     let deadPlayer = Game.players.hash[playerData.name];
     // avoid respawn after disconnect
     if(playerData.name in Game.players.hash)
@@ -339,7 +344,6 @@ socket.on('playerFinish',function(playerData){
     Game.map.finish.isFinished = true;
 });
 
-
 // some monster died
 socket.on('monsterDead',function(monsterData){
     // if not in finish state,then don't do anything
@@ -347,6 +351,9 @@ socket.on('monsterDead',function(monsterData){
     {
         return;
     }
+
+    let monsterKiller=Game.players.hash[monsterData.monsterKiller];
+    monsterKiller.body.velocity.y = Player[monsterKiller.key].velocity.vertical.bounce;
     if(monsterData.monsterKiller==Config.currentUserName)
     {
         Monster[monsterData.monsterType].music.die.play();

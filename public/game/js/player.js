@@ -85,10 +85,10 @@ const Player = {
                 socket.emit(
                     'playerDead',
                     {
+                        playerKiller: otherCharacter.name._text,
                         name: character.name._text
                     }
                 );
-                otherCharacter.body.velocity.y = Player[character.key].velocity.vertical.bounce;
                 Player.mario.music.hit.play();
                 Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
                     // respawn monster to its spawnpoint
