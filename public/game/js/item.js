@@ -22,6 +22,7 @@ const Item = {
                 }
             }
         },
+        effect: 50,
         bounce: {
             x: 0,
             y: 0
@@ -94,6 +95,7 @@ const Item = {
                 }
             }
         },
+        effect: 10,
         bounce: {
             x: 1,
             y: 1

@@ -178,7 +178,7 @@ const Map = {
             );
         }
     },
-    overlap:function(player, map)
+    overlap: function(player, map)
     {
         if (player.body.blocked.down)
         {
@@ -197,6 +197,17 @@ const Map = {
         {
             //console.log(Config.currentUserName+"is touching right");
             player.body.velocity.x = 0;
+        }
+    },
+    monsterCollide: function(monster, map)
+    {
+        if(monster.body.blocked.left)
+        {
+            monster.animations.play('walkRight');
+        }
+        if(monster.body.blocked.right)
+        {
+            monster.animations.play('walkLeft');
         }
     }
 }

@@ -20,8 +20,9 @@ const Monster = {
             }
         },
         animation: {
-            walk: [ 0, 1 ],
-            die: [ 2 ],
+            walkLeft: [ 0, 1 ],
+            walkRight: [ 2, 3 ],
+            die: [ 4 ],
             frame_rate: 2
         },
         velocity: {
@@ -72,7 +73,7 @@ const Monster = {
         },
         respawn: function(monster){
 	        monster.body.enable = true;
-            monster.animations.play('walk');
+            monster.animations.play('walkLeft');
 	        monster.position.x = monster.spawn.x;
             monster.position.y = monster.spawn.y;       
             monster.body.velocity.x = Monster.goomba.velocity.x;
@@ -100,8 +101,9 @@ const Monster = {
             }
         },
         animation: {
-            walk: [ 0, 1 ],
-            die: [ 1 ],
+            walkLeft: [ 0, 1 ],
+            walkRight: [ 2, 3 ],
+            die: [ 4 ],
             frame_rate: 2
         },
         velocity: {
@@ -153,7 +155,7 @@ const Monster = {
         respawn: function(monster)
         {
 	        monster.body.enable = true;
-            monster.animations.play('walk');
+            monster.animations.play('walkLeft');
 	        monster.position.x = monster.spawn.x;
             monster.position.y = monster.spawn.y;
             monster.body.velocity.x = Monster.caveTurtle.velocity.x;
@@ -169,8 +171,9 @@ const Monster = {
             height: 32
         },
         animation: {
-            walk: [ 0, 1 ],
-            die: [ 1 ],
+            walkLeft: [ 0, 1 ],
+            walkRight: [ 2, 3 ],
+            die: [ 4 ],
             frame_rate: 2
         },
         music: {
@@ -213,7 +216,7 @@ const Monster = {
         },
         respawn: function(monster){
             monster.body.enable = true;
-            monster.animations.play('walk');
+            monster.animations.play('walkLeft');
             monster.position.x = monster.spawn.x;
             monster.position.y = monster.spawn.y;
             monster.body.velocity.x = Monster.spikeTurtle.velocity.x;
@@ -231,8 +234,9 @@ const Monster = {
         music: {
         },
         animation: {
-            walk: [ 0, 1 ],
-            die: [ 2 ],
+            walkLeft: [ 0, 1 ],
+            walkRight: [ 0, 1 ],
+            die: [ 1 ],
             frame_rate: 6
         },
         velocity: {
@@ -260,7 +264,7 @@ const Monster = {
             );
 
             spawnedMonster.animations.add(
-                'walk',
+                'walkLeft',
                 Monster[monster.name].animation.walk,
                 Monster[monster.name].animation.frame_rate,
                 true
@@ -273,7 +277,7 @@ const Monster = {
                 true
             );
 
-            spawnedMonster.animations.play('walk');
+            spawnedMonster.animations.play('walkLeft');
             monster.body.velocity.x = Monster.goomba.velocity.x;
             // reassign spawnpoint
             spawnedMonster.name=monster.name;
@@ -340,13 +344,34 @@ function MonsterSetup(structure=null, monsterData=null)
                     y: child.position.y
                 };
             }
+            child.animations.add('walkLeft', Monster[monsterType].animation.walkLeft, Monster[monsterType].animation.frame_rate, true);
+            child.animations.add('walkRight', Monster[monsterType].animation.walkRight, Monster[monsterType].animation.frame_rate, true);
+            child.animations.add('die', Monster[monsterType].animation.die, Monster[monsterType].animation.frame_rate, true);
+            
+            if(child.body.velocity.x < 0)
+            {
+                child.animations.play('walkLeft');
+            }
+            else
+            {
+                child.animations.play('walkRight');
+            }
         }
-        
+        /*
         Game.monsters[monsterType].callAll(
             'animations.add',
             'animations',
-            'walk',
-            Monster[monsterType].animation.walk,
+            'walkLeft',
+            Monster[monsterType].animation.walkLeft,
+            Monster[monsterType].animation.frame_rate,
+            true
+        );
+
+        Game.monsters[monsterType].callAll(
+            'animations.add',
+            'animations',
+            'walkRight',
+            Monster[monsterType].animation.walkRight,
             Monster[monsterType].animation.frame_rate,
             true
         );
@@ -359,13 +384,14 @@ function MonsterSetup(structure=null, monsterData=null)
             Monster[monsterType].animation.frame_rate,
             true
         );
-        
+        */
+        /*
         Game.monsters[monsterType].callAll(
             'animations.play',
             'animations',
-            'walk'
+            'walkLeft'
         );
-        
+        */
         Game.monsters[monsterType].setAll(
             'body.gravity.y',
             Monster[monsterType].gravity.y

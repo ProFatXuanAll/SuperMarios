@@ -197,7 +197,8 @@ function update()
         // monster collide with solid layer
         Game.engine.physics.arcade.collide(
             monsterGroup,
-            Game.map.solid
+            Game.map.solid,
+            Map.monsterCollide
         );
         // monster overlap with character
         Game.engine.physics.arcade.overlap(
@@ -254,7 +255,7 @@ function update()
         // delete player if signaled
         if(character.delete)
         {
-            Game.players.hash[plater].name.destroy();
+            Game.players.hash[player].name.destroy();
             Game.players.hash[player].destroy();
             delete Game.players.hash[player];
             continue;
@@ -266,7 +267,8 @@ function update()
 
         // stop moving to left or right
         if(!character.body.onFloor())
-            velocity.y += playerTypeVelocity.vertical.gravity - 10 * (feather >= 1 ? 1 : 0);
+            //if player pick more than 1 feather, only 1 feather will effect(or it will be overpowered)
+            velocity.y += playerTypeVelocity.vertical.gravity - Item.feather.effect * (feather >= 1 ? 1 : 0);
 
         if (cursor.up.isDown)
         {
@@ -280,7 +282,7 @@ function update()
             if(!character.dieyet)
             {
                 facing = Config.status.left;
-                velocity.x = facing * (coin * 50 + playerTypeVelocity.horizontal.move);
+                velocity.x = facing * (coin * Item.coin.effect + playerTypeVelocity.horizontal.move);
                 character.animations.play('left');
             }
         }
