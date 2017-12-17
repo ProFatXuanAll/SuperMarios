@@ -148,7 +148,7 @@ module.exports = function(server){
             );
         });
 
-        //some monster died
+        // some monster dead
         socket.on('monsterDead', function(monsterDie){
             io.emit(
                 'monsterDead',
@@ -156,12 +156,19 @@ module.exports = function(server){
             );
         });
 
-        //some monster died
+        // some item dead
         socket.on('itemDead', function(itemDie){
             io.emit(
                 'itemDead',
                 itemDie
             );
+        });
+
+        socket.on('playerStatusChange', function(itemData){
+            io.emit(
+                'playerStatusChange',
+                itemData
+            )
         });
     });
 
