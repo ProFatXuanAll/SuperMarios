@@ -1,28 +1,25 @@
 {% extends "game/base.html" %}
 
 {% block stylesheets %}
+<link rel="stylesheet" href="/game/css/name.css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
 {% endblock %}
 
 {% block content %}
 <div class="box">
     <form method="POST" action="">
-        <h2><b>Your Name?</b></h2>
-        <input type="text" id="account" class="inputbox" name="account" placeholder="Username"><br>
-        <input type="submit" class="btn" value="Login">
+        <h2><b>What your name?</b></h2>
+        <input type="text" id="account" class="inputbox" name="account" placeholder="Username" autofocus><br>
+        {% if error %}
+        <div class="inputbox" id="error">
+            This name have been used, please try another.
+        </div><br>
+        {% endif %}
+        <input type="submit" class="btn" value="START!">
     </form>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script>
-$(document).ready(function(){
-    $("form").submit(function(e){
-        if($("#account").val() == ""){
-            e.preventDefault();
-            window.alert("Please enter your user name.");
-            return false;
-        };
-    });
-})
-</script>
+<script src="/game/js/name.js"></script>
 {% endblock %}
