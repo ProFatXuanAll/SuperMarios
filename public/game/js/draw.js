@@ -192,6 +192,13 @@ function update()
         Game.players.current,
         Game.map.solid
     );
+
+    // current player overlap with event layer
+    Game.engine.physics.arcade.overlap(
+        Game.players.current,
+        Game.map.event,
+        Map.detectPoint
+    );
     
     // other player collide with solid layer
     Game.engine.physics.arcade.collide(
@@ -243,8 +250,6 @@ function update()
     //detect player finish and fall out of the world
     //only need to detect myself and emit
     Map.detectPlayerWorldBound(Game.players.current);
-    Map.detectMidpoint(Game.players.current);
-    Map.detectFinished(Game.players.current);
 
     // player movement update
     let all_players = Game.players.hash;

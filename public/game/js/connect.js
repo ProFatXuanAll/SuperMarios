@@ -364,8 +364,8 @@ socket.on('playerRespawn',function(playerData){
 });
 
 socket.on('playerMidpoint',function(playerData){
-    Game.players.hash[playerData.name].spawn.x=Game.map.midpoint[0].x;
-    Game.players.hash[playerData.name].spawn.y=Game.map.midpoint[0].y;
+    Game.players.hash[playerData.name].spawn.x=Game.map.point.midpoint[playerData.id].x;
+    Game.players.hash[playerData.name].spawn.y=Game.map.point.midpoint[playerData.id].y;
 });
 
 socket.on('playerFinish',function(playerData){
@@ -376,7 +376,7 @@ socket.on('playerFinish',function(playerData){
         Config.font.Bold
     );
     finishText.fixedToCamera = true;
-    Game.map.finish.isFinished = true;
+    Game.map.point.isFinished = true;
 });
 
 // some monster died

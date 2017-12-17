@@ -6,6 +6,7 @@ const Map = {
             layer: {
                 solid: 'solidLayer',
                 monster: 'monsterLayer',
+                event: 'eventLayer',
                 item: 'itemLayer',
             },
             start: [
@@ -14,16 +15,22 @@ const Map = {
                     y:1096
                 }
             ],
-            midpoint: [
-                {
-                    x: 5691,
-                    y: 1000
-                }
-            ],
-            finish: {
-                x: 9500,
-                y: 0,
-                isFinished: false
+            point: {
+                midpoint: [
+                    {
+                        x: 5691,
+                        y: 1000,
+                        id: 0
+                    },
+                    {
+                        x:9500,
+                        y:0,
+                        id: 1
+                    }
+                ],
+                start: -1,
+                end: 1,
+                isFinish: false
             },
             size: {
                 x:9600,
@@ -102,32 +109,41 @@ const Map = {
             src: ['/game/assets/map/music/worldmap.wav']
         }
     ],
-    detectMidpoint: function(character)
+    detectPoint: function(character,map)
     {
-        if(character.y >= Game.map.midpoint[0].y && character.x >= Game.map.midpoint[0].x && character.spawn.id <= 0)
+        let spawnPointID=character.spawn.id;
+        for(let i=spawnPointID; i<=Game.map.point.end;i++)
         {
-            character.spawn.id=0;
-            socket.emit(
-                'playerMidpoint',
+            let newSpawnPoint={
+                x: Game.map.point.midpoint[i].x,
+                y: Game.map.point.midpoint[i].y,
+            }
+            if(character.y >= newSpawnPoint.y && character.x >= newSpawnPoint.x)
+            {
+                if(spawnPointID<Game.map.point.end)
                 {
-                    name: character.name._text
+                    character.spawn.id=i;
+                    socket.emit(
+                        'playerMidpoint',
+                        {
+                            id: i,
+                            name: character.name._text
+                        }
+                    );
                 }
-            );
-        }
-    },
-    detectFinished: function(character)
-    {
-        if(character.y >= Game.map.finish.y && character.x >= Game.map.finish.x && Game.map.finish.isFinished == false)
-        {
-            /*
-            socket.emit(
-                'playerFinish',
+                if(spawnPointID==Game.map.point.end&&Game.map.point.isFinish==false)
                 {
-                    name: character.name._text
+                    socket.emit(
+                        'playerFinish',
+                        {
+                            name: character.name._text
+                        }
+                    );
                 }
-            );
-            */
+            }
         }
+
+
     },
     detectPlayerWorldBound: function(character)
     {
@@ -251,9 +267,7 @@ function MapSetup(structure, tileset, background, music)
     this.size = structure.size;
 
     //give map midpoint
-    this.midpoint = structure.midpoint;
-    //give map finish point
-    this.finish = structure.finish;
+    this.point= structure.point;
 
     // background camera fixed to center
     this.background.fixedToCamera = true;
@@ -267,6 +281,9 @@ function MapSetup(structure, tileset, background, music)
 
     // add solid block layer
     this.solid = this.tileMap.createLayer(structure.layer.solid);
+
+    // add event block layer
+    this.event = this.tileMap.createLayer(structure.layer.event);
     
     // new layer need resize world
     this.solid.resizeWorld();
