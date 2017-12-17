@@ -247,12 +247,13 @@ function update()
         let playerTypeVelocity = Player[character.key].velocity;
         let status = all_players[player].status;
         let coin = status.coin;
+        let feather = status.feather;
         let facing;
         
         // stop moving to left or right
         
         if(!character.body.onFloor())
-            velocity.y += playerTypeVelocity.vertical.gravity;
+            velocity.y += playerTypeVelocity.vertical.gravity - 10 * (feather % 2);
 
         if (cursor.up.isDown)
         {

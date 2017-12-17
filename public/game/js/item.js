@@ -37,7 +37,7 @@ const Item = {
                 'itemDead',
                 {
                     itemOwner: Config.currentUserName,
-                    itemType: item.name,
+                    itemType: 'coin',
                     id: item.id
                 }
             );
@@ -46,6 +46,61 @@ const Item = {
         respawn: function(item, character)
         {
             character.status.coin -= 1;
+            item.visible = true;
+	        item.body.enable = true;
+	        item.position.x = item.spawn.x;
+            item.position.y = item.spawn.y;
+            item.body.velocity.x = Item.coin.velocity.x;
+            item.body.velocity.y = Item.coin.velocity.y;
+        }
+    },
+    feather:{
+        tileNumber: 95,
+        spriteName: 'feather',
+        velocity: {
+            x: 0,
+            y: 0
+        },
+        gravity: {
+            x: 0,
+            y: 80
+        },
+        music : {
+            get : {
+                name: 'featherGet',
+                src:'/game/assets/item/sound/featherget.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Item.coin.music.get.name);
+                    return () => {
+                        sfx.play();
+                    }
+                }
+            }
+        },
+        bounce: {
+            x: 1,
+            y: 1
+        },
+        picture: {
+            src: '/game/assets/item/image/feather.png',
+            width: 32,
+            height: 32
+        },
+        overlap: function(character, item)
+        {
+            socket.emit(
+                'itemDead',
+                {
+                    itemOwner: Config.currentUserName,
+                    itemType: 'feather',
+                    id: item.id
+                }
+            );
+            
+        },
+        respawn: function(item, character)
+        {
+            character.status.feather -= 1;
             item.visible = true;
 	        item.body.enable = true;
 	        item.position.x = item.spawn.x;

@@ -361,7 +361,7 @@ socket.on('itemDead',function(itemData){
     // set item's animation to die and play die sound
     let deadItem = Game.items[itemData.itemType].children[itemData.id];
     let character = Game.players.hash[itemData.itemOwner];
-    character.status.coin += 1;
+    character.status[itemData.itemType] += 1;
     Item[itemData.itemType].music.get.play();
     deadItem.body.enable = false;
     deadItem.visible = false;
