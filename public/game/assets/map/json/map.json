@@ -48,7 +48,7 @@
  "orientation":"orthogonal",
  "properties":
     {
-     "collisionExclusion":"67,68,77,78,98,99,100"
+     "collisionExclusion":"98,99,100"
     },
  "propertytypes":
     {
