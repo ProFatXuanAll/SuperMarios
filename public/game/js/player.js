@@ -67,18 +67,27 @@ const Player = {
                 character.status[itemType] = 0;
             }
         },
-        collide: function(character, otherCharacter){
-            if (character.body.touching.down)
+        collide: function(otherCharacter, character){
+            if (character.body.touching.up && otherCharacter.body.touching.down)
             {
                 //console.log(Config.currentUserName+"is touching down");
                 socket.emit(
-                    'someOneDie',
+                    'playerDead',
                     {
-                        name: otherCharacter.name._text
+                        name: character.name._text
                     }
                 );
-                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                otherCharacter.body.velocity.y = Player[character.key].velocity.vertical.bounce;
                 Player.mario.music.hit.play();
+                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
+                    // respawn monster to its spawnpoint
+                    socket.emit(
+                        'playerRespawn',
+                        {
+                            name: character.name._text,
+                        }
+                    );
+                });
             }
             if(character.body.touching.left)
             {

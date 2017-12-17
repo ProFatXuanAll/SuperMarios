@@ -147,9 +147,16 @@ module.exports = function(server){
         });
 
         //someone died
-        socket.on('someOneDie', function(playerData){
+        socket.on('playerDead', function(playerData){
             io.emit(
-                'someOneDie',
+                'playerDead',
+                playerData
+            );
+        });
+
+        socket.on('playerRespawn', function(playerData){
+            io.emit(
+                'playerRespawn',
                 playerData
             );
         });
@@ -177,9 +184,9 @@ module.exports = function(server){
             );
         });
 
-        socket.on('playerStatusChange', function(itemData){
+        socket.on('itemRespawn', function(itemData){
             io.emit(
-                'playerStatusChange',
+                'itemRespawn',
                 itemData
             )
         });

@@ -58,11 +58,20 @@ const Monster = {
             else
             {
                 socket.emit(
-                    'someOneDie',
+                    'playerDead',
                     {
                         name: character.name._text
                     }
                 );
+                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
+                    // respawn monster to its spawnpoint
+                    socket.emit(
+                        'playerRespawn',
+                        {
+                            name: character.name._text,
+                        }
+                    );
+                });
             }
         },
         destroy: function(monster){
@@ -139,11 +148,20 @@ const Monster = {
             else
             {
                 socket.emit(
-                    'someOneDie',
+                    'playerDead',
                     {
                         name: character.name._text
                     }
                 );
+                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
+                    // respawn monster to its spawnpoint
+                    socket.emit(
+                        'playerRespawn',
+                        {
+                            name: character.name._text,
+                        }
+                    );
+                });
             }
         },
         destroy: function(monster){
@@ -202,11 +220,20 @@ const Monster = {
         },
         overlap: function(character, monster){
             socket.emit(
-                'someOneDie',
+                'playerDead',
                 {
                     name: character.name._text
                 }
             );
+            Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
+                // respawn monster to its spawnpoint
+                socket.emit(
+                    'playerRespawn',
+                    {
+                        name: character.name._text,
+                    }
+                );
+            });
         },
         destroy: function(monster){
             monster.animations.stop();
@@ -249,11 +276,20 @@ const Monster = {
         },
         overlap: function(character, monster){
             socket.emit(
-                'someOneDie',
+                'playerDead',
                 {
                     name: character.name._text
                 }
             );
+            Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
+                // respawn monster to its spawnpoint
+                socket.emit(
+                    'playerRespawn',
+                    {
+                        name: character.name._text,
+                    }
+                );
+            });
         },
         respawn: function(monster)
         {

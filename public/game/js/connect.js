@@ -291,7 +291,7 @@ socket.on('playerDelete',function(playerData){
 });
 
 // someone died
-socket.on('someOneDie', function(playerData){
+socket.on('playerDead', function(playerData){
 
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
@@ -311,18 +311,22 @@ socket.on('someOneDie', function(playerData){
     deadPlayer.animations.play('die');
     deadPlayer.body.enable = false;
     deadPlayer.immovable = true;
+});
 
-    // respawn user
-    Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
-        {
-            // avoid respawn after disconnect
-            if(playerData.name in Game.players.hash)
-            {
-                //respawn player to his spawnpoint
-                Player[deadPlayer.key].respawn(deadPlayer);
-            }
-	    }
-    );
+socket.on('playerRespawn',function(playerData){
+    // if not in finish state,then don't do anything
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
+
+    let deadPlayer = Game.players.hash[playerData.name];
+    // avoid respawn after disconnect
+    if(playerData.name in Game.players.hash)
+    {
+        //respawn player to his spawnpoint
+        Player[deadPlayer.key].respawn(deadPlayer);
+    }
 });
 
 
@@ -363,7 +367,7 @@ socket.on('itemDead',function(itemData){
     Item[itemData.itemType].destroy(deadItem, character);
 });
 
-socket.on('playerStatusChange', function(itemData){
+socket.on('itemRespawn', function(itemData){
 
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)

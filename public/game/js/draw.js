@@ -168,8 +168,8 @@ function update()
 {
     // current player collide with other player
     Game.engine.physics.arcade.collide(
-        Game.players.current,
         Game.players.others,
+        Game.players.current,
         Player.mario.collide
     );
     

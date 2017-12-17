@@ -46,7 +46,7 @@ const Item = {
                 {
                     // respawn item to its spawnpoint
                     socket.emit(
-                        'playerStatusChange',
+                        'itemRespawn',
                         {
                             itemOwner: Config.currentUserName,
                             itemType: 'coin',
@@ -119,7 +119,7 @@ const Item = {
             {
                 // respawn item to its spawnpoint
                 socket.emit(
-                    'playerStatusChange',
+                    'itemRespawn',
                     {
                         itemOwner: Config.currentUserName,
                         itemType: 'feather',
