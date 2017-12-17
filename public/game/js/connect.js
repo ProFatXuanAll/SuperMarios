@@ -330,25 +330,25 @@ socket.on('someOneDie', function(die){
 
 // some monster died
 socket.on('monsterDead',function(monsterData){
+    // if not in finish state,then don't do anything
+    if(Config.state.current < Config.state.finish)
+    {
+        return;
+    }
+    // set monster's animation to die and play die sound
+    let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
+    Monster[monsterData.monsterType].destroy(deadMonster);
+});
 
+socket.on('monsterRespawn',function(monsterData){
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
     {
         return;
     }
 
-    // set monster's animation to die and play die sound
     let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
-    deadMonster.animations.stop();
-    deadMonster.animations.play('die');
-    Monster[monsterData.monsterType].music.die.play();
-    deadMonster.body.enable = false;
-    Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
-        {
-            // respawn monster to its spawnpoint
-            Monster[monsterData.monsterType].respawn(deadMonster);
-	    }
-    );
+    Monster[monsterData.monsterType].respawn(deadMonster);
 });
 
 socket.on('itemDead',function(itemData){
@@ -362,10 +362,7 @@ socket.on('itemDead',function(itemData){
     // set item's animation to die and play die sound
     let deadItem = Game.items[itemData.itemType].children[itemData.id];
     let character = Game.players.hash[itemData.itemOwner];
-    character.status[itemData.itemType] += 1;
-    Item[itemData.itemType].music.get.play();
-    deadItem.body.enable = false;
-    deadItem.visible = false;
+    Item[itemData.itemType].destroy(deadItem, character);
 });
 
 socket.on('playerStatusChange', function(itemData){

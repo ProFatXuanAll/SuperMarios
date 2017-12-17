@@ -38,11 +38,21 @@ const Monster = {
                 socket.emit(
                     'monsterDead',
                     {
-                        monsterType: monster.name,
+                        monsterType: 'goomba',
                         id: monster.id
                     }
                 );
                 character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
+                    // respawn monster to its spawnpoint
+                    socket.emit(
+                        'monsterRespawn',
+                        {
+                            monsterType: 'goomba',
+                            id: monster.id
+                        }
+                    );
+                });
             }
             else
             {
@@ -53,6 +63,12 @@ const Monster = {
                     }
                 );
             }
+        },
+        destroy: function(monster){
+            monster.animations.stop();
+            monster.animations.play('die');
+            Monster.goomba.music.die.play();
+            monster.body.enable = false;
         },
         respawn: function(monster){
 	        monster.body.enable = true;
@@ -111,6 +127,12 @@ const Monster = {
                     }
                 );
                 character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
+                {
+                    // respawn monster to its spawnpoint
+                    Monster.caveTurtle.respawn(deadMonster);
+                }
+            );
             }
             else
             {
@@ -121,6 +143,12 @@ const Monster = {
                     }
                 );
             }
+        },
+        destroy: function(monster){
+            monster.animations.stop();
+            monster.animations.play('die');
+            Monster.caveTurtle.music.die.play();
+            monster.body.enable = false;
         },
         respawn: function(monster)
         {
@@ -176,6 +204,12 @@ const Monster = {
                     name: character.name._text
                 }
             );
+        },
+        destroy: function(monster){
+            monster.animations.stop();
+            monster.animations.play('die');
+            Monster.spikeTurtle.music.die.play();
+            monster.body.enable = false;
         },
         respawn: function(monster){
             monster.body.enable = true;

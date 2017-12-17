@@ -55,6 +55,13 @@ const Item = {
                 }
             );
         },
+        destroy: function(item, character)
+        {
+            character.status.coin += 1;
+            Item.coin.music.get.play();
+            item.body.enable = false;
+            item.visible = false;
+        },
         respawn: function(item, character)
         {
             character.status.coin -= 1;
@@ -62,8 +69,6 @@ const Item = {
 	        item.body.enable = true;
 	        item.position.x = item.spawn.x;
             item.position.y = item.spawn.y;
-            item.body.velocity.x = Item.coin.velocity.x;
-            item.body.velocity.y = Item.coin.velocity.y;
         }
     },
     feather:{
@@ -108,7 +113,19 @@ const Item = {
                     id: item.id
                 }
             );
-            
+            Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
+            {
+                // respawn item to its spawnpoint
+                socket.emit(
+                    'playerStatusChange',
+                    {
+                        itemOwner: Config.currentUserName,
+                        itemType: 'feather',
+                        id: item.id
+                    }
+                );
+            }
+            );   
         },
         respawn: function(item, character)
         {
@@ -117,8 +134,13 @@ const Item = {
 	        item.body.enable = true;
 	        item.position.x = item.spawn.x;
             item.position.y = item.spawn.y;
-            item.body.velocity.x = Item.coin.velocity.x;
-            item.body.velocity.y = Item.coin.velocity.y;
+        },
+        destroy: function(item, character)
+        {
+            character.status.feather += 1;
+            Item.feather.music.get.play();
+            item.body.enable = false;
+            item.visible = false;
         }
     }
 }

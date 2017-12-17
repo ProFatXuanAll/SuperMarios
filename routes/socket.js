@@ -156,6 +156,13 @@ module.exports = function(server){
             );
         });
 
+        socket.on('monsterRespawn', function(monsterDie){
+            io.emit(
+                'monsterRespawn',
+                monsterDie
+            );
+        });
+
         // some item dead
         socket.on('itemDead', function(itemDie){
             io.emit(
