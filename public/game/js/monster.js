@@ -39,6 +39,7 @@ const Monster = {
                 socket.emit(
                     'monsterDead',
                     {
+                        monsterKiller: Config.currentUserName,
                         monsterType: 'goomba',
                         id: monster.id
                     }
@@ -77,7 +78,6 @@ const Monster = {
         destroy: function(monster){
             monster.animations.stop();
             monster.animations.play('die');
-            Monster.goomba.music.die.play();
             monster.body.enable = false;
         },
         respawn: function(monster){
@@ -133,7 +133,8 @@ const Monster = {
                 socket.emit(
                     'monsterDead',
                     {
-                        monsterType: monster.name,
+                        monsterKiller: Config.currentUserName,
+                        monsterType: 'caveTurtle',
                         id: monster.id
                     }
                 );
@@ -167,11 +168,9 @@ const Monster = {
         destroy: function(monster){
             monster.animations.stop();
             monster.animations.play('die');
-            Monster.caveTurtle.music.die.play();
             monster.body.enable = false;
         },
-        respawn: function(monster)
-        {
+        respawn: function(monster){
 	        monster.body.enable = true;
             monster.animations.play('walkLeft');
 	        monster.position.x = monster.spawn.x;
@@ -238,7 +237,6 @@ const Monster = {
         destroy: function(monster){
             monster.animations.stop();
             monster.animations.play('die');
-            Monster.spikeTurtle.music.die.play();
             monster.body.enable = false;
         },
         respawn: function(monster){

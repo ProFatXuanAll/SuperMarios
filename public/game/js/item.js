@@ -59,7 +59,6 @@ const Item = {
         destroy: function(item, character)
         {
             character.status.coin += 1;
-            Item.coin.music.get.play();
             item.body.enable = false;
             item.visible = false;
         },
@@ -141,7 +140,6 @@ const Item = {
         destroy: function(item, character)
         {
             character.status.feather += 1;
-            Item.feather.music.get.play();
             item.body.enable = false;
             item.visible = false;
         }

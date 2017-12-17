@@ -114,16 +114,12 @@ const Map = {
         if(character.y + character.height >= Game.map.size.y)
         {
             character.y=Game.map.size.y-character.height-5;
-            if(!character.dieyet)
-            {
-                character.dieyet=true;
-                socket.emit(
-                    'playerDead',
-                    {
-                        name: character.name._text
-                    }
-                );
-            }
+            socket.emit(
+                'playerDead',
+                {
+                    name: character.name._text
+                }
+            );
             Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
                 // respawn monster to its spawnpoint
                 socket.emit(

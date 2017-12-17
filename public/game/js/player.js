@@ -49,6 +49,17 @@ const Player = {
         },
         width: 32,
         height: 56,
+        destroy: function(character)
+        {
+            if(character.dieyet==false)
+            {
+                character.dieyet = true;
+                character.animations.stop();
+                character.animations.play('die');
+                character.body.enable = false;
+                character.immovable = true;
+            }
+        },
         respawn: function(character)
         {
             if(character.name._text == Config.currentUserName)
