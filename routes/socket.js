@@ -7,6 +7,12 @@ module.exports = function(server){
     io.on('connection', function(socket){
         // new player tell server to join game
         socket.on('00 playerJoin', function(playerData){
+            //if someone open multiple tabs
+            if(playerList[playerData.name] !== undefined)
+            {
+                socket.emit('multipleConnection');
+                return;
+            }
             console.log(playerData.name + ' join');
             // server tell existed player(s) info new of player
             socket.broadcast.emit(
@@ -125,5 +131,6 @@ module.exports = function(server){
         });
     });
 
+    io.playerList = playerList;
     return io;
 };

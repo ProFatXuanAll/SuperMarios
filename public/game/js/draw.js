@@ -157,6 +157,11 @@ function create()
             y: Game.players.current.position.y
         }
     );
+
+    socket.on('multipleConnection',function(){
+        socket.emit('disconnect');
+        window.location.replace("/game/error");
+    });
 }
 
 
