@@ -100,14 +100,13 @@ const Map = {
     {
         if(character.y >= Game.map.finish.y && character.x >= Game.map.finish.x && Game.map.finish.isFinished == false)
         {
-            let finishText = Game.engine.add.text(
-                $( window ).width()/3,
-                $( window ).height()/2-100,
-                character.name._text + 'has finished!',
-                Config.font.Bold
+            socket.emit(
+                'playerFinish',
+                {
+                    name: character.name._text
+                }
             );
-            finishText.fixedToCamera = true;
-            Game.map.finish.isFinished = true;
+
         }
     },
     detectPlayerWorldBound: function(character)

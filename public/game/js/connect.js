@@ -329,6 +329,17 @@ socket.on('playerRespawn',function(playerData){
     }
 });
 
+socket.on('playerFinish',function(playerData){
+    let finishText = Game.engine.add.text(
+        $( window ).width()/3,
+        $( window ).height()/2-100,
+        playerData.name + ' win!',
+        Config.font.Bold
+    );
+    finishText.fixedToCamera = true;
+    Game.map.finish.isFinished = true;
+});
+
 
 // some monster died
 socket.on('monsterDead',function(monsterData){
