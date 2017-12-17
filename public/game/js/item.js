@@ -131,6 +131,7 @@ const Item = {
         },
         respawn: function(item, character)
         {
+            item.body.velocity.y=0;
             character.status.feather -= 1;
             item.visible = true;
 	        item.body.enable = true;
