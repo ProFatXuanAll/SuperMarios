@@ -80,7 +80,7 @@ socket.on('03 playerJoinFinish', function(){
 });
 
 //ask server to get monster list
-socket.on('05 getMonsterInfo', function(nameData){
+socket.on('05 getMonsterInfo', function(playerData){
 
     // update state if haven't reach
     if(Config.state.current < Config.state.getMonsterInfo)
@@ -119,7 +119,7 @@ socket.on('05 getMonsterInfo', function(nameData){
     socket.emit(
         '06 parseMonsterInfo',
         {
-            requestName: nameData.name,
+            requestName: playerData.name,
             monsterGroup: dataString
         }
     );
@@ -159,7 +159,7 @@ socket.on('07 spawnMonster', function(monsterData){
 });
 
 //ask server to get item list
-socket.on('09 getItemInfo', function(nameData){
+socket.on('09 getItemInfo', function(playerData){
 
     // update state if haven't reach
     if(Config.state.current < Config.state.getItemInfo)
@@ -198,7 +198,7 @@ socket.on('09 getItemInfo', function(nameData){
     socket.emit(
         '10 parseItemInfo',
         {
-            requestName: nameData.name,
+            requestName: playerData.name,
             itemGroup: dataString
         }
     );
@@ -231,7 +231,7 @@ socket.on('11 spawnItem', function(itemData){
 });
 
 // someone press key
-socket.on('move',function(datamove){
+socket.on('move',function(playerData){
 
     // if not in finish state,then don't do anything  
     if(Config.state.current < Config.state.finish)
@@ -239,28 +239,28 @@ socket.on('move',function(datamove){
         return;
     }
 
-    if(datamove.name in Game.players.hash)
+    if(playerData.name in Game.players.hash)
     {
-        if(datamove.move == 'up')
+        if(playerData.move == 'up')
         {
-            Game.players.hash[datamove.name].position.x = datamove.x;
-            Game.players.hash[datamove.name].position.y = datamove.y;
-            Game.players.hash[datamove.name].body.velocity.x = datamove.vx;
-            Game.players.hash[datamove.name].body.velocity.y = datamove.vy;
+            Game.players.hash[playerData.name].position.x = playerData.x;
+            Game.players.hash[playerData.name].position.y = playerData.y;
+            Game.players.hash[playerData.name].body.velocity.x = playerData.vx;
+            Game.players.hash[playerData.name].body.velocity.y = playerData.vy;
         }
         else
         {
-            Game.players.hash[datamove.name].cursor[datamove.move].isDown = true;
-            Game.players.hash[datamove.name].position.x = datamove.x;
-            Game.players.hash[datamove.name].position.y = datamove.y;
-            Game.players.hash[datamove.name].body.velocity.x = datamove.vx;
-            Game.players.hash[datamove.name].body.velocity.y = datamove.vy;
+            Game.players.hash[playerData.name].cursor[playerData.move].isDown = true;
+            Game.players.hash[playerData.name].position.x = playerData.x;
+            Game.players.hash[playerData.name].position.y = playerData.y;
+            Game.players.hash[playerData.name].body.velocity.x = playerData.vx;
+            Game.players.hash[playerData.name].body.velocity.y = playerData.vy;
         }
     }
 });
 
 // someone release key
-socket.on('stop',function(datamove){
+socket.on('stop',function(playerData){
 
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
@@ -268,18 +268,18 @@ socket.on('stop',function(datamove){
         return;
     }
 
-    if(datamove.name in Game.players.hash)
+    if(playerData.name in Game.players.hash)
     {
-        Game.players.hash[datamove.name].cursor[datamove.move].isDown = false;
-        Game.players.hash[datamove.name].position.x = datamove.x;
-        Game.players.hash[datamove.name].position.y = datamove.y;
-        Game.players.hash[datamove.name].body.velocity.x = datamove.vx;
-        Game.players.hash[datamove.name].body.velocity.y = datamove.vy;
+        Game.players.hash[playerData.name].cursor[playerData.move].isDown = false;
+        Game.players.hash[playerData.name].position.x = playerData.x;
+        Game.players.hash[playerData.name].position.y = playerData.y;
+        Game.players.hash[playerData.name].body.velocity.x = playerData.vx;
+        Game.players.hash[playerData.name].body.velocity.y = playerData.vy;
     }
 });
 
 // delete other players
-socket.on('playerDelete',function(dele){
+socket.on('playerDelete',function(playerData){
 
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
@@ -287,13 +287,13 @@ socket.on('playerDelete',function(dele){
         return;
     }
 
-    Game.players.hash[dele.name].name.destroy();
-    Game.players.hash[dele.name].destroy();
-    delete Game.players.hash[dele.name];
+    Game.players.hash[playerData.name].name.destroy();
+    Game.players.hash[playerData.name].destroy();
+    delete Game.players.hash[playerData.name];
 });
 
 // someone died
-socket.on('someOneDie', function(die){
+socket.on('someOneDie', function(playerData){
 
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
@@ -302,9 +302,9 @@ socket.on('someOneDie', function(die){
     }
 
     //player die animation and player death sound
-    let deadPlayer = Game.players.hash[die.name];
+    let deadPlayer = Game.players.hash[playerData.name];
     deadPlayer.dieyet = true;
-    if(die.name == Config.currentUserName)
+    if(playerData.name == Config.currentUserName)
     {
         Game.map.music.stop();
         Player[deadPlayer.key].music.die.play();
@@ -318,7 +318,7 @@ socket.on('someOneDie', function(die){
     Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
         {
             // avoid respawn after disconnect
-            if(die.name in Game.players.hash)
+            if(playerData.name in Game.players.hash)
             {
                 //respawn player to his spawnpoint
                 Player[deadPlayer.key].respawn(deadPlayer);

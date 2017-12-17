@@ -36,11 +36,11 @@ module.exports = function(server){
         });
         
         // new player tell server to get monster
-        socket.on('04 requestMonster', function(nameData){
+        socket.on('04 requestMonster', function(playerData){
             // find exist user to sync monster
             if(superUser == null)
             {
-               superUser = nameData.name;
+               superUser = playerData.name;
                socket.emit(
                     '07 spawnMonster',
                     {
@@ -52,7 +52,7 @@ module.exports = function(server){
             {
                 playerList[superUser].socket.emit(
                     '05 getMonsterInfo',
-                    nameData
+                    playerData
                 );
             }
         });
@@ -69,7 +69,7 @@ module.exports = function(server){
         });
 
         // new player tell server to get item
-        socket.on('08 requestItem', function(nameData){
+        socket.on('08 requestItem', function(playerData){
             // find exist user to sync item
             if(superUser == socket.username)
             {
@@ -84,7 +84,7 @@ module.exports = function(server){
             {
                 playerList[superUser].socket.emit(
                     '09 getItemInfo',
-                    nameData
+                    playerData
                 );
             }
         });
@@ -100,16 +100,16 @@ module.exports = function(server){
             );
         });
 
-        socket.on('move',function(datamove){
+        socket.on('move',function(playerData){
             socket.broadcast.emit(
                 'move',
-                datamove);
+                playerData);
         });
 
-        socket.on('stop',function(datamove){
+        socket.on('stop',function(playerData){
             socket.broadcast.emit(
                 'stop',
-                datamove);
+                playerData);
         });
 
         // someone disconnect
@@ -141,33 +141,33 @@ module.exports = function(server){
         });
 
         //someone died
-        socket.on('someOneDie', function(die){
+        socket.on('someOneDie', function(playerData){
             io.emit(
                 'someOneDie',
-                die
+                playerData
             );
         });
 
         // some monster dead
-        socket.on('monsterDead', function(monsterDie){
+        socket.on('monsterDead', function(monsterData){
             io.emit(
                 'monsterDead',
-                monsterDie
+                monsterData
             );
         });
 
-        socket.on('monsterRespawn', function(monsterDie){
+        socket.on('monsterRespawn', function(monsterData){
             io.emit(
                 'monsterRespawn',
-                monsterDie
+                monsterData
             );
         });
 
         // some item dead
-        socket.on('itemDead', function(itemDie){
+        socket.on('itemDead', function(itemData){
             io.emit(
                 'itemDead',
-                itemDie
+                itemData
             );
         });
 
