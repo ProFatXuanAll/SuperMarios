@@ -9,7 +9,7 @@ router.get('/about', UrlSetting, function(req, res, next) {
     res.render('home/about');
 });
 
-function UrlSetting(req,res,next){
+function UrlSetting(req, res, next){
     res.locals = {
         home: '/home',
         about: '/home/about',

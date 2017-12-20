@@ -4,16 +4,30 @@
 
   <title>{{ title }}</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" href="/home/images/icons/favoricon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="/home/assets/images/icons/favoricon.ico">
   <!-- Style Sheets -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
   <link rel="stylesheet" href="/game/css/base.css">
   {% block stylesheets %}{% endblock %}
 
 </head>
 <body>
 
-  <header>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="{{ home }}">
+			<img src="/home/assets/images/icons/favoricon.ico" alt="ProFatXuanAll" width="50" height="50">
+		</a>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link active" href="{{ home }}">Home <span class="sr-only">(current)</span></a>
+				<a class="nav-item nav-link" href="{{ game }}">Game</a>
+				<a class="nav-item nav-link" href="{{ pedia }}">Pedia</a>
+			</div>
+		</div>
+	</nav>
+
+  <!--header>
     <h1><a href="{{ home }}"><img src="/home/images/icons/index.ico" alt="Super Marios"></a></h1>
     <nav>
       <ul>
@@ -22,12 +36,14 @@
         <li><a href="{{ pedia }}">Pedia</a></li>
       </ul>
     </nav>
-  </header>
+  </header-->
 
   {% block content %}{% endblock %}
 
   <!-- Scripts -->
-  <script src="/home/js/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
   <!--script src="/game/js/phaser.min.js"></script-->
   <script src="/game/js/phaser/phaser.js"></script>
   {% block scripts %}{% endblock %}
