@@ -334,12 +334,12 @@ socket.on('playerDead', function(playerData){
     let deadPlayer = Game.players.hash[playerData.name];
     if(playerData.name == Config.currentUserName)
     {
-        Game.map.music.stop();
-        Player[deadPlayer.key].music.die.play();
+        Game.map.sound.stop();
+        Player[deadPlayer.key].sound.die.play();
     }
     else
     {
-        Player.mario.music.hit.play();
+        Player.mario.sound.hit.play();
     }
     if(playerData.name in Game.players.hash)
     {
@@ -391,7 +391,7 @@ socket.on('monsterDead',function(monsterData){
     monsterKiller.body.velocity.y = Player[monsterKiller.key].velocity.vertical.bounce;
     if(monsterData.monsterKiller == Config.currentUserName)
     {
-        Monster[monsterData.monsterType].music.die.play();
+        Monster[monsterData.monsterType].sound.die.play();
     }
     // set monster's animation to die and play die sound
     let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
@@ -422,7 +422,7 @@ socket.on('itemDead',function(itemData){
     let character = Game.players.hash[itemData.itemOwner];
     if(itemData.itemOwner == Config.currentUserName)
     {
-        Item.coin.music.get.play();
+        Item.coin.sound.get.play();
     }
     Item[itemData.itemType].destroy(deadItem, character);
 });

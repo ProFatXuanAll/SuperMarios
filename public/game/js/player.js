@@ -4,14 +4,14 @@ const Player = {
         picture: {
             width: 32,
             height: 56,
-            src: '/game/assets/player/image/mariox32.png'
+            src: '/game/assets/players/images/mariox32.png'
         },
-        music: {
+        sound: {
             die: {
                 name: 'marioDie',
-                src: '/game/assets/player/sound/die.wav',
+                src: '/game/assets/players/sounds/die.wav',
                 create: () => {
-                    let sfx = Game.engine.add.audio(Player.mario.music.die.name);
+                    let sfx = Game.engine.add.audio(Player.mario.sound.die.name);
                     return () => {
                         sfx.play();
                     }
@@ -19,9 +19,9 @@ const Player = {
             },
             hit: {
                 name: 'marioHit',
-                src: '/game/assets/player/sound/hit.wav',
+                src: '/game/assets/players/sounds/hit.wav',
                 create: () => {
-                    let sfx = Game.engine.add.audio(Player.mario.music.hit.name);
+                    let sfx = Game.engine.add.audio(Player.mario.sound.hit.name);
                     return () => {
                         sfx.play();
                     }
@@ -64,7 +64,7 @@ const Player = {
         {
             if(character.name._text == Config.currentUserName)
             {
-                Game.map.music.loopFull();
+                Game.map.sound.loopFull();
             }
             character.body.velocity.x = 0;
             character.body.velocity.y = 0;
@@ -89,15 +89,6 @@ const Player = {
                         name: character.name._text
                     }
                 );
-                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
-                    // respawn monster to its spawnpoint
-                    socket.emit(
-                        'playerRespawn',
-                        {
-                            name: character.name._text,
-                        }
-                    );
-                });
             }
             if(character.body.touching.left)
             {

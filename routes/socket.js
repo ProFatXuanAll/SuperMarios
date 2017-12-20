@@ -208,6 +208,16 @@ module.exports = function(server){
                 'playerDead',
                 playerData
             );
+            setTimeout
+            (
+                function(){
+                    io.emit(
+                        'playerRespawn',
+                        playerData
+                    )
+                },
+                3000
+            );
         });
 
         // existed player(s) tell server it respawn
@@ -244,6 +254,16 @@ module.exports = function(server){
                 'monsterDead',
                 monsterData
             );
+            setTimeout
+            (
+                function(){
+                    io.emit(
+                        'monsterRespawn',
+                        monsterData
+                    );
+                },
+                3000
+            );
         });
 
         // existed player(s) tell server it respawn monster
@@ -261,6 +281,16 @@ module.exports = function(server){
             io.emit(
                 'itemDead',
                 itemData
+            );
+            setTimeout
+            (
+                function(){
+                    io.emit(
+                        'itemRespawn',
+                        itemData
+                    )
+                },
+                3000
             );
         });
 
