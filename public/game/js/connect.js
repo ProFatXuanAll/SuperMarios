@@ -389,10 +389,6 @@ socket.on('monsterDead',function(monsterData){
 
     let monsterKiller=Game.players.hash[monsterData.monsterKiller];
     monsterKiller.body.velocity.y = Player[monsterKiller.key].velocity.vertical.bounce;
-    if(monsterData.monsterKiller == Config.currentUserName)
-    {
-        Monster[monsterData.monsterType].sound.die.play();
-    }
     // set monster's animation to die and play die sound
     let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
     Monster[monsterData.monsterType].destroy(deadMonster);

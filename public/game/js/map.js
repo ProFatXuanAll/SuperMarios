@@ -174,6 +174,7 @@ const Map = {
             monster.position.x = 50;
             monster.position.y = 50;
             monster.body.velocity.y=0;
+            Monster[monster.name].destroy(monster);
             socket.emit(
                 'monsterDead',
                 {
@@ -187,6 +188,7 @@ const Map = {
             monster.position.x = 50;
             monster.position.y = 50;
             monster.body.velocity.y= 0;
+            Monster[monster.name].destroy(monster);
             socket.emit(
                 'monsterDead',
                 {
@@ -200,6 +202,7 @@ const Map = {
             monster.position.x = 50;
             monster.position.y = 50;
             monster.body.velocity.y = 0;
+            Monster[monster.name].destroy(monster);
             socket.emit(
                 'monsterDead',
                 {

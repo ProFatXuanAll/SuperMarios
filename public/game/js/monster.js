@@ -44,6 +44,9 @@ const Monster = {
                         id: monster.id
                     }
                 );
+                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                Monster.goomba.sound.die.play();
+                Monster.goomba.destroy(monster);
             }
             else
             {
@@ -118,6 +121,10 @@ const Monster = {
                         id: monster.id
                     }
                 );
+                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                Monster.caveTurtle.sound.die.play();
+                Monster.caveTurtle.destroy(monster);
+                
             }
             else
             {
@@ -267,7 +274,7 @@ function MonsterSetup(structure=null, monsterData=null)
         {
             let child = Game.monsters[monsterType].children[i];
             child.name = monsterType;
-            child.id=i;
+            child.id = i;
             if(monsterData)
             {
                 child.position.x = monsterData[monsterType][i].x;

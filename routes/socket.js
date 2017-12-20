@@ -250,7 +250,7 @@ module.exports = function(server){
         // existed player(s) tell server it kill monster
         socket.on('monsterDead', function(monsterData){
             // server tell everyone it kill monster
-            io.emit(
+            socket.broadcast.emit(
                 'monsterDead',
                 monsterData
             );
