@@ -29,7 +29,7 @@ const Config = {
         requestMonster: 4,
         getMonsterInfo: 5,
         parseMonsterInfo: 6,
-        spawnItem: 7,
+        spawnMonster: 7,
         requestItem: 8,
         getItemInfo: 9,
         parseItemInfo: 10,
@@ -43,4 +43,4 @@ const Config = {
     },
     delay: 200,
     currentUserName: $("#userName").html()
-}
+};

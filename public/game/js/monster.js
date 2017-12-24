@@ -15,7 +15,7 @@ const Monster = {
                     let sfx = Game.engine.add.audio(Monster.goomba.sound.die.name);
                     return () => {
                         sfx.play();
-                    }
+                    };
                 }
             }
         },
@@ -88,7 +88,7 @@ const Monster = {
                     let sfx = Game.engine.add.audio(Monster.caveTurtle.sound.die.name);
                     return () => {
                         sfx.play();
-                    }
+                    };
                 }
             }
         },
@@ -172,7 +172,7 @@ const Monster = {
                     let sfx = Game.engine.add.audio(Monster.spikeTurtle.sound.die.name);
                     return () => {
                         sfx.play();
-                    }
+                    };
                 }
             }
         },
@@ -248,7 +248,7 @@ const Monster = {
             return;
         }
     }
-}
+};
 
 function MonsterSetup(structure=null, monsterData=null)
 {

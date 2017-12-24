@@ -14,7 +14,7 @@ const Player = {
                     let sfx = Game.engine.add.audio(Player.mario.sound.die.name);
                     return () => {
                         sfx.play();
-                    }
+                    };
                 }
             },
             hit: {
@@ -24,7 +24,7 @@ const Player = {
                     let sfx = Game.engine.add.audio(Player.mario.sound.hit.name);
                     return () => {
                         sfx.play();
-                    }
+                    };
                 }
             }
         },

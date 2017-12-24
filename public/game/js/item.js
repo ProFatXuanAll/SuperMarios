@@ -18,7 +18,7 @@ const Item = {
                     let sfx = Game.engine.add.audio(Item.coin.sound.get.name);
                     return () => {
                         sfx.play();
-                    }
+                    };
                 }
             }
         },
@@ -77,7 +77,7 @@ const Item = {
                     let sfx = Game.engine.add.audio(Item.coin.sound.get.name);
                     return () => {
                         sfx.play();
-                    }
+                    };
                 }
             }
         },
@@ -118,7 +118,7 @@ const Item = {
             item.visible = false;
         }
     }
-}
+};
 
 function ItemSetup(structure=null, itemData=null)
 {
