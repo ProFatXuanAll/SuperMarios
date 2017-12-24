@@ -10,12 +10,12 @@ const Item = {
             x: 0,
             y: 0
         },
-        music : {
+        sound : {
             get : {
                 name: 'coinGet',
-                src:'/game/assets/item/sound/coinget.wav',
+                src:'/game/assets/items/sounds/coinget.wav',
                 create: () => {
-                    let sfx = Game.engine.add.audio(Item.coin.music.get.name);
+                    let sfx = Game.engine.add.audio(Item.coin.sound.get.name);
                     return () => {
                         sfx.play();
                     }
@@ -28,7 +28,7 @@ const Item = {
             y: 0
         },
         picture: {
-            src: '/game/assets/item/image/coin.png',
+            src: '/game/assets/items/images/coin.png',
             width: 32,
             height: 32
         },
@@ -40,19 +40,6 @@ const Item = {
                     itemOwner: Config.currentUserName,
                     itemType: 'coin',
                     id: item.id
-                }
-            );
-            Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
-                {
-                    // respawn item to its spawnpoint
-                    socket.emit(
-                        'itemRespawn',
-                        {
-                            itemOwner: Config.currentUserName,
-                            itemType: 'coin',
-                            id: item.id
-                        }
-                    );
                 }
             );
         },
@@ -82,12 +69,12 @@ const Item = {
             x: 0,
             y: 80
         },
-        music : {
+        sound : {
             get : {
                 name: 'featherGet',
-                src:'/game/assets/item/sound/featherget.wav',
+                src:'/game/assets/items/sounds/featherget.wav',
                 create: () => {
-                    let sfx = Game.engine.add.audio(Item.coin.music.get.name);
+                    let sfx = Game.engine.add.audio(Item.coin.sound.get.name);
                     return () => {
                         sfx.play();
                     }
@@ -100,7 +87,7 @@ const Item = {
             y: 1
         },
         picture: {
-            src: '/game/assets/item/image/feather.png',
+            src: '/game/assets/items/images/feather.png',
             width: 32,
             height: 32
         },
@@ -113,19 +100,6 @@ const Item = {
                     itemType: 'feather',
                     id: item.id
                 }
-            );
-            Game.engine.time.events.add(Phaser.Timer.SECOND * 3, function()
-            {
-                // respawn item to its spawnpoint
-                socket.emit(
-                    'itemRespawn',
-                    {
-                        itemOwner: Config.currentUserName,
-                        itemType: 'feather',
-                        id: item.id
-                    }
-                );
-            }
             );   
         },
         respawn: function(item, character)
@@ -154,10 +128,10 @@ function ItemSetup(structure=null, itemData=null)
         Game.items[itemType] = Game.engine.add.group();
         Game.items[itemType].enableBody = true;
 
-        //set music for eack kind of item
-        for(let musicType in Item[itemType].music)
+        //set sound for eack kind of item
+        for(let soundType in Item[itemType].sound)
         {
-            Item[itemType].music[musicType].play = Item[itemType].music[musicType].create();
+            Item[itemType].sound[soundType].play = Item[itemType].sound[soundType].create();
         }
 
         //create item from tilemap

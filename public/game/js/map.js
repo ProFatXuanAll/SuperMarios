@@ -2,7 +2,7 @@ const Map = {
     structure: [
         {
             name: 'world01',
-            src: '/game/assets/map/json/map.json',
+            src: '/game/assets/maps/jsons/map.json',
             layer: {
                 solid: 'solidLayer',
                 monster: 'monsterLayer',
@@ -42,7 +42,7 @@ const Map = {
     background: [
         {
             name: 'background01',
-            src: '/game/assets/map/image/background/nature.png',
+            src: '/game/assets/maps/images/backgrounds/nature.png',
             width: '1920',
             height: '1080',
             x: 0,
@@ -52,61 +52,61 @@ const Map = {
     tileset: [
         {
             name: 'tileset01',
-            src: '/game/assets/map/image/tileset/tilesetx32.png'
+            src: '/game/assets/maps/images/tilesets/tilesetx32.png'
         }
     ],
-    music: [
+    sound: [
         {
             name: 'castle',
-            src: ['/game/assets/map/music/castle.wav']
+            src: ['/game/assets/maps/sounds/castle.wav']
         },
         {
             name: 'cave',
-            src: ['/game/assets/map/music/cave.wav']
+            src: ['/game/assets/maps/sounds/cave.wav']
         },
         {
             name: 'field',
-            src: ['/game/assets/map/music/field.wav']
+            src: ['/game/assets/maps/sounds/field.wav']
         },
         {
             name: 'finalboss',
-            src: ['/game/assets/map/music/finalboss.wav']
+            src: ['/game/assets/maps/sounds/finalboss.wav']
         },
         {
             name: 'finish',
-            src: ['/game/assets/map/music/finish.wav']
+            src: ['/game/assets/maps/sounds/finish.wav']
         },
         {
             name: 'flyship',
-            src: ['/game/assets/map/music/flyship.wav']
+            src: ['/game/assets/maps/sounds/flyship.wav']
         },
         {
             name: 'ghosthouse',
-            src: ['/game/assets/map/music/ghosthouse.wav']
+            src: ['/game/assets/maps/sounds/ghosthouse.wav']
         },
         {
             name: 'miniboss',
-            src: ['/game/assets/map/music/miniboss.wav']
+            src: ['/game/assets/maps/sounds/miniboss.wav']
         },
         {
             name: 'rocky',
-            src: ['/game/assets/map/music/rocky.wav']
+            src: ['/game/assets/maps/sounds/rocky.wav']
         },
         {
             name: 'surprise',
-            src: ['/game/assets/map/music/surprise.wav']
+            src: ['/game/assets/maps/sounds/surprise.wav']
         },
         {
             name: 'timed',
-            src: ['/game/assets/map/music/timed.wav']
+            src: ['/game/assets/maps/sounds/timed.wav']
         },
         {
             name: 'water',
-            src: ['/game/assets/map/music/water.wav']
+            src: ['/game/assets/maps/sounds/water.wav']
         },
         {
             name: 'worldmap',
-            src: ['/game/assets/map/music/worldmap.wav']
+            src: ['/game/assets/maps/sounds/worldmap.wav']
         }
     ],
     detectPoint: function(character,map)
@@ -156,15 +156,6 @@ const Map = {
                     name: character.name._text
                 }
             );
-            Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
-                // respawn monster to its spawnpoint
-                socket.emit(
-                    'playerRespawn',
-                    {
-                        name: character.name._text,
-                    }
-                );
-            });
         }
         if(character.x <= 0)
         {
@@ -183,6 +174,7 @@ const Map = {
             monster.position.x = 50;
             monster.position.y = 50;
             monster.body.velocity.y=0;
+            Monster[monster.name].destroy(monster);
             socket.emit(
                 'monsterDead',
                 {
@@ -196,6 +188,7 @@ const Map = {
             monster.position.x = 50;
             monster.position.y = 50;
             monster.body.velocity.y= 0;
+            Monster[monster.name].destroy(monster);
             socket.emit(
                 'monsterDead',
                 {
@@ -209,6 +202,7 @@ const Map = {
             monster.position.x = 50;
             monster.position.y = 50;
             monster.body.velocity.y = 0;
+            Monster[monster.name].destroy(monster);
             socket.emit(
                 'monsterDead',
                 {
@@ -252,7 +246,7 @@ const Map = {
     }
 }
 
-function MapSetup(structure, tileset, background, music)
+function MapSetup(structure, tileset, background, sound)
 {
     // add background
     this.background = Game.engine.add.tileSprite(
@@ -291,11 +285,11 @@ function MapSetup(structure, tileset, background, music)
     // enable collision on tile map
     this.tileMap.setCollisionByExclusion([67,68,77,78,98,99,100]);
     
-    //add backgroundmusic
-    this.music = Game.engine.add.audio(music.name);
+    //add backgroundsound
+    this.sound = Game.engine.add.audio(sound.name);
 
-    // start loop map music
-    this.music.loopFull();
+    // start loop map sound
+    this.sound.loopFull();
 
     //resize game window when initialize the game
     resizeGameWindow();

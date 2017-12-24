@@ -51,15 +51,15 @@ function preload()
             Map.background[i].src
         );
     }
-    // load all background music
-    for(let i = 0; i < Map.music.length; ++i)
+    // load all background sound
+    for(let i = 0; i < Map.sound.length; ++i)
     {
         Game.engine.load.audio(
-            Map.music[i].name,
-            Map.music[i].src
+            Map.sound[i].name,
+            Map.sound[i].src
         );
     }
-    // load all player spritesheet and music
+    // load all player spritesheet and sound
     for(let playerType in Player)
     {
         Game.engine.load.spritesheet(
@@ -68,15 +68,15 @@ function preload()
             Player[playerType].picture.width,
             Player[playerType].picture.height
         );
-        for(let musicType in Player[playerType].music)
+        for(let soundType in Player[playerType].sound)
         {
             Game.engine.load.audio(
-                Player[playerType].music[musicType].name,
-                Player[playerType].music[musicType].src
+                Player[playerType].sound[soundType].name,
+                Player[playerType].sound[soundType].src
             );
         }
     }
-    // load all monster spritesheet and music
+    // load all monster spritesheet and sound
     for(let monsterType in Monster)
     {
         Game.engine.load.spritesheet(
@@ -85,15 +85,15 @@ function preload()
             Monster[monsterType].picture.width,
             Monster[monsterType].picture.height
         );
-        for(let musicType in Monster[monsterType].music)
+        for(let soundType in Monster[monsterType].sound)
         {
             Game.engine.load.audio(
-                Monster[monsterType].music[musicType].name,
-                Monster[monsterType].music[musicType].src
+                Monster[monsterType].sound[soundType].name,
+                Monster[monsterType].sound[soundType].src
             );
         }
     }
-    // load all item spritesheet and music
+    // load all item spritesheet and sound
     for(let itemType in Item)
     {
         Game.engine.load.spritesheet(
@@ -103,8 +103,8 @@ function preload()
             Item[itemType].picture.height
         );
         Game.engine.load.audio(
-            Item[itemType].music.get.name,
-            Item[itemType].music.get.src
+            Item[itemType].sound.get.name,
+            Item[itemType].sound.get.src
         );
     }
 }
@@ -119,14 +119,14 @@ function create()
         Map.structure[0],
         Map.tileset[0],
         Map.background[0],
-        Map.music[2]
+        Map.sound[2]
     );
 
     for(let playerType in Player)
     {
-        for(let musicType in Player[playerType].music)
+        for(let soundType in Player[playerType].sound)
         {
-            Player[playerType].music[musicType].play = Player[playerType].music[musicType].create();
+            Player[playerType].sound[soundType].play = Player[playerType].sound[soundType].create();
         }
     }
     // create players' container

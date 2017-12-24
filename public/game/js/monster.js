@@ -3,16 +3,16 @@ const Monster = {
         tileNumber: 87,
         spriteName: 'goomba',
         picture: {
-            src: '/game/assets/monster/image/goomba.png',
+            src: '/game/assets/monsters/images/goomba.png',
             width: 32,
             height: 32
         },
-        music: {
+        sound: {
             die: {
                 name: 'goombaDie',
-                src:'/game/assets/monster/sound/hit.wav',
+                src:'/game/assets/monsters/sounds/hit.wav',
                 create: () => {
-                    let sfx = Game.engine.add.audio(Monster.goomba.music.die.name);
+                    let sfx = Game.engine.add.audio(Monster.goomba.sound.die.name);
                     return () => {
                         sfx.play();
                     }
@@ -44,16 +44,9 @@ const Monster = {
                         id: monster.id
                     }
                 );
-                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
-                    // respawn monster to its spawnpoint
-                    socket.emit(
-                        'monsterRespawn',
-                        {
-                            monsterType: 'goomba',
-                            id: monster.id
-                        }
-                    );
-                });
+                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                Monster.goomba.sound.die.play();
+                Monster.goomba.destroy(monster);
             }
             else
             {
@@ -63,15 +56,6 @@ const Monster = {
                         name: character.name._text
                     }
                 );
-                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
-                    // respawn monster to its spawnpoint
-                    socket.emit(
-                        'playerRespawn',
-                        {
-                            name: character.name._text,
-                        }
-                    );
-                });
             }
         },
         destroy: function(monster){
@@ -92,16 +76,16 @@ const Monster = {
         tileNumber: 88,
         spriteName: 'caveTurtle',
         picture:{
-            src: '/game/assets/monster/image/cave_turtle.png',
+            src: '/game/assets/monsters/images/cave_turtle.png',
             width: 32,
             height: 32
         },
-        music: {
+        sound: {
             die: {
                 name: 'caveTurtleDie',
-                src:'/game/assets/monster/sound/hit.wav',
+                src:'/game/assets/monsters/sounds/hit.wav',
                 create: () => {
-                    let sfx = Game.engine.add.audio(Monster.caveTurtle.music.die.name);
+                    let sfx = Game.engine.add.audio(Monster.caveTurtle.sound.die.name);
                     return () => {
                         sfx.play();
                     }
@@ -137,11 +121,10 @@ const Monster = {
                         id: monster.id
                     }
                 );
-                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function()
-                {
-                    // respawn monster to its spawnpoint
-                    Monster.caveTurtle.respawn(monster);
-                });
+                character.body.velocity.y = Player[character.key].velocity.vertical.bounce;
+                Monster.caveTurtle.sound.die.play();
+                Monster.caveTurtle.destroy(monster);
+                
             }
             else
             {
@@ -151,15 +134,6 @@ const Monster = {
                         name: character.name._text
                     }
                 );
-                Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
-                    // respawn monster to its spawnpoint
-                    socket.emit(
-                        'playerRespawn',
-                        {
-                            name: character.name._text,
-                        }
-                    );
-                });
             }
         },
         destroy: function(monster){
@@ -180,7 +154,7 @@ const Monster = {
         tileNumber: 86,
         spriteName: 'spikeTurtle',
         picture:{
-            src: '/game/assets/monster/image/spike_turtle.png',
+            src: '/game/assets/monsters/images/spike_turtle.png',
             width: 32,
             height: 32
         },
@@ -190,12 +164,12 @@ const Monster = {
             die: [ 4 ],
             frame_rate: 2
         },
-        music: {
+        sound: {
             die: {
                 name: 'spikeTurtleDie',
-                src: '/game/assets/monster/sound/empty.wav',
+                src: '/game/assets/monsters/sounds/empty.wav',
                 create: () => {
-                    let sfx = Game.engine.add.audio(Monster.spikeTurtle.music.die.name);
+                    let sfx = Game.engine.add.audio(Monster.spikeTurtle.sound.die.name);
                     return () => {
                         sfx.play();
                     }
@@ -221,15 +195,6 @@ const Monster = {
                     name: character.name._text
                 }
             );
-            Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
-                // respawn monster to its spawnpoint
-                socket.emit(
-                    'playerRespawn',
-                    {
-                        name: character.name._text,
-                    }
-                );
-            });
         },
         destroy: function(monster){
             monster.animations.stop();
@@ -249,11 +214,11 @@ const Monster = {
         tileNumber: 80,
         spriteName: 'ironFlower',
         picture:{
-            src: '/game/assets/monster/image/iron_flower.png',
+            src: '/game/assets/monsters/images/iron_flower.png',
             width: 32,
             height: 32
         },
-        music: {
+        sound: {
         },
         animation: {
             walkLeft: [ 0, 1 ],
@@ -276,15 +241,6 @@ const Monster = {
                     name: character.name._text
                 }
             );
-            Game.engine.time.events.add(Phaser.Timer.SECOND * 3,function(){
-                // respawn monster to its spawnpoint
-                socket.emit(
-                    'playerRespawn',
-                    {
-                        name: character.name._text,
-                    }
-                );
-            });
         },
         respawn: function(monster)
         {
@@ -300,9 +256,9 @@ function MonsterSetup(structure=null, monsterData=null)
     {
         Game.monsters[monsterType] = Game.engine.add.group();
         Game.monsters[monsterType].enableBody = true;
-        for(let musicType in Monster[monsterType].music)
+        for(let soundType in Monster[monsterType].sound)
         {
-            Monster[monsterType].music[musicType].play = Monster[monsterType].music[musicType].create();
+            Monster[monsterType].sound[soundType].play = Monster[monsterType].sound[soundType].create();
         }
 
         // create monster from map
@@ -318,7 +274,7 @@ function MonsterSetup(structure=null, monsterData=null)
         {
             let child = Game.monsters[monsterType].children[i];
             child.name = monsterType;
-            child.id=i;
+            child.id = i;
             if(monsterData)
             {
                 child.position.x = monsterData[monsterType][i].x;
