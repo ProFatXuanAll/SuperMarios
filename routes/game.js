@@ -6,27 +6,28 @@ const io = require("./socket")(app.server);
 const router = express.Router();
 
 app.use('/game',session({
-  secret : 'dkwqhnfqwohfwnfuqha',
-  resave : false,
-  saveUninitialized : true,
+  secret: 'dkwqhnfqwohfwnfuqha',
+  resave: false,
+  saveUninitialized: true,
 }));
 
-router.get('/', UrlSetting, function(req, res, next) {
-    var sess = req.session;
+router.get('/', UrlSetting, function(req, res, next){
+    let sess = req.session;
     if(sess.userName === undefined)
     {
         res.redirect('/game/name');
     }
     else
     {
-        res.render('game/index',{ name : sess.userName });
+        res.render('game/index',{ name: sess.userName });
     }
 });
     
-router.get('/name', UrlSetting,function(req,res,next){
-    var sess = req.session;
+router.get('/name', UrlSetting,function(req, res, next){
+    let sess = req.session;
     if(sess.userName)
     {
+	//this part should be deleted before project release
         res.send('You should not see this page.');
     }
     else
@@ -35,8 +36,8 @@ router.get('/name', UrlSetting,function(req,res,next){
     }
 });
 
-router.post('/name', UrlSetting,function(req,res,next){
-    var sess = req.session;
+router.post('/name', UrlSetting,function(req, res, next){
+    let sess = req.session;
     if(io.playerList[req.body.account])
     {
         res.render('game/name',{ error: true });
@@ -57,7 +58,7 @@ router.get('/error', UrlSetting, function(req, res, next){
     res.render('game/error',{ error: 'multipleConnect' });
 });
 
-function UrlSetting(req,res,next){
+function UrlSetting(req, res, next){
     res.locals = {
         title: 'SuperMarios',
         home: '/home',
