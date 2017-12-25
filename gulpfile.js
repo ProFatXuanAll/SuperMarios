@@ -7,6 +7,7 @@ const sass = require('gulp-sass');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
+const nodemon = require('gulp-nodemon');
 
 // Lint Task
 gulp.task('lint1', function() {
@@ -42,6 +43,24 @@ gulp.task('sass2', function() {
 });
 gulp.task('sass', ['sass1', 'sass2']);
 
+// Nodemon for Live Reload
+gulp.task('develop', function(){
+    var stream = nodemon({ 
+		script: 'app.js',
+		ext: 'html js',
+        //ignore: ['ignored.js'],
+        tasks: ['lint'] 
+	});
+
+    stream.on('restart', function(){
+        console.log('restarted!')
+    }).on('crash', function(){
+        console.error('Application has crashed!\n')
+        stream.emit('restart', 10)  // restart the server in 10 seconds
+    });
+});
+
+
 // Concatenate & Minify JS
 /*gulp.task('scripts', function() {
     return gulp.src('js/*.js')
@@ -60,4 +79,4 @@ gulp.task('sass', ['sass1', 'sass2']);
 
 // Default Task
 // gulp.task('default', ['lint', 'sass', 'scripts', 'watch']);
-gulp.task('default', ['lint', 'sass']);
+gulp.task('default', ['lint', 'sass', 'develop']);
