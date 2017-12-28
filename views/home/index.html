@@ -2,48 +2,37 @@
 
 {% block stylesheet %}
 <link rel="stylesheet" href="/home/css/base.css">
+<link rel="stylesheet" href="/home/css/index.css">
 {% endblock %}
 
 {% block content %}
 <!-- Title -->
-<div class="card">
-  <img class="card-img img-fluid opacity-8" src="/home/assets/images/products/super_marios.jpg" alt="SuperMarios">
-  <div class="card-img-overlay d-flex">
-    <div class="my-auto mx-auto text-center">
-      <h1 class="card-title display-1 mario-title-font">Super Marios</h1>
-      <h2 class="card-text mario-subtitle-font">A web realtime MMOG</h2>
-	  <a href="{{ game }}" class="card-text btn btn-secondary btn-xl align-middle">Let's Play</a>
-    </div>
-  </div>
-</div>
 
 <!-- Content -->
-<div class="card">
-  <div class="card-body">
-    <h1 class="card-title">Card title</h1>
-    <h2 class="card-subtitle mb-2 text-muted">Card subtitle</h2>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-  </div>
-</div>
+<section class="intro">
+  <figure>
+    <img src="/home/assets/images/products/super_marios.jpg">
+    <figcaption>
+      <h1>Super Marios</h1>
+      <p>Many Marios Run Together</p>
+      <button><a href="{{ game }}">Play</a></button>
+    </figcaption>
+  </figure>
+</section>
 
-<div class="card">
-  <div class="card-header">
-	Super Marios
-  </div>
-  <div class="card-body">
-    <h1 class="card-title">What is Super Marios ?</h1>
-    <p class="card-text">
-    "Super Marios" is a web realtime MMOG (Massively Multiplayer Online Game)
-    Using Mario to take on an exciting adventure,
-    Other real world Marios will attack you from EVERYWHERE.
-    Also, there are monsters blocking your way!
-    No matter what comes to you, just remember,
-    Accessories will always be there to your assistence.
-    Strive for the one and only glory!
-	</p>
-    <button class="btn btn-primary btn-lg"><a href="{{ game }}">Let's Play !</a></button>
-  </div>
-</div>
+<section>
+  <h1 class="">What is Super Marios ?</h1>
+  <p class="">
+  "Super Marios" is a web realtime MMOG (Massively Multiplayer Online Game)
+  Using Mario to take on an exciting adventure,
+  Other real world Marios will attack you from EVERYWHERE.
+  Also, there are monsters blocking your way!
+  No matter what comes to you, just remember,
+  Accessories will always be there to your assistence.
+  Strive for the one and only glory!
+  </p>
+  <button class=""><a href="{{ game }}">Let's Play !</a></button>
+</section>
 {% endblock %}
 
 {% block script %}
