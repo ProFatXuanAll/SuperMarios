@@ -10,16 +10,22 @@
     grid-area: item1; }
     .intro article h1 {
       font-family: tiempos-headline-bold;
-      font-size: 1rem;
+      font-size: 1.5rem;
       white-space: nowrap;
       margin: 1rem; }
+      .intro article h1 img {
+        width: 1.5rem;
+        height: 1.5rem; }
     .intro article p {
       font-family: averta-regular;
-      font-size: .5rem;
+      font-size: 0.8rem;
       margin: 1rem;
-      line-height: .8rem;
+      line-height: 1rem;
       color: #1a1a1a; }
-  .intro img {
+  .intro > img {
+    border: 1rem solid black;
+    border-top: 0;
+    border-bottom: 0;
     grid-area: item2;
     width: 100%;
     height: auto; }
