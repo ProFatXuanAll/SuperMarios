@@ -7,22 +7,62 @@
 
 {% block content %}
 
-<table class="table">
-  <thead class="thead-dark">
+<nav>
+
+</nav>
+
+<table id="coinTable">
+  <thead>
     <tr>
       <th scope="col">#</th>
       <th scope="col">Player</th>
       <th scope="col">Coin</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in players %}
+    <tr>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ player.userSortByCoin }}</td>
+      <td>{{ player.coin }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table id="killTable">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Player</th>
       <th scope="col">Kills</th>
     </tr>
   </thead>
   <tbody>
     {% for player in players %}
     <tr>
-      <th scope="row">{{ player.rank }}</th>
-      <td>{{ player.userName }}</td>
-      <td>{{ player.coin }}</td>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ player.userSortBykill }}</td>
       <td>{{ player.kill }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table id="completeTable">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Player</th>
+      <th scope="col">Completion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in players %}
+    <tr>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ player.userSortBycomp }}</td>
+      <td>{{ player.complete }}</td>
     </tr>
     {% endfor %}
   </tbody>
