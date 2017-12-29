@@ -4,10 +4,10 @@ $intro_background_size: 1.2rem;
 $intro_article_item_margin: 1rem;
 $intro_article_h1: 1.5rem;
 $intro_article_p: .8rem;
-$intro_article_p_line_height: 1rem;
+$intro_article_p_line_height: 1.2rem;
 
 
-.intro {
+section {
   display: grid;
   grid-template-columns: auto $intro_item_width 5% $intro_item_width auto;
   grid-template-areas: $intro_template;
@@ -21,13 +21,13 @@ $intro_article_p_line_height: 1rem;
   background-position: top left, top right, bottom left;
 
   article {
-    grid-area: item1;
 
     h1 {
       font-family: tiempos-headline-bold;
       font-size: $intro_article_h1;
       white-space: nowrap;
-      margin: $intro_article_item_margin; 
+      margin-bottom: $intro_article_item_margin; 
+      text-shadow: 1.5px 1.5px 1px grey;
 
       img {
         width: $intro_article_h1;
@@ -38,22 +38,40 @@ $intro_article_p_line_height: 1rem;
     p {
       font-family: averta-regular;
       font-size: $intro_article_p;
-      margin: $intro_article_item_margin; 
       line-height: $intro_article_p_line_height;
-      color: darken(grey, 40%);
+      color: darken(grey, 30%);
       
-      b {
+      strong {
         font-weight: bold;
+        white-space: nowrap;
       }
     }
   }
 
   & > img {
+    grid-area: item2;
     border: 1rem solid black;
     border-top: 0;
     border-bottom: 0;
-    grid-area: item2;
     width: 100%;
     height: auto;
+  }
+}
+
+.origin-intro {
+  article {
+    grid-area: item1;
+  }
+  & > img {
+    grid-area: item2;
+  }
+}
+
+.new-intro {
+  article {
+    grid-area: item2;
+  }
+  & > img {
+    grid-area: item1;
   }
 }

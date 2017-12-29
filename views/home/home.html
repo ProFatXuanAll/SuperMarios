@@ -1,29 +1,63 @@
 {% extends "home/base.html" %}
 
 {% block stylesheet %}
-<link rel="stylesheet" href="/home/css/base.css">
 <link rel="stylesheet" href="/home/css/home.css">
 {% endblock %}
 
 {% block content %}
-<!-- Title -->
+  <section class="origin-intro">
+    <article>
+      <h1>What is Super Mario <img src="/home/assets/gifs/icons/question_block.gif"></h1>
+      <p>
+        Created by <strong>Nintendo</strong>, 
+      </p>
+      <p>
+        <strong>Super Mario</strong> 
+        is a video game featuring their mascot, <strong>Mario</strong>.
+      </p>
+      <p>
+        Player follows Mario's adventures in <strong>Mushroom Kingdom</strong>,
+      </p>
+      <p>
+        Run up hills and jump across platforms, 
+      </p>
+      <p>
+        Step on enemies and beat up evil <strong>Bowser</strong>,
+      </p>
+      <p>
+        Then finally rescue kidnapped <strong>Princess Peach</strong>.
+      </p>
+    </article>
+    <img src="/home/assets/gifs/products/mario.gif" alt="demo" width="800" height="450">
+  </section>
 
-<!-- Content -->
-<section class="intro">
+<section class="new-intro">
+  <img src="/home/assets/gifs/products/mario.gif" alt="demo" width="800" height="450">
   <article>
     <h1>What is Super Marios <img src="/home/assets/gifs/icons/question_block.gif"></h1>
     <p>
-      <b>Super Marios</b> is a web realtime MMOG (Massively Multiplayer Online Game).
+      <strong>Super Marios</strong> is a web realtime <strong>MMOG</strong>.
+    </p>
+    <p>
       Using Mario to take on an exciting adventure,
-      Other real world Marios will attack you from EVERYWHERE.
+    </p>
+    <p>
+      Other real world Marios will attack you from <strong>EVERYWHERE</strong>.
+    </p>
+    <p>
       Also, there are monsters blocking your way!
+    </p>
+    <p>
       No matter what comes to you, just remember,
+    </p>
+    <p>
       Accessories will always be there to your assistence.
-      Strive for the one and only glory!
+    </p>
+    <p>
+      <strong>Strive for the one and only glory!</strong>
     </p>
     <!--button><a href="{{ game }}">Let's Play !</a></button-->
   </article>
-  <img src="/home/assets/gifs/products/mario.gif" alt="demo" width="800" height="450">
 </section>
 {% endblock %}
 

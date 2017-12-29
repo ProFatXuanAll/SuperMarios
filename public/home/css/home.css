@@ -1,4 +1,4 @@
-.intro {
+section {
   display: grid;
   grid-template-columns: auto 40% 5% 40% auto;
   grid-template-areas: ". item1 . item2 .";
@@ -10,28 +10,39 @@
   background-size: 1.2rem 1.2rem, 1.2rem 1.2rem, 1.2rem 1.2rem;
   background-repeat: repeat-y, repeat-y, repeat-x;
   background-position: top left, top right, bottom left; }
-  .intro article {
-    grid-area: item1; }
-    .intro article h1 {
-      font-family: tiempos-headline-bold;
-      font-size: 1.5rem;
-      white-space: nowrap;
-      margin: 1rem; }
-      .intro article h1 img {
-        width: 1.5rem;
-        height: 1.5rem; }
-    .intro article p {
-      font-family: averta-regular;
-      font-size: 0.8rem;
-      margin: 1rem;
-      line-height: 1rem;
-      color: #1a1a1a; }
-      .intro article p b {
-        font-weight: bold; }
-  .intro > img {
+  section article h1 {
+    font-family: tiempos-headline-bold;
+    font-size: 1.5rem;
+    white-space: nowrap;
+    margin-bottom: 1rem;
+    text-shadow: 1.5px 1.5px 1px grey; }
+    section article h1 img {
+      width: 1.5rem;
+      height: 1.5rem; }
+  section article p {
+    font-family: averta-regular;
+    font-size: 0.8rem;
+    line-height: 1.2rem;
+    color: #343434; }
+    section article p strong {
+      font-weight: bold;
+      white-space: nowrap; }
+  section > img {
+    grid-area: item2;
     border: 1rem solid black;
     border-top: 0;
     border-bottom: 0;
-    grid-area: item2;
     width: 100%;
     height: auto; }
+
+.origin-intro article {
+  grid-area: item1; }
+
+.origin-intro > img {
+  grid-area: item2; }
+
+.new-intro article {
+  grid-area: item2; }
+
+.new-intro > img {
+  grid-area: item1; }
