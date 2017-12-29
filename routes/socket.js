@@ -21,7 +21,7 @@ module.exports = function(server){
             socket.broadcast.emit(
                 '01 toExistPlayer',
                 playerData
-                );
+            );
             socket.username = playerData.name;
 
             // server store new player info
@@ -60,10 +60,10 @@ module.exports = function(server){
                 superUser = playerData.name;
                 // server tell new player to generate monster by itself
                 socket.emit(
-                     '07 spawnMonster',
-                     {
-                         superUser: true
-                     }
+                    '07 spawnMonster',
+                    {
+                        superUser: true
+                    }
                 );
             }
             // new player is super user
@@ -214,7 +214,7 @@ module.exports = function(server){
                     io.emit(
                         'playerRespawn',
                         playerData
-                    )
+                    );
                 },
                 3000
             );
@@ -288,7 +288,7 @@ module.exports = function(server){
                     io.emit(
                         'itemRespawn',
                         itemData
-                    )
+                    );
                 },
                 3000
             );
@@ -300,7 +300,7 @@ module.exports = function(server){
             io.emit(
                 'itemRespawn',
                 itemData
-            )
+            );
         });
     });
 

@@ -4,7 +4,7 @@ config = {
         'password' : '',
         'dbname' : '',
     },
-    'port':,
+    'port':
 }
 
 module.exports = config;
