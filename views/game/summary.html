@@ -8,7 +8,9 @@
 {% block content %}
 
 <nav>
-
+  <button class="tab currentTag" onclick="displayTable(event,'coinTable')"></button>
+  <button class="tab" onclick="displayTable(event,'killTable')"></button>
+  <button class="tab" onclick="displayTable(event,'completeTable')"></button>
 </nav>
 
 <table id="coinTable">
@@ -42,7 +44,7 @@
     {% for player in players %}
     <tr>
       <th scope="row">{{ loop.index }}</th>
-      <td>{{ player.userSortBykill }}</td>
+      <td>{{ player.userSortByKill }}</td>
       <td>{{ player.kill }}</td>
     </tr>
     {% endfor %}
@@ -61,7 +63,7 @@
     {% for player in players %}
     <tr>
       <th scope="row">{{ loop.index }}</th>
-      <td>{{ player.userSortBycomp }}</td>
+      <td>{{ player.userSortByComp }}</td>
       <td>{{ player.complete }}</td>
     </tr>
     {% endfor %}

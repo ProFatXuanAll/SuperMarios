@@ -1,117 +1,53 @@
-@font-face {
-  /*font-family: 'Open Sans', sans-serif;*/
-  font-family: NotoSansCJKtc-Light;
-  src: url(/common/font/NotoSansCJKtc-Light.otf);
-}
+@import "reset";
+@import "font";
 
-*{
-  margin: 0;
-  border: 0;
-  padding: 0;
-  font-size: 32px;
-  font: inherit;
-  line-height: 1;
-}
+$menu_len: 4;
+$menu_template: "item1 . item2 item3 item4";
 
-html {
+$cloud_border: .4rem;
+
+.menu {
+  display: grid;
+  grid-template-columns: 15% auto 15% 15% 15%;
+  grid-template-areas: $menu_template;
+  justify-items: center;
+  align-items: center;
+  padding: .1rem;
   width: 100%;
-  height: 100%;
-}
+  font-size: .5rem;
+  background: lightblue;
 
-body {
-  font-family: NotoSansCJKtc-Light;
-  text-align: center;
-  width: 100%;
-  height: 100%;
-}
-
-header {
-  display: block;
-  position: relative;
-  z-index: 10000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  height: 3em;
-  line-height: 3em;
-  box-shadow: 0 0 0.15em 0 rgba(0, 0, 0, 0.1);
-  margin-bottom: 1em;
-}
-
-header h1 {
-  position: absolute;
-  left: 1em;
-  top: 0;
-  height: 3em;
-  line-height: 3em;
-  cursor: default;
-}
-
-header h1 a {
-  font-size: 1.25em;
-}
-
-header h1 a img {
-  height: 100%;
-  width: auto;
-  vertical-align: baseline;
-}
-
-header nav {
-  position: absolute;
-  right: 0.5em;
-  top: 0;
-  height: 3em;
-  line-height: 3em;
-}
-
-header nav ul {
-  margin: 0;
-}
-
-header nav ul li {
-  display: inline-block;
-  margin-left: 0.5em;
-  font-size: 0.9em;
-}
-
-header nav ul li a {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-  height: 3em;
-  line-height: 3em;
-  padding: 0 0.5em 0 0.5em;
-  outline: 0;
-}
-
-@media screen and (max-width: 736px) {
-
-  header {
-    height: 2.5em;
-    line-height: 2.5em;
-  }
-
-  header h1 {
+  a {
+    background: white;
+    border: $cloud_border solid white;
+    border-radius: 50%;
+    box-shadow: 1px 1px 1px grey;
+    padding: .1rem;
     text-align: center;
-    position: relative;
-    left: 0;
-    top: 0;
-    height: 2.5em;
-    line-height: 2.5em;
+    font-family: Ageta_Chubby_Demo;
+    transition: border .5s;
+
+    &:hover {
+      text-decoration: underline;
+      border: $cloud_border * 1.5 solid white;
+    }
+
+    &:first-child {
+      background: none;
+      border: none;
+      border-radius: 0;
+      box-shadow: 0 0 0;
+      padding: 0;
+    }
+
+    &:first-child:hover {
+      text-decoration: none;
+    }
   }
 
-  header h1 a {
-    font-size: 1em;
+  @for $i from 1 through $menu_len {
+    a:nth-child(#{$i}) {
+      grid-area: item#{$i};
+    }
   }
-
-  header nav {
-    display: none;
-  }
-}
-
-.content {
-  width: 100%;
-  height: 90%;
 }
