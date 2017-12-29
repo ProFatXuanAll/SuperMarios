@@ -1,0 +1,6 @@
+nav .tab {
+  background: gray;
+  color: black; }
+
+nav .currentTag {
+  background: #ff0f00; }

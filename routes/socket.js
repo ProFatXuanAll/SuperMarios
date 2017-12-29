@@ -3,6 +3,8 @@ module.exports = function(server){
     const io = require('socket.io').listen(server);
 
     let playerList = {};
+    let gameResult = {}; // for data collection
+    let summary = {}; // for sorting result, and client will render this
     let superUser = null;
     io.on('connection', function(socket){
         // new player tell server to join game
@@ -247,6 +249,26 @@ module.exports = function(server){
             );
         });
 
+        /*After game finished, all players should return their info
+        for rank sorting, include name, coin, kills, x-position*/
+        socket.on('collectData', function(playerData){
+            // store player info for sorting
+            // gameResult: [user{},user{}...]
+            // set flag if the user has returned info
+            checkCollectData();
+        });
+
+        function checkCollectData(){
+            //check if everyone's flag has been true
+            //if so, do ranking, else return;
+        }
+
+        function ranking(user, achieve){
+            //sort by achievement and pick 10 users for render
+            //store the sorting result into object "summary"
+            //there should be 3 array in "summary"
+        }
+
         // existed player(s) tell server it kill monster
         socket.on('monsterDead', function(monsterData){
             // server tell everyone it kill monster
@@ -305,5 +327,7 @@ module.exports = function(server){
     });
 
     io.playerList = playerList;
+    io.summary = summary;
+
     return io;
 };
