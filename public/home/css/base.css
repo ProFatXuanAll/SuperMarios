@@ -61,6 +61,7 @@ body {
   src: url("/common/font/tiempos-headline-semibold.woff2"); }
 
 .menu {
+  position: fixed;
   display: grid;
   grid-template-columns: 5% auto 5% 5% 5%;
   grid-template-areas: "item1 . item2 item3 item4";
