@@ -4,6 +4,8 @@
 $menu_len: 4;
 $menu_template: "item1 . item2 item3 item4";
 
+$cloud_border: .4rem;
+
 .menu {
   display: grid;
   grid-template-columns: 15% auto 15% 15% 15%;
@@ -17,16 +19,29 @@ $menu_template: "item1 . item2 item3 item4";
 
   a {
     background: white;
-    border: .4rem solid white;
+    border: $cloud_border solid white;
     border-radius: 50%;
+    box-shadow: 1px 1px 1px grey;
     padding: .1rem;
     text-align: center;
     font-family: Ageta_Chubby_Demo;
+    transition: border .5s;
+
+    &:hover {
+      text-decoration: underline;
+      border: $cloud_border * 1.5 solid white;
+    }
 
     &:first-child {
       background: none;
       border: none;
+      border-radius: 0;
+      box-shadow: 0 0 0;
       padding: 0;
+    }
+
+    &:first-child:hover {
+      text-decoration: none;
     }
   }
 

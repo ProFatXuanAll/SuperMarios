@@ -50,15 +50,24 @@ html {
   background: lightblue; }
   .menu a {
     background: white;
-    border: .4rem solid white;
+    border: 0.4rem solid white;
     border-radius: 50%;
+    box-shadow: 1px 1px 1px grey;
     padding: .1rem;
     text-align: center;
-    font-family: Ageta_Chubby_Demo; }
+    font-family: Ageta_Chubby_Demo;
+    transition: border .5s; }
+    .menu a:hover {
+      text-decoration: underline;
+      border: 0.6rem solid white; }
     .menu a:first-child {
       background: none;
       border: none;
+      border-radius: 0;
+      box-shadow: 0 0 0;
       padding: 0; }
+    .menu a:first-child:hover {
+      text-decoration: none; }
   .menu a:nth-child(1) {
     grid-area: item1; }
   .menu a:nth-child(2) {
