@@ -47,9 +47,9 @@ gulp.task('sass', ['sass1', 'sass2']);
 gulp.task('develop', function(){
     var stream = nodemon({ 
 		script: 'app.js',
-		ext: 'html js',
+		ext: 'html js scss',
         //ignore: ['ignored.js'],
-        tasks: ['lint'] 
+        tasks: ['lint', 'sass'] 
 	});
 
     stream.on('restart', function(){
@@ -71,11 +71,13 @@ gulp.task('develop', function(){
         .pipe(gulp.dest('dist/js'));
 });*/
 
+
 // Watch Files For Changes
-/*gulp.task('watch', function() {
-    gulp.watch('js/*.js', ['lint', 'scripts']);
-    gulp.watch('scss/*.scss', ['sass']);
-});*/
+//gulp.task('watch', function() {
+//    gulp.watch('*/*.js', ['lint', 'scripts']);
+//    gulp.watch('*/*.scss', ['sass']);
+//});
+
 
 // Default Task
 // gulp.task('default', ['lint', 'sass', 'scripts', 'watch']);

@@ -1,0 +1,41 @@
+.banner {
+  width: 100%;
+  height: 100%; }
+  .banner figure {
+    position: relative;
+    width: 100%;
+    height: 100%; }
+    .banner figure img {
+      width: 100%;
+      opacity: 0.9; }
+    .banner figure figcaption {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; }
+      .banner figure figcaption h1 {
+        font-family: Bubble3D;
+        font-size: 3rem;
+        margin: 0.5rem; }
+      .banner figure figcaption p {
+        font-family: Ageta_Chubby_Demo;
+        font-size: 1rem;
+        margin: 0.5rem; }
+      .banner figure figcaption button {
+        font-family: Autarquica-demo-font-FFP;
+        font-size: 1rem;
+        margin: 0.5rem;
+        color: #e67300;
+        border: 0.3rem outset #ffd9b3;
+        background: #ffa64d;
+        border-radius: 10px;
+        padding: .2rem .5rem; }
+        .banner figure figcaption button:hover {
+          color: #804000;
+          border: 0.3rem outset #ffa64d;
+          background: #e67300;
+          cursor: pointer; }
+
+.intro {
+  text-align: center; }

@@ -1,3 +1,19 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  text-decoration: none;
+  color: inherit;
+  font-weight: normal;
+  font-style: normal; }
+
+ul, li {
+  list-style: none; }
+
+html {
+  font-size: 32px; }
+
 @font-face {
   font-family: "Ageta_Chubby_Demo";
   src: url("/common/font/Ageta_Chubby_Demo.otf"); }
@@ -22,25 +38,41 @@
   font-family: "EricaOne-Regular";
   src: url("/common/font/EricaOne-Regular.ttf"); }
 
-.opacity-8 {
-  opacity: 0.8; }
-
-.btn-xl {
-  width: auto;
-  height: auto;
-  padding: 0 2rem;
-  margin-top: 1rem;
-  font-family: "Bubble3D";
-  font-size: 3rem;
-  color: black;
-  background: transparent;
-  border-radius: 2rem;
-  vertical-align: center; }
-
-.mario-title-font {
-  font-family: "Bubble3D";
-  font-size: 10rem; }
-
-.mario-subtitle-font {
-  font-family: "Ageta_Chubby_Demo";
-  font-size: 3rem; }
+.menu {
+  display: grid;
+  grid-template-columns: 15% auto 15% 15% 15%;
+  grid-template-areas: "item1 . item2 item3 item4";
+  justify-items: center;
+  align-items: center;
+  padding: .1rem;
+  width: 100%;
+  font-size: .5rem;
+  background: lightblue; }
+  .menu a {
+    background: white;
+    border: 0.4rem solid white;
+    border-radius: 50%;
+    box-shadow: 1px 1px 1px grey;
+    padding: .1rem;
+    text-align: center;
+    font-family: Ageta_Chubby_Demo;
+    transition: border .5s; }
+    .menu a:hover {
+      text-decoration: underline;
+      border: 0.6rem solid white; }
+    .menu a:first-child {
+      background: none;
+      border: none;
+      border-radius: 0;
+      box-shadow: 0 0 0;
+      padding: 0; }
+    .menu a:first-child:hover {
+      text-decoration: none; }
+  .menu a:nth-child(1) {
+    grid-area: item1; }
+  .menu a:nth-child(2) {
+    grid-area: item2; }
+  .menu a:nth-child(3) {
+    grid-area: item3; }
+  .menu a:nth-child(4) {
+    grid-area: item4; }

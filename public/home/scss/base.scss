@@ -1,56 +1,53 @@
-@font-face {
-  font-family: "Ageta_Chubby_Demo";
-  src: url("/common/font/Ageta_Chubby_Demo.otf");
-}
+@import "reset";
+@import "font";
 
-@font-face {
-  font-family: "Ageta_Chubby_Italic_Demo";
-  src: url("/common/font/Ageta_Chubby_Italic_Demo.otf");
-}
+$menu_len: 4;
+$menu_template: "item1 . item2 item3 item4";
 
-@font-face {
-  font-family: "Autarquica-demo-font-FFP";
-  src: url("/common/font/Autarquica-demo-font-FFP.ttf");
-}
+$cloud_border: .4rem;
 
-@font-face {
-  font-family: "Bubble3D";
-  src: url("/common/font/Bubble3D.ttf");
-}
+.menu {
+  display: grid;
+  grid-template-columns: 15% auto 15% 15% 15%;
+  grid-template-areas: $menu_template;
+  justify-items: center;
+  align-items: center;
+  padding: .1rem;
+  width: 100%;
+  font-size: .5rem;
+  background: lightblue;
 
-@font-face {
-  font-family: "Cowboys";
-  src: url("/common/font/Cowboys.otf");
-}
+  a {
+    background: white;
+    border: $cloud_border solid white;
+    border-radius: 50%;
+    box-shadow: 1px 1px 1px grey;
+    padding: .1rem;
+    text-align: center;
+    font-family: Ageta_Chubby_Demo;
+    transition: border .5s;
 
-@font-face {
-  font-family: "EricaOne-Regular";
-  src: url("/common/font/EricaOne-Regular.ttf");
-}
+    &:hover {
+      text-decoration: underline;
+      border: $cloud_border * 1.5 solid white;
+    }
 
-.opacity-8 {
-  opacity: 0.8;
-}
+    &:first-child {
+      background: none;
+      border: none;
+      border-radius: 0;
+      box-shadow: 0 0 0;
+      padding: 0;
+    }
 
-.btn-xl {
-  width: auto;
-  height: auto;
-  padding: 0 2rem;
-  margin-top: 1rem;
-  font-family: "Bubble3D";
-  font-size: 3rem;
-  color: black;
-  background: transparent;
-  border-radius: 2rem;
-  vertical-align: center;
-}
+    &:first-child:hover {
+      text-decoration: none;
+    }
+  }
 
-.mario-title-font {
-  font-family: "Bubble3D";
-  font-size: 10rem;
-}
-
-.mario-subtitle-font {
-  font-family: "Ageta_Chubby_Demo";
-  font-size: 3rem;
+  @for $i from 1 through $menu_len {
+    a:nth-child(#{$i}) {
+      grid-area: item#{$i};
+    }
+  }
 }
