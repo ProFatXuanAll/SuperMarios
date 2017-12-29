@@ -1,0 +1,25 @@
+.intro {
+  display: grid;
+  grid-template-columns: auto 40% 5% 40% auto;
+  grid-template-areas: ". item1 . item2 .";
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  height: 100%; }
+  .intro article {
+    grid-area: item1; }
+    .intro article h1 {
+      font-family: tiempos-headline-bold;
+      font-size: 1rem;
+      white-space: nowrap;
+      margin: 1rem; }
+    .intro article p {
+      font-family: averta-regular;
+      font-size: .5rem;
+      margin: 1rem;
+      line-height: .8rem;
+      color: #1a1a1a; }
+  .intro img {
+    grid-area: item2;
+    width: 100%;
+    height: auto; }

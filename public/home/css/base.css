@@ -12,7 +12,13 @@ ul, li {
   list-style: none; }
 
 html {
-  font-size: 32px; }
+  font-size: 32px;
+  width: 100%;
+  height: 100%; }
+
+body {
+  width: 100%;
+  height: 100%; }
 
 @font-face {
   font-family: "Ageta_Chubby_Demo";
@@ -38,36 +44,41 @@ html {
   font-family: "EricaOne-Regular";
   src: url("/common/font/EricaOne-Regular.ttf"); }
 
+@font-face {
+  font-family: "averta-regular";
+  src: url("/common/font/averta-regular.woff2"); }
+
+@font-face {
+  font-family: "averta-bold";
+  src: url("/common/font/averta-bold.woff2"); }
+
+@font-face {
+  font-family: "tiempos-headline-bold";
+  src: url("/common/font/tiempos-headline-bold.woff2"); }
+
+@font-face {
+  font-family: "tiempos-headline-bold";
+  src: url("/common/font/tiempos-headline-semibold.woff2"); }
+
 .menu {
   display: grid;
-  grid-template-columns: 15% auto 15% 15% 15%;
+  grid-template-columns: 5% auto 5% 5% 5%;
   grid-template-areas: "item1 . item2 item3 item4";
+  grid-column-gap: 0px;
   justify-items: center;
   align-items: center;
-  padding: .1rem;
   width: 100%;
-  font-size: .5rem;
-  background: lightblue; }
+  padding: .1rem;
+  height: 2rem;
+  font-size: .6rem;
+  background: linear-gradient(to bottom, #ff0f00, #ff3f33); }
   .menu a {
-    background: white;
-    border: 0.4rem solid white;
-    border-radius: 50%;
-    box-shadow: 1px 1px 1px grey;
-    padding: .1rem;
-    text-align: center;
-    font-family: Ageta_Chubby_Demo;
-    transition: border .5s; }
+    color: white;
+    font-family: Ageta_Chubby_Demo; }
     .menu a:hover {
-      text-decoration: underline;
-      border: 0.6rem solid white; }
-    .menu a:first-child {
-      background: none;
-      border: none;
-      border-radius: 0;
-      box-shadow: 0 0 0;
-      padding: 0; }
-    .menu a:first-child:hover {
-      text-decoration: none; }
+      text-decoration: underline; }
+    .menu a img {
+      vertical-align: center; }
   .menu a:nth-child(1) {
     grid-area: item1; }
   .menu a:nth-child(2) {

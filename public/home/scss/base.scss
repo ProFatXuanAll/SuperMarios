@@ -1,47 +1,36 @@
 @import "reset";
 @import "font";
 
+$menu_color: #ff0f00;
 $menu_len: 4;
+$menu_item_width: 5%;
 $menu_template: "item1 . item2 item3 item4";
 
 $cloud_border: .4rem;
 
 .menu {
   display: grid;
-  grid-template-columns: 15% auto 15% 15% 15%;
+  grid-template-columns: $menu_item_width auto $menu_item_width $menu_item_width $menu_item_width;
   grid-template-areas: $menu_template;
+  grid-column-gap: 0px;
   justify-items: center;
   align-items: center;
-  padding: .1rem;
   width: 100%;
-  font-size: .5rem;
-  background: lightblue;
+  padding: .1rem;
+  height: 2rem;
+  font-size: .6rem;
+  background: linear-gradient(to bottom, $menu_color, lighten($menu_color, 10%));
 
   a {
-    background: white;
-    border: $cloud_border solid white;
-    border-radius: 50%;
-    box-shadow: 1px 1px 1px grey;
-    padding: .1rem;
-    text-align: center;
+    color: white;
     font-family: Ageta_Chubby_Demo;
-    transition: border .5s;
 
     &:hover {
       text-decoration: underline;
-      border: $cloud_border * 1.5 solid white;
     }
 
-    &:first-child {
-      background: none;
-      border: none;
-      border-radius: 0;
-      box-shadow: 0 0 0;
-      padding: 0;
-    }
-
-    &:first-child:hover {
-      text-decoration: none;
+    img {
+      vertical-align: center;
     }
   }
 
