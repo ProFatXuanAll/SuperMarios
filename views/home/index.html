@@ -1,39 +1,14 @@
-{% extends "home/base.html" %}
-
-{% block stylesheet %}
-<link rel="stylesheet" href="/home/css/base.css">
-<link rel="stylesheet" href="/home/css/index.css">
-{% endblock %}
-
-{% block content %}
-<!-- Title -->
-
-<!-- Content -->
-<section class="banner">
-  <figure>
-    <img src="/home/assets/images/products/super_marios.jpg">
-    <figcaption>
-      <h1>Super Marios</h1>
-      <p>Many Marios Run Together</p>
-      <button><a href="{{ game }}">Play</a></button>
-    </figcaption>
-  </figure>
-</section>
-
-<section class="intro">
-  <h1>What is Super Marios ?</h1>
-  <p>
-    "Super Marios" is a web realtime MMOG (Massively Multiplayer Online Game).
-    Using Mario to take on an exciting adventure,
-    Other real world Marios will attack you from EVERYWHERE.
-    Also, there are monsters blocking your way!
-    No matter what comes to you, just remember,
-    Accessories will always be there to your assistence.
-    Strive for the one and only glory!
-  </p>
-  <button><a href="{{ game }}">Let's Play !</a></button>
-</section>
-{% endblock %}
-
-{% block script %}
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/home/css/index.css">
+</head>
+<body>
+  <!-- Content -->
+  <section>
+    <h1>Super Marios</h1>
+    <p>Many Marios Run Together</p>
+    <button><a href="{{ game }}">Play</a></button>
+  </section>
+</body>
+</html>

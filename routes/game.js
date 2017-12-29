@@ -65,6 +65,7 @@ router.get('/error', UrlSetting, function(req, res, next){
 function UrlSetting(req, res, next){
     res.locals = {
         title: 'SuperMarios',
+        root: '/',
         home: '/home',
         game: '/game',
         pedia: '/game/pedia',

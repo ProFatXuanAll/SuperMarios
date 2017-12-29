@@ -55,7 +55,14 @@ app.set('view engine', 'html');
 // setting URL routing module
 app.use('/home', home);
 app.use('/game', game);
-app.use('/', function(req,res,next){ res.redirect('/home'); });
+app.use('/', function(req, res, next){
+    res.render(
+        'home/index',
+        {
+            game: '/game'
+        }
+    );
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

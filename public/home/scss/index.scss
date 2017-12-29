@@ -1,60 +1,51 @@
+@import "reset";
+@import "font";
+
 $figure_margin: .5rem;
 $figure_button: #e67300;
 
-.banner {
-  width: 100%;
-  height: 100%;
-
-  figure {
-    position: relative; // for figcaption to center
-    width: 100%;
-    height: 100%;
-    
-    img {
-      width: 100%;
-      opacity: 0.9; // make text context more visible
-    }
-
-    figcaption {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-
-      h1 {
-        font-family: Bubble3D;
-        font-size: 3rem;
-        margin: $figure_margin;
-      }
-
-      p {
-        font-family: Ageta_Chubby_Demo;
-        font-size: 1rem;
-        margin: $figure_margin;
-      }
-
-      button {
-        font-family: Autarquica-demo-font-FFP;
-        font-size: 1rem;
-        margin: $figure_margin;
-        color: $figure_button;
-        border: .3rem outset lighten($figure_button, 40%);
-        background: lighten($figure_button, 20%);
-        border-radius: 10px;
-        padding: .2rem .5rem;
-
-        &:hover {
-          color: darken($figure_button, 20%);
-          border: .3rem outset lighten($figure_button, 20%);
-          background: $figure_button;
-          cursor: pointer;
-        }
-      }
-    }
-  }
+body {
+  background-image: url(/home/assets/images/products/super_marios.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  position: relative;
 }
 
-.intro {
+section {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
+  white-space: nowrap;
+
+  h1 {
+    font-family: Bubble3D;
+    font-size: 3rem;
+    margin: $figure_margin;
+  }
+
+  p {
+    font-family: Ageta_Chubby_Demo;
+    font-size: 1rem;
+    margin: $figure_margin;
+  }
+
+  button {
+    font-size: 1rem;
+    margin: $figure_margin;
+    color: darken($figure_button, 20%);
+    border: .3rem outset lighten($figure_button, 40%);
+    background: lighten($figure_button, 20%);
+    border-radius: 10px;
+    padding: .2rem .5rem;
+
+    &:hover {
+      color: darken($figure_button, 40%);
+      border: .3rem outset lighten($figure_button, 20%);
+      background: $figure_button;
+      cursor: pointer;
+    }
+  }
 }

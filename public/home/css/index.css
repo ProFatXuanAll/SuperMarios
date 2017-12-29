@@ -1,41 +1,97 @@
-.banner {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  text-decoration: none;
+  color: inherit;
+  font-weight: normal;
+  font-style: normal; }
+
+ul, li {
+  list-style: none; }
+
+html {
+  font-size: 32px;
   width: 100%;
   height: 100%; }
-  .banner figure {
-    position: relative;
-    width: 100%;
-    height: 100%; }
-    .banner figure img {
-      width: 100%;
-      opacity: 0.9; }
-    .banner figure figcaption {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center; }
-      .banner figure figcaption h1 {
-        font-family: Bubble3D;
-        font-size: 3rem;
-        margin: 0.5rem; }
-      .banner figure figcaption p {
-        font-family: Ageta_Chubby_Demo;
-        font-size: 1rem;
-        margin: 0.5rem; }
-      .banner figure figcaption button {
-        font-family: Autarquica-demo-font-FFP;
-        font-size: 1rem;
-        margin: 0.5rem;
-        color: #e67300;
-        border: 0.3rem outset #ffd9b3;
-        background: #ffa64d;
-        border-radius: 10px;
-        padding: .2rem .5rem; }
-        .banner figure figcaption button:hover {
-          color: #804000;
-          border: 0.3rem outset #ffa64d;
-          background: #e67300;
-          cursor: pointer; }
 
-.intro {
-  text-align: center; }
+body {
+  width: 100%;
+  height: 100%; }
+
+@font-face {
+  font-family: "Ageta_Chubby_Demo";
+  src: url("/common/font/Ageta_Chubby_Demo.otf"); }
+
+@font-face {
+  font-family: "Ageta_Chubby_Italic_Demo";
+  src: url("/common/font/Ageta_Chubby_Italic_Demo.otf"); }
+
+@font-face {
+  font-family: "Autarquica-demo-font-FFP";
+  src: url("/common/font/Autarquica-demo-font-FFP.ttf"); }
+
+@font-face {
+  font-family: "Bubble3D";
+  src: url("/common/font/Bubble3D.ttf"); }
+
+@font-face {
+  font-family: "Cowboys";
+  src: url("/common/font/Cowboys.otf"); }
+
+@font-face {
+  font-family: "EricaOne-Regular";
+  src: url("/common/font/EricaOne-Regular.ttf"); }
+
+@font-face {
+  font-family: "averta-regular";
+  src: url("/common/font/averta-regular.woff2"); }
+
+@font-face {
+  font-family: "averta-bold";
+  src: url("/common/font/averta-bold.woff2"); }
+
+@font-face {
+  font-family: "tiempos-headline-bold";
+  src: url("/common/font/tiempos-headline-bold.woff2"); }
+
+@font-face {
+  font-family: "tiempos-headline-bold";
+  src: url("/common/font/tiempos-headline-semibold.woff2"); }
+
+body {
+  background-image: url(/home/assets/images/products/super_marios.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  position: relative; }
+
+section {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  white-space: nowrap; }
+  section h1 {
+    font-family: Bubble3D;
+    font-size: 3rem;
+    margin: 0.5rem; }
+  section p {
+    font-family: Ageta_Chubby_Demo;
+    font-size: 1rem;
+    margin: 0.5rem; }
+  section button {
+    font-size: 1rem;
+    margin: 0.5rem;
+    color: #804000;
+    border: 0.3rem outset #ffd9b3;
+    background: #ffa64d;
+    border-radius: 10px;
+    padding: .2rem .5rem; }
+    section button:hover {
+      color: #1a0d00;
+      border: 0.3rem outset #ffa64d;
+      background: #e67300;
+      cursor: pointer; }

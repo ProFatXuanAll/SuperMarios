@@ -1,0 +1,56 @@
+$intro_item_width: 40%;
+$intro_template: ". item1 . item2 .";
+$intro_article_item_margin: 1rem;
+$intro_article_h1: 1.5rem;
+$intro_article_p: .8rem;
+$intro_article_p_line_height: 1rem;
+
+.intro {
+  display: grid;
+  grid-template-columns: auto $intro_item_width 5% $intro_item_width auto;
+  grid-template-areas: $intro_template;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-image: url("/home/assets/images/icons/brick_block.ico");
+  background-size: 1rem 1rem;
+  background-repeat: repeat-x;
+
+  article {
+    grid-area: item1;
+
+    h1 {
+      font-family: tiempos-headline-bold;
+      font-size: $intro_article_h1;
+      white-space: nowrap;
+      margin: $intro_article_item_margin; 
+
+      img {
+        width: $intro_article_h1;
+        height: $intro_article_h1;
+      }
+    }
+
+    p {
+      font-family: averta-regular;
+      font-size: $intro_article_p;
+      margin: $intro_article_item_margin; 
+      line-height: $intro_article_p_line_height;
+      color: darken(grey, 40%);
+      
+      b {
+        font-weight: bold;
+      }
+    }
+  }
+
+  & > img {
+    border: 1rem solid black;
+    border-top: 0;
+    border-bottom: 0;
+    grid-area: item2;
+    width: 100%;
+    height: auto;
+  }
+}
