@@ -64,9 +64,9 @@ const Monster = {
             monster.body.enable = false;
         },
         respawn: function(monster){
-	        monster.body.enable = true;
+            monster.body.enable = true;
             monster.animations.play('walkLeft');
-	        monster.position.x = monster.spawn.x;
+            monster.position.x = monster.spawn.x;
             monster.position.y = monster.spawn.y;       
             monster.body.velocity.x = Monster.goomba.velocity.x;
             monster.body.velocity.y = Monster.goomba.velocity.y;
@@ -142,9 +142,9 @@ const Monster = {
             monster.body.enable = false;
         },
         respawn: function(monster){
-	        monster.body.enable = true;
+            monster.body.enable = true;
             monster.animations.play('walkLeft');
-	        monster.position.x = monster.spawn.x;
+            monster.position.x = monster.spawn.x;
             monster.position.y = monster.spawn.y;
             monster.body.velocity.x = Monster.caveTurtle.velocity.x;
             monster.body.velocity.y = Monster.caveTurtle.velocity.y;

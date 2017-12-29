@@ -9,14 +9,14 @@ const Config = {
     },
     font: {
         Arial: {
-            font: "16px Arial",
-            fill: "#000000",
-            align: "center"
+            font: '16px Arial',
+            fill: '#000000',
+            align: 'center'
         },
         Bold: {
-            font: "64px Arial",
-            fill: "#000000",
-            align: "center"
+            font: '64px Arial',
+            fill: '#000000',
+            align: 'center'
         }
     },
     // Config.state is used verify state
@@ -42,5 +42,5 @@ const Config = {
         right: 1
     },
     delay: 200,
-    currentUserName: $("#userName").html()
+    currentUserName: $('#userName').html()
 };

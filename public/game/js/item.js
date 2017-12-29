@@ -53,8 +53,8 @@ const Item = {
         {
             character.status.coin -= 1;
             item.visible = true;
-	        item.body.enable = true;
-	        item.position.x = item.spawn.x;
+            item.body.enable = true;
+            item.position.x = item.spawn.x;
             item.position.y = item.spawn.y;
         }
     },
@@ -107,8 +107,8 @@ const Item = {
             item.body.velocity.y=0;
             character.status.feather -= 1;
             item.visible = true;
-	        item.body.enable = true;
-	        item.position.x = item.spawn.x;
+            item.body.enable = true;
+            item.position.x = item.spawn.x;
             item.position.y = item.spawn.y;
         },
         destroy: function(item, character)
@@ -141,36 +141,36 @@ function ItemSetup(structure=null, itemData=null)
             itemType,
             structure.layer.item,
             Game.items[itemType]);
-            //assign id to each sprite in group
-            for(let i = 0;i<Game.items[itemType].length;i++)
+        //assign id to each sprite in group
+        for(let i = 0;i<Game.items[itemType].length;i++)
+        {
+            let child = Game.items[itemType].children[i];
+            child.name = itemType;
+            child.id=i;
+            if(itemData)
             {
-                let child = Game.items[itemType].children[i];
-                child.name = itemType;
-                child.id=i;
-                if(itemData)
-                {
-                    child.position.x = itemData[itemType][i].x;
-                    child.position.y = itemData[itemType][i].y;
-                    child.body.velocity.x = itemData[itemType][i].vx;
-                    child.body.velocity.y = itemData[itemType][i].vy;
-                    child.spawn = {
-                        x: itemData[itemType][i].sx,
-                        y: itemData[itemType][i].sy
-                    };
-                }
-                else
-                {
-                    child.body.velocity.x = Item[itemType].velocity.x;
-                    child.body.velocity.y = Item[itemType].velocity.y;
-                    child.spawn = {
-                        x: child.position.x,
-                        y: child.position.y
-                    };
-                }
+                child.position.x = itemData[itemType][i].x;
+                child.position.y = itemData[itemType][i].y;
+                child.body.velocity.x = itemData[itemType][i].vx;
+                child.body.velocity.y = itemData[itemType][i].vy;
+                child.spawn = {
+                    x: itemData[itemType][i].sx,
+                    y: itemData[itemType][i].sy
+                };
             }
+            else
+            {
+                child.body.velocity.x = Item[itemType].velocity.x;
+                child.body.velocity.y = Item[itemType].velocity.y;
+                child.spawn = {
+                    x: child.position.x,
+                    y: child.position.y
+                };
+            }
+        }
 
-            Game.items[itemType].setAll('body.gravity.y', Item[itemType].gravity.y);
-            Game.items[itemType].setAll('body.bounce.x', Item[itemType].bounce.x);
-            Game.items[itemType].setAll('body.bounce.y', Item[itemType].bounce.y);
+        Game.items[itemType].setAll('body.gravity.y', Item[itemType].gravity.y);
+        Game.items[itemType].setAll('body.bounce.x', Item[itemType].bounce.x);
+        Game.items[itemType].setAll('body.bounce.y', Item[itemType].bounce.y);
     }
 }

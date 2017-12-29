@@ -167,7 +167,7 @@ function create()
 
     socket.on('multipleConnection',function(){
         socket.emit('disconnect');
-        window.location.replace("/game/error");
+        window.location.replace('/game/error');
     });
 }
 
@@ -312,7 +312,7 @@ function update()
         }
         else if (cursor.down.isDown)
         {
-                    //temporary unusable for hacks
+            //temporary unusable for hacks
         }
         else
         {
