@@ -8,7 +8,7 @@ const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
 const nodemon = require('gulp-nodemon');
-
+const eslint = require('gulp-eslint');
 // Lint Task
 gulp.task('lint1', function() {
     return gulp.src('./public/home/js/*.js')
@@ -28,7 +28,13 @@ gulp.task('lint2', function() {
          )
         .pipe(jshint.reporter('default'));
 });
-gulp.task('lint', ['lint1', 'lint2']);
+gulp.task('lint3',function(){
+    return gulp.src(['./public/game/js/*.js','!node_modules/**'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+gulp.task('lint', ['lint1', 'lint2','lint3']);
 
 // Compile Our Sass
 gulp.task('sass1', function() {
