@@ -139,6 +139,7 @@ const Map = {
                             name: character.name._text
                         }
                     );
+                    Game.map.point.isFinish = true;
                 }
             }
         }

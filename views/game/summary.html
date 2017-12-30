@@ -1,0 +1,77 @@
+{% extends "game/base.html" %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="/game/css/summary.css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block content %}
+
+<nav>
+  <button class="tab currentTag" onclick="displayTable(event,'coinTable')"></button>
+  <button class="tab" onclick="displayTable(event,'killTable')"></button>
+  <button class="tab" onclick="displayTable(event,'completeTable')"></button>
+</nav>
+
+<table id="coinTable">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Player</th>
+      <th scope="col">Coin</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in summary.coin %}
+    <tr>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ player.user }}</td>
+      <td>{{ player.achieve }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table id="killTable" style="display:none">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Player</th>
+      <th scope="col">Kills</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in summary.kills %}
+    <tr>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ player.user }}</td>
+      <td>{{ player.achieve }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<table id="completeTable" style="display:none">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Player</th>
+      <th scope="col">Completion</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in summary.comp %}
+    <tr>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ player.user }}</td>
+      <td>{{ player.achieve }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/game/js/summary.js"></script>
+{% endblock %}
