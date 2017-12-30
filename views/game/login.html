@@ -6,12 +6,27 @@
 
 {% block content %}
 <form method="POST" action="">
+  <!-- make user input name -->
   <section>
-    <h1>What your name?</h1>
-    <input type="text" id="account" name="account" placeholder="Username" autofocus>
-    <input type="submit" value="START!">
-    <span id="error">{{ errorMsg }}</span>
+    <article>
+      <h1>What your name?</h1>
+      <input type="text" id="account" name="account" placeholder="Type a name here" autofocus>
+      <span id="error">{{ errorMsg }}</span>
+    </article>
+    <button type="button"><img src="/game/assets/pages/svgs/next.svg" alt="Next"></button>
   </section>
+
+  <!-- make user choose character -->
+  <section>
+    <article>
+      <h1>Choose a character</h1>
+      <img src="/game/assets/players/gifs/mario.gif" width=32 height=56>
+      <img src="/game/assets/players/gifs/luigi.gif" width=32 height=56>
+      <img src="/game/assets/players/gifs/tomato_chicken.gif" width=32 height=56>
+    </article>
+    <button type="button"><img src="/game/assets/pages/svgs/previous.svg" alt="Previous"></button>
+  </section>
+  <input type="submit" value="Start!">
 </form>
 {% endblock %}
 

@@ -1,47 +1,130 @@
-$name_item_column_width: 40%;
-$name_item_row_width: 10%;
-$name_template: 
-  ". title ."
-  ". input ."
-  ". button ."
-  ". error .";
-$name_background_image: url("/home/assets/images/icons/brick_block.ico");
-$name_background_size: 1.2rem;
-$name_article_item_margin: 1rem;
-$name_article_h1: 1.5rem;
-$name_article_p: .8rem;
-$name_article_p_line_height: 1.2rem;
+$name_form_item_column_width: 40%;
+$name_form_item_row_width: 30%;
+$name_form_template: 
+  ". . ."
+  ". section ."
+  ". submit ."
+  ". . .";
+$name_section_item_column_width: 40%;
+$name_section_item_row_width: 20%;
+$name_section_template: 
+  ". section_item1 . section_item2 .";
 
 form {
+  display: grid;
+  grid-template-columns: auto $name_form_item_column_width auto;
+  grid-template-rows: auto $name_form_item_row_width $name_form_item_row_width auto;
+  grid-template-areas: $name_form_template;
+  justify-items: center;
+  align-items: center;
   width: 100%;
   height: 100%;
-  border: 10px solid red;
+  border: 10px solid red; // test
 
   section {
+    grid-area: section;
     display: grid;
-    grid-template-columns: auto $name_item_column_width auto;
-    grid-template-rows: auto $name_item_row_width $name_item_row_width $name_item_row_width $name_item_row_width;
-    grid-template-areas: $name_template;
+    grid-template-columns: auto $name_section_item_column_width auto $name_section_item_column_width auto;
+    grid-template-areas: $name_section_template;
     justify-items: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    border: 10px solid black;
 
-    h1 {
-      grid-area: title; 
+    button {
+      font-size: 1rem;
+      text-align: center;
+      width: 3rem;
+      height: 3rem;
+      background: transparent;
+      vertical-align: center;
+      outline: none;
+      cursor: pointer;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
     }
 
-    input[type="text"] {
-      grid-area: input; 
+    &:nth-of-type(odd) {
+      article {
+        grid-area: section_item1;
+      }
+
+      button {
+        grid-area: section_item2;
+      }
     }
 
-    input[type="submit"] {
-      grid-area: button; 
+    &:nth-of-type(even) {
+      article {
+        grid-area: section_item2;
+      }
+
+      button {
+        grid-area: section_item1;
+      }
     }
 
-    span {
-      grid-area: error; 
+    &:nth-of-type(1) {
+      text-align: center;
+
+      h1 {
+        margin: 1rem;
+      }
+
+      input[type="text"] {
+        border: .1rem solid rgb(229, 151, 0);
+        padding: 1rem;
+        height: 2rem;
+        font-size: 1rem;
+      }
     }
+
+    &:nth-of-type(2) {
+      text-align: center;
+
+      h1 {
+        margin: 1rem;
+        white-space: nowrap;
+      }
+
+      select {
+        width: 5rem;
+        height: 2rem;
+        font-size: 1rem;
+      }
+    }
+
+    &:not(:first-of-type) {
+      display: none;
+    }
+    /*&:not(:last-of-type) { // test
+      display: none;
+    }*/
+  }
+
+  input[type="submit"] {
+    grid-area: submit; 
+    width: 5rem;
+    height: 3rem;
+    font-size: 1rem;
   }
 }
+
+/*
+h1 {
+  grid-area: title; 
+}
+
+input[type="text"] {
+  grid-area: input; 
+  display: inline-block;
+  height: 20%;
+}
+
+span {
+  grid-area: error; 
+}
+*/
