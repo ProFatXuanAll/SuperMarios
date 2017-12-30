@@ -387,6 +387,10 @@ socket.on('playerFinish',function(playerData){
     });
 });
 
+socket.on('gotoSummary',function(){
+    window.location = "/game/summary";
+});
+
 // some monster died
 socket.on('monsterDead',function(monsterData){
     // if not in finish state,then don't do anything

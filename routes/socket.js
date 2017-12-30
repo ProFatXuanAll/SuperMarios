@@ -254,7 +254,6 @@ module.exports = function(server){
         for rank sorting, include name, coin, kills, x-position*/
         socket.on('collectData', function(playerData){
             gameResult.push(playerData);
-            console.log(gameResult);
             if(playerList[playerData.userName].getResult === false){
                 playerList[playerData.userName].getResult = true;
             }
@@ -274,6 +273,7 @@ module.exports = function(server){
             ranking('kills');
             ranking('comp');
             console.log(summary);
+            setTimeout(() => io.emit('gotoSummary'), 3000);
         }
 
         function ranking(achieve){
