@@ -2,7 +2,7 @@
 @import "font";
 
 $menu_color: #ff0f00;
-$menu_len: 4;
+$menu_length: 4;
 $menu_item_width: 5%;
 $menu_template: "item1 . item2 item3 item4";
 
@@ -35,7 +35,7 @@ $cloud_border: .4rem;
     }
   }
 
-  @for $i from 1 through $menu_len {
+  @for $i from 1 through $menu_length {
     a:nth-child(#{$i}) {
       grid-area: item#{$i};
     }
