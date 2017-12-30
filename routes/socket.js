@@ -255,7 +255,12 @@ module.exports = function(server){
         socket.on('collectData', function(playerData){
             gameResult.push(playerData);
             console.log(gameResult);
-            playerList[playerData.userName].getResult = true;
+            if(playerList[playerData.userName].getResult === false){
+                playerList[playerData.userName].getResult = true;
+            }
+            else{
+                return;
+            }
             checkCollectData();
         });
 
@@ -273,7 +278,7 @@ module.exports = function(server){
 
         function ranking(achieve){
             gameResult.sort(function(a, b){
-                return a[achieve] > b[achieve];
+                return a[achieve] < b[achieve];
             });
 
             summary[achieve] = [];

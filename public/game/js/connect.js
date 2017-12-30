@@ -376,7 +376,7 @@ socket.on('playerFinish',function(playerData){
         Config.font.Bold
     );
     finishText.fixedToCamera = true;
-    Game.map.point.isFinished = true;
+    Game.map.point.isFinish = true;
 
     //collect data for ranking
     socket.emit('collectData',{
