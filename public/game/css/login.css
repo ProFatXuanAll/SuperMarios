@@ -1,18 +1,22 @@
 form {
-  display: grid;
-  grid-template-columns: auto 40% auto;
-  grid-template-rows: 10% 10% 10% 10%;
-  grid-template-areas: ". title ." ". input ." ". button ." ". error .";
-  justify-items: center;
-  align-items: center;
   width: 100%;
   height: 100%;
-  border: 10px solid black; }
-  form h1 {
-    grid-area: title; }
-  form input[type="text"] {
-    grid-area: input; }
-  form input[type="submit"] {
-    grid-area: button; }
-  form span {
-    grid-area: error; }
+  border: 10px solid red; }
+  form section {
+    display: grid;
+    grid-template-columns: auto 40% auto;
+    grid-template-rows: auto 10% 10% 10% 10%;
+    grid-template-areas: ". title ." ". input ." ". button ." ". error .";
+    justify-items: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border: 10px solid black; }
+    form section h1 {
+      grid-area: title; }
+    form section input[type="text"] {
+      grid-area: input; }
+    form section input[type="submit"] {
+      grid-area: button; }
+    form section span {
+      grid-area: error; }
