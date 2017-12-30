@@ -382,7 +382,7 @@ socket.on('playerFinish',function(playerData){
     socket.emit('collectData',{
         userName: Config.currentUserName,
         coin: 0, // should be replaced
-        kills: 0, //should be replaced
+        kill: 0, //should be replaced
         comp: Game.players.current.x,
     });
 });

@@ -270,8 +270,9 @@ module.exports = function(server){
                 }   
             }
             ranking('coin');
-            ranking('kills');
+            ranking('kill');
             ranking('comp');
+            formating();
             console.log(summary);
             setTimeout(() => io.emit('gotoSummary'), 3000);
         }
@@ -294,6 +295,15 @@ module.exports = function(server){
                 {
                     break;
                 }
+            }
+        }
+
+        function formating(){
+            for(let c in summary.comp){
+                // 9500 is the x position of end point
+                summary.comp[c].achieve /= 9500;
+                summary.comp[c].achieve *= 100;
+                summary.comp[c].achieve = summary.comp[c].achieve.toFixed(1);
             }
         }
 

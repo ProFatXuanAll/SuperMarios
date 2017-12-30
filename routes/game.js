@@ -60,7 +60,7 @@ module.exports = function(app){
 
     router.get('/summary', UrlSetting, function(req, res, next){
         // there should be an object "summary" in socket.js, which include sorted players information
-        res.render('game/summary', { players: io.summary });
+        res.render('game/summary', { summary: io.summary });
     });
 
     router.get('/pedia', UrlSetting, function(req, res, next){

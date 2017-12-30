@@ -1,13 +1,51 @@
-nav {
-  .tab {
-    background: gray;
-    color: black;
-  }
-  .currentTag {
-    background: #ff0f00;
-  }
-}
+section {
+  display: grid;
+  grid-template-rows: 4rem auto auto 2rem;
+  grid-template-areas: "." "nav" "table" ".";
+  justify-items: center;
+  font-size: .4rem;
 
-table {
+  nav {
+    display: grid;
+    grid-area: nav;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 0px;
+    justify-items: start;
+    background: #ffffff;
+
+    .tag {
+      height: 1.5rem;
+      width: auto;
+      padding: 3px 5px;
+      border: solid #aaaaaa;
+      background: #ffffff;
+      color: black;
+    }
+
+    .currentTag {
+      background: #ff5f55;
+    }
+  }
+
+  table {
+    color: black;
+    thead{
+      tr{
+        display: grid;
+        grid-template-columns: 3rem 10rem 15rem;
+        grid-column-gap: 0px;
+        justify-items: end;
+
+        th{
+          font: Ageta_Chubby_Demo;
+          font-size: .5rem;
+        }
+      }
+    }
+
+    tbody{
+      
+    }
+  }
 
 }
