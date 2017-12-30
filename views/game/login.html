@@ -1,0 +1,20 @@
+{% extends "game/base.html" %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="/game/css/login.css">
+{% endblock %}
+
+{% block content %}
+<form method="POST" action="">
+  <section>
+    <h1>What your name?</h1>
+    <input type="text" id="account" name="account" placeholder="Username" autofocus>
+    <input type="submit" value="START!">
+    <span id="error">{{ errorMsg }}</span>
+  </section>
+</form>
+{% endblock %}
+
+{% block script %}
+<script src="/game/js/name.js"></script>
+{% endblock %}

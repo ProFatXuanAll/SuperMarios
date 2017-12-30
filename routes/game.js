@@ -15,7 +15,7 @@ router.get('/', UrlSetting, function(req, res, next) {
     var sess = req.session;
     if(sess.userName === undefined)
     {
-        res.redirect('/game/name');
+        res.redirect('/game/login');
     }
     else
     {
@@ -23,7 +23,7 @@ router.get('/', UrlSetting, function(req, res, next) {
     }
 });
     
-router.get('/name', UrlSetting,function(req,res,next){
+router.get('/login', UrlSetting,function(req,res,next){
     var sess = req.session;
     if(sess.userName)
     {
@@ -31,15 +31,25 @@ router.get('/name', UrlSetting,function(req,res,next){
     }
     else
     {
-        res.render('game/name',{ error: false });
+        res.render(
+            'game/login',
+            {
+                errorMsg: ""
+            }
+        );
     }
 });
 
-router.post('/name', UrlSetting,function(req,res,next){
+router.post('/login', UrlSetting,function(req,res,next){
     var sess = req.session;
     if(io.playerList[req.body.account])
     {
-        res.render('game/name',{ error: true });
+        res.render(
+            'game/login',
+            {
+                errorMsg: "This name have been used, please try another."
+            }
+        );
     }
     else
     {
