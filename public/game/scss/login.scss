@@ -1,15 +1,14 @@
-$login_section_title_template: 
-  ". previous title next .";
-$login_form_item_column_width: 40%;
-$login_form_item_row_width: 30%;
-$login_form_template: 
-  ". . ."
-  ". section ."
-  ". submit ."
-  ". . .";
+// section title layout
+// grid template
+$login_section_title_template:
+  ". . . . ."
+  ". previous title next ."
+  ". . . . .";
 
+// button layout
 @mixin login_section_title_btn() {
   background: transparent;
+  border: none;
   outline: none;
   cursor: pointer;
 
@@ -23,17 +22,29 @@ $login_form_template:
   }
 }
 
-header {visibility: hidden;}
-
+// grid layout
 .section-title {
   display: grid;
   grid-template-areas: $login_section_title_template;
   grid-template-columns: auto 10% 20% 10% auto;
+  grid-template-rows: auto 10% 5%;
   justify-items: center;
   align-items: center;
+  width: 100%;
+  height: 50%;
 
   article {
     grid-area: title;
+
+    h1 {
+      /*&:not(:first-of-type) {
+        display: none;
+      }*/
+      
+      &:not(:first-of-type) { // test
+        display: none;
+      } 
+    }
   }
 
   .previous-btn {
@@ -46,34 +57,86 @@ header {visibility: hidden;}
     @include login_section_title_btn;
   }
 }
+// section title layout end
 
-/*
+// form layout
+// grid template
+$login_form_template:
+  ". input ."
+  ". . ."
+  ". output ."
+  ". . .";
+
+// grid layout
 form {
   display: grid;
-  grid-template-columns: auto $name_form_item_column_width auto;
-  grid-template-rows: auto $name_form_item_row_width $name_form_item_row_width auto;
-  grid-template-areas: $name_form_template;
+  grid-template-columns: auto 40% auto;
+  grid-template-rows: 30% 5% 10% auto;
+  grid-template-areas: $login_form_template;
   justify-items: center;
   align-items: center;
   width: 100%;
-  height: 100%;
-  border: 10px solid red; // test
+  height: 50%;
 
-  section {
-    grid-area: section;
-    display: grid;
-    grid-template-columns: auto $name_section_item_column_width auto auto $name_section_item_column_width auto;
-    grid-template-areas: $name_section_template;
-    justify-items: center;
-    align-items: center;
+  section[class*="input-"] {
+    grid-area: input;
     width: 100%;
     height: 100%;
+
+    &:not(:first-of-type) {
+      display: none;
+    }
   }
 
-  input[type="submit"] {
-    grid-area: submit; 
-    width: 5rem;
-    height: 3rem;
-    font-size: 1rem;
+  //.input-name { // test
+  //  display: none;
+  //}
+
+  .input-name {
+    width: 100%;
+    height: 100%;
+
+    input {
+      width: 100%;
+      height: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      border: .1rem solid rgb(229, 151, 0);
+      text-align: center;
+    }
   }
-}*/
+
+  .input-character {
+    text-align: center;
+
+    img {
+      margin: 1rem;
+      border: .1rem solid white;
+      transition: border .5s;
+
+      &:hover {
+        border: .1rem solid darkblue;
+      }
+    }
+
+    input {
+      display: none;
+    }
+  }
+
+  .output {
+    grid-area: output; 
+    width: 100%;
+    height: 100%;
+    text-align: center;
+
+    #error {
+      font-size: 1rem;
+    }
+
+    input {
+      font-size: 1rem;
+    }
+  }
+}
+// form layout end
