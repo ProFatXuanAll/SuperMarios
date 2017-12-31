@@ -1,15 +1,53 @@
-$name_form_item_column_width: 40%;
-$name_form_item_row_width: 30%;
-$name_form_template: 
+$login_section_title_template: 
+  ". previous title next .";
+$login_form_item_column_width: 40%;
+$login_form_item_row_width: 30%;
+$login_form_template: 
   ". . ."
   ". section ."
   ". submit ."
   ". . .";
-$name_section_item_column_width: 40%;
-$name_section_item_row_width: 20%;
-$name_section_template: 
-  ". section_item1 . section_item2 .";
 
+@mixin login_section_title_btn() {
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+
+  img {
+    width: 50%;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+header {visibility: hidden;}
+
+.section-title {
+  display: grid;
+  grid-template-areas: $login_section_title_template;
+  grid-template-columns: auto 10% 20% 10% auto;
+  justify-items: center;
+  align-items: center;
+
+  article {
+    grid-area: title;
+  }
+
+  .previous-btn {
+    grid-area: previous;
+    @include login_section_title_btn;
+  }
+
+  .next-btn {
+    grid-area: next;
+    @include login_section_title_btn;
+  }
+}
+
+/*
 form {
   display: grid;
   grid-template-columns: auto $name_form_item_column_width auto;
@@ -24,85 +62,12 @@ form {
   section {
     grid-area: section;
     display: grid;
-    grid-template-columns: auto $name_section_item_column_width auto $name_section_item_column_width auto;
+    grid-template-columns: auto $name_section_item_column_width auto auto $name_section_item_column_width auto;
     grid-template-areas: $name_section_template;
     justify-items: center;
     align-items: center;
     width: 100%;
     height: 100%;
-
-    button {
-      font-size: 1rem;
-      text-align: center;
-      width: 3rem;
-      height: 3rem;
-      background: transparent;
-      vertical-align: center;
-      outline: none;
-      cursor: pointer;
-      opacity: 0.8;
-
-      &:hover {
-        opacity: 1;
-      }
-    }
-
-    &:nth-of-type(odd) {
-      article {
-        grid-area: section_item1;
-      }
-
-      button {
-        grid-area: section_item2;
-      }
-    }
-
-    &:nth-of-type(even) {
-      article {
-        grid-area: section_item2;
-      }
-
-      button {
-        grid-area: section_item1;
-      }
-    }
-
-    &:nth-of-type(1) {
-      text-align: center;
-
-      h1 {
-        margin: 1rem;
-      }
-
-      input[type="text"] {
-        border: .1rem solid rgb(229, 151, 0);
-        padding: 1rem;
-        height: 2rem;
-        font-size: 1rem;
-      }
-    }
-
-    &:nth-of-type(2) {
-      text-align: center;
-
-      h1 {
-        margin: 1rem;
-        white-space: nowrap;
-      }
-
-      select {
-        width: 5rem;
-        height: 2rem;
-        font-size: 1rem;
-      }
-    }
-
-    &:not(:first-of-type) {
-      display: none;
-    }
-    /*&:not(:last-of-type) { // test
-      display: none;
-    }*/
   }
 
   input[type="submit"] {
@@ -111,20 +76,4 @@ form {
     height: 3rem;
     font-size: 1rem;
   }
-}
-
-/*
-h1 {
-  grid-area: title; 
-}
-
-input[type="text"] {
-  grid-area: input; 
-  display: inline-block;
-  height: 20%;
-}
-
-span {
-  grid-area: error; 
-}
-*/
+}*/

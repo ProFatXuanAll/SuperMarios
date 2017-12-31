@@ -1,83 +1,62 @@
+header {
+  visibility: hidden; }
+
+.section-title {
+  display: grid;
+  grid-template-areas: ". previous title next .";
+  grid-template-columns: auto 10% 20% 10% auto;
+  justify-items: center;
+  align-items: center; }
+  .section-title article {
+    grid-area: title; }
+  .section-title .previous-btn {
+    grid-area: previous;
+    background: transparent;
+    outline: none;
+    cursor: pointer; }
+    .section-title .previous-btn img {
+      width: 50%;
+      opacity: 0.8; }
+      .section-title .previous-btn img:hover {
+        opacity: 1; }
+  .section-title .next-btn {
+    grid-area: next;
+    background: transparent;
+    outline: none;
+    cursor: pointer; }
+    .section-title .next-btn img {
+      width: 50%;
+      opacity: 0.8; }
+      .section-title .next-btn img:hover {
+        opacity: 1; }
+
+/*
 form {
   display: grid;
-  grid-template-columns: auto 40% auto;
-  grid-template-rows: auto 30% 30% auto;
-  grid-template-areas: ". . ." ". section ." ". submit ." ". . .";
+  grid-template-columns: auto $name_form_item_column_width auto;
+  grid-template-rows: auto $name_form_item_row_width $name_form_item_row_width auto;
+  grid-template-areas: $name_form_template;
   justify-items: center;
   align-items: center;
   width: 100%;
   height: 100%;
-  border: 10px solid red; }
-  form section {
+  border: 10px solid red; // test
+
+  section {
     grid-area: section;
     display: grid;
-    grid-template-columns: auto 40% auto 40% auto;
-    grid-template-areas: ". section_item1 . section_item2 .";
+    grid-template-columns: auto $name_section_item_column_width auto auto $name_section_item_column_width auto;
+    grid-template-areas: $name_section_template;
     justify-items: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    /*&:not(:last-of-type) { // test
-      display: none;
-    }*/ }
-    form section button {
-      font-size: 1rem;
-      text-align: center;
-      width: 3rem;
-      height: 3rem;
-      background: transparent;
-      vertical-align: center;
-      outline: none;
-      cursor: pointer;
-      opacity: 0.8; }
-      form section button:hover {
-        opacity: 1; }
-    form section:nth-of-type(odd) article {
-      grid-area: section_item1; }
-    form section:nth-of-type(odd) button {
-      grid-area: section_item2; }
-    form section:nth-of-type(even) article {
-      grid-area: section_item2; }
-    form section:nth-of-type(even) button {
-      grid-area: section_item1; }
-    form section:nth-of-type(1) {
-      text-align: center; }
-      form section:nth-of-type(1) h1 {
-        margin: 1rem; }
-      form section:nth-of-type(1) input[type="text"] {
-        border: 0.1rem solid #e59700;
-        padding: 1rem;
-        height: 2rem;
-        font-size: 1rem; }
-    form section:nth-of-type(2) {
-      text-align: center; }
-      form section:nth-of-type(2) h1 {
-        margin: 1rem;
-        white-space: nowrap; }
-      form section:nth-of-type(2) select {
-        width: 5rem;
-        height: 2rem;
-        font-size: 1rem; }
-    form section:not(:first-of-type) {
-      display: none; }
-  form input[type="submit"] {
-    grid-area: submit;
+  }
+
+  input[type="submit"] {
+    grid-area: submit; 
     width: 5rem;
     height: 3rem;
-    font-size: 1rem; }
-
-/*
-h1 {
-  grid-area: title; 
-}
-
-input[type="text"] {
-  grid-area: input; 
-  display: inline-block;
-  height: 20%;
-}
-
-span {
-  grid-area: error; 
-}
-*/
+    font-size: 1rem;
+  }
+}*/

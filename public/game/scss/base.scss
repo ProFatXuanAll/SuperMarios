@@ -10,6 +10,8 @@ $cloud_border: .4rem;
 
 .menu {
   position: fixed;
+  top: 0;
+  left: 0;
   display: grid;
   grid-template-columns: $menu_item_width auto $menu_item_width $menu_item_width $menu_item_width;
   grid-template-areas: $menu_template;
