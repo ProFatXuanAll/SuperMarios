@@ -1,9 +1,9 @@
 section {
-  display: grid;
-  grid-template-rows: 4rem auto auto 2rem;
-  grid-template-areas: "." "nav" "table" ".";
-  justify-items: center;
-  font-size: .4rem; }
+  display: block;
+  margin-top: 4rem;
+  align: center;
+  font-size: .4rem;
+  outline: 3px solid #222222; }
   section nav {
     display: grid;
     grid-area: nav;
@@ -14,17 +14,20 @@ section {
     section nav .tag {
       height: 1.5rem;
       width: auto;
-      padding: 3px 5px;
-      border: solid #aaaaaa;
+      padding: 0 10px;
       background: #ffffff;
-      color: black; }
+      color: black;
+      font-size: .75rem;
+      border: #aaaaaa;
+      border-collapse: collapse; }
     section nav .currentTag {
       background: #ff5f55; }
   section table {
+    grid-area: table;
     color: black; }
     section table thead tr {
       display: grid;
-      grid-template-columns: 3rem 10rem 15rem;
+      grid-template-columns: 1rem 3rem 8rem;
       grid-column-gap: 0px;
       justify-items: end; }
       section table thead tr th {

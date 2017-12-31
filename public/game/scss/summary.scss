@@ -1,9 +1,9 @@
 section {
-  display: grid;
-  grid-template-rows: 4rem auto auto 2rem;
-  grid-template-areas: "." "nav" "table" ".";
-  justify-items: center;
+  display: block;
+  margin-top: 4rem;
+  align: center;
   font-size: .4rem;
+  outline: 3px solid #222222;
 
   nav {
     display: grid;
@@ -16,10 +16,12 @@ section {
     .tag {
       height: 1.5rem;
       width: auto;
-      padding: 3px 5px;
-      border: solid #aaaaaa;
+      padding: 0 10px;
       background: #ffffff;
       color: black;
+      font-size: .75rem;
+      border: #aaaaaa;
+      border-collapse: collapse;
     }
 
     .currentTag {
@@ -28,11 +30,12 @@ section {
   }
 
   table {
+    grid-area: table;
     color: black;
     thead{
       tr{
         display: grid;
-        grid-template-columns: 3rem 10rem 15rem;
+        grid-template-columns: 1rem 3rem 8rem;
         grid-column-gap: 0px;
         justify-items: end;
 

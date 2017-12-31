@@ -60,7 +60,31 @@ module.exports = function(app){
 
     router.get('/summary', UrlSetting, function(req, res, next){
         // there should be an object "summary" in socket.js, which include sorted players information
-        res.render('game/summary', { summary: io.summary });
+        let fakedata = {
+            coin: [
+                { user: 'player3', achieve: 9, },
+                { user: 'player2', achieve: 7, },
+                { user: 'player4', achieve: 5, },
+                { user: 'player1', achieve: 3, },
+                { user: 'player5', achieve: 1, },
+            ],
+            kill: [
+                { user: 'player5', achieve: 16, },
+                { user: 'player1', achieve: 13, },
+                { user: 'player4', achieve: 12, },
+                { user: 'player2', achieve: 9, },
+                { user: 'player3', achieve: 6, },
+            ],
+            comp: [
+                { user: 'player4', achieve: 100.0, },
+                { user: 'player2', achieve: 97.2, },
+                { user: 'player1', achieve: 73.8, },
+                { user: 'player5', achieve: 65.5, },
+                { user: 'player3', achieve: 20.4, },
+            ],
+        }                                        
+        // summary: io.summary
+        res.render('game/summary', { summary: fakedata });
     });
 
     router.get('/pedia', UrlSetting, function(req, res, next){
