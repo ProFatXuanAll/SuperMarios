@@ -1,22 +1,62 @@
+header {
+  visibility: hidden; }
+
+.section-title {
+  display: grid;
+  grid-template-areas: ". previous title next .";
+  grid-template-columns: auto 10% 20% 10% auto;
+  justify-items: center;
+  align-items: center; }
+  .section-title article {
+    grid-area: title; }
+  .section-title .previous-btn {
+    grid-area: previous;
+    background: transparent;
+    outline: none;
+    cursor: pointer; }
+    .section-title .previous-btn img {
+      width: 50%;
+      opacity: 0.8; }
+      .section-title .previous-btn img:hover {
+        opacity: 1; }
+  .section-title .next-btn {
+    grid-area: next;
+    background: transparent;
+    outline: none;
+    cursor: pointer; }
+    .section-title .next-btn img {
+      width: 50%;
+      opacity: 0.8; }
+      .section-title .next-btn img:hover {
+        opacity: 1; }
+
+/*
 form {
+  display: grid;
+  grid-template-columns: auto $name_form_item_column_width auto;
+  grid-template-rows: auto $name_form_item_row_width $name_form_item_row_width auto;
+  grid-template-areas: $name_form_template;
+  justify-items: center;
+  align-items: center;
   width: 100%;
   height: 100%;
-  border: 10px solid red; }
-  form section {
+  border: 10px solid red; // test
+
+  section {
+    grid-area: section;
     display: grid;
-    grid-template-columns: auto 40% auto;
-    grid-template-rows: auto 10% 10% 10% 10%;
-    grid-template-areas: ". title ." ". input ." ". button ." ". error .";
+    grid-template-columns: auto $name_section_item_column_width auto auto $name_section_item_column_width auto;
+    grid-template-areas: $name_section_template;
     justify-items: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    border: 10px solid black; }
-    form section h1 {
-      grid-area: title; }
-    form section input[type="text"] {
-      grid-area: input; }
-    form section input[type="submit"] {
-      grid-area: button; }
-    form section span {
-      grid-area: error; }
+  }
+
+  input[type="submit"] {
+    grid-area: submit; 
+    width: 5rem;
+    height: 3rem;
+    font-size: 1rem;
+  }
+}*/
