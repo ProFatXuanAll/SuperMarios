@@ -25,7 +25,7 @@
 	  <tbody>
 		{% for player in summary.coin %}
 		<tr>
-		  <th scope="row">{{ loop.index }}</th>
+		  <td scope="row">{{ loop.index }}</td>
 		  <td>{{ player.user }}</td>
 		  <td>{{ player.achieve }}</td>
 		</tr>
@@ -44,7 +44,7 @@
 	  <tbody>
 		{% for player in summary.kill %}
 		<tr>
-		  <th scope="row">{{ loop.index }}</th>
+		  <td scope="row">{{ loop.index }}</td>
 		  <td>{{ player.user }}</td>
 		  <td>{{ player.achieve }}</td>
 		</tr>
@@ -63,13 +63,14 @@
 	  <tbody>
 		{% for player in summary.comp %}
 		<tr>
-		  <th scope="row">{{ loop.index }}</th>
+		  <td scope="row">{{ loop.index }}</td>
 		  <td>{{ player.user }}</td>
-		  <td>{{ player.achieve }}</td>
+		  <td>{{ player.achieve }}%</td>
 		</tr>
 		{% endfor %}
 	  </tbody>
 	</table>
+
 </section>
 {% endblock %}
 

@@ -1,53 +1,59 @@
 section {
   display: block;
-  margin-top: 4rem;
-  align: center;
-  font-size: .4rem;
-  outline: 3px solid #222222;
+  margin: auto;
+  margin-top: 3rem;
+  width: 50%;
+  border: solid 1px #555555;
 
   nav {
     display: grid;
-    grid-area: nav;
     grid-template-columns: auto auto auto;
-    grid-column-gap: 0px;
-    justify-items: start;
+    grid-column-gap: 0;
+    align: left;
+    justify-content: start;
     background: #ffffff;
 
     .tag {
-      height: 1.5rem;
+      height: auto;
       width: auto;
-      padding: 0 10px;
+      padding: 5px 15px;
       background: #ffffff;
       color: black;
       font-size: .75rem;
-      border: #aaaaaa;
+      border-left: 3px solid #ff5555;
       border-collapse: collapse;
     }
 
     .currentTag {
-      background: #ff5f55;
+      /*background: #ffaaaa;*/
     }
   }
 
   table {
-    grid-area: table;
-    color: black;
-    thead{
-      tr{
-        display: grid;
-        grid-template-columns: 1rem 3rem 8rem;
-        grid-column-gap: 0px;
-        justify-items: end;
+    border-collapse: collapse;
+    width: 100%;
+    height: auto;
+    font-size: .6rem;
 
-        th{
-          font: Ageta_Chubby_Demo;
-          font-size: .5rem;
-        }
-      }
+    th,td {
+      height: auto;
+      width: auto;
+      text-align: left;
+      padding: 8px;
     }
 
-    tbody{
-      
+    tr {
+      display: grid;
+      grid-template-columns: 15% 35% 50%;
+    }
+ 
+    tr:nth-child(even){
+      background-color: #fff2f2;
+    }
+ 
+    th {
+        background-color: #ff0f00;
+        color: white;
     }
   }
 

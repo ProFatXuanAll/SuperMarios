@@ -11,6 +11,6 @@ function displayTable(e, tagName){
         tags[i].className = tags[i].className.replace(" currentTag", "");
     }
 
-    document.getElementById(tagName).style.display = "block";
+    document.getElementById(tagName).style.display = "";
     e.currentTarget.className += " currentTag";
 }
