@@ -277,7 +277,6 @@ function MapSetup(structure, tileset, background, sound)
     this.solid = this.tileMap.createLayer(structure.layer.solid);
 
     // add event block layer
-    this.event = this.tileMap.createLayer(structure.layer.event);
     
     // new layer need resize world
     this.solid.resizeWorld();

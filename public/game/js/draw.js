@@ -192,13 +192,6 @@ function update()
         Game.players.current,
         Game.map.solid
     );
-
-    // current player overlap with event layer
-    Game.engine.physics.arcade.overlap(
-        Game.players.current,
-        Game.map.event,
-        Map.detectPoint
-    );
     
     // other player collide with solid layer
     Game.engine.physics.arcade.collide(
