@@ -117,14 +117,14 @@ socket.on('05 getMonsterInfo', function(playerData){
             if(dataString.length > 1)
                 dataString += ',';
 
-            dataString += `"${monsterType}":[`
+            dataString += `"${monsterType}":[`;
             
             let children = Game.monsters[monsterType].children;
             for(let i = 0; i < children.length; ++i)
             {
                 if(i != 0)
                     dataString += ',';
-                dataString += '{'
+                dataString += '{';
                 dataString += '"x":'+children[i].position.x + ',';
                 dataString += '"y":'+children[i].position.y + ',';
                 dataString += '"vx":'+children[i].body.velocity.x + ',';
@@ -132,9 +132,9 @@ socket.on('05 getMonsterInfo', function(playerData){
                 dataString += '"sx":'+children[i].spawn.x + ',';
                 dataString += '"sy":'+children[i].spawn.y;
                 // dataString += 'bodyenable'
-                dataString += '}'
+                dataString += '}';
             }
-            dataString += ']'
+            dataString += ']';
         }
         dataString += '}';
         // return monster info
@@ -197,14 +197,14 @@ socket.on('09 getItemInfo', function(playerData){
             if(dataString.length > 1)
                 dataString += ',';
 
-            dataString += `"${itemType}":[`
+            dataString += `"${itemType}":[`;
             
             let children = Game.items[itemType].children;
             for(let i = 0; i < children.length; ++i)
             {
                 if(i != 0)
                     dataString += ',';
-                dataString += '{'
+                dataString += '{';
                 dataString += '"x":'+children[i].position.x + ',';
                 dataString += '"y":'+children[i].position.y + ',';
                 dataString += '"vx":'+children[i].body.velocity.x + ',';
@@ -212,9 +212,9 @@ socket.on('09 getItemInfo', function(playerData){
                 dataString += '"sx":'+children[i].spawn.x + ',';
                 dataString += '"sy":'+children[i].spawn.y;
                 // dataString += 'bodyenable'
-                dataString += '}'
+                dataString += '}';
             }
-            dataString += ']'
+            dataString += ']';
         }
         dataString += '}';
         // return item info
@@ -377,6 +377,18 @@ socket.on('playerFinish',function(playerData){
     );
     finishText.fixedToCamera = true;
     Game.map.point.isFinish = true;
+
+    //collect data for ranking
+    socket.emit('collectData',{
+        userName: Config.currentUserName,
+        coin: 0, // should be replaced
+        kill: 0, //should be replaced
+        comp: Game.players.current.x,
+    });
+});
+
+socket.on('gotoSummary',function(){
+    window.location = "/game/summary";
 });
 
 // some monster died

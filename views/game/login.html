@@ -1,0 +1,46 @@
+{% extends "game/base.html" %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="/game/css/login.css">
+{% endblock %}
+
+{% block content %}
+<!-- section title -->
+<section class="section-title">
+  <article>
+    <h1>What your name?</h1>
+    <h1>Choose a character</h1>
+  </article>
+  <button class="previous-btn" type="button"><img src="/game/assets/pages/svgs/previous.svg" alt="Previous"></button>
+  <button class="next-btn" type="button"><img src="/game/assets/pages/svgs/next.svg" alt="Next"></button>
+</section>
+
+<!-- primary form -->
+<form method="POST" action="">
+  <!-- make user input name -->
+  <section>
+    <input type="text" id="account" name="account" placeholder="Type a name here" autofocus>
+  </section>
+
+  <!-- make user choose character -->
+  <section>
+    <article>
+      <img src="/game/assets/players/gifs/mario.gif" width=32 height=56>
+      <img src="/game/assets/players/gifs/luigi.gif" width=32 height=56>
+      <img src="/game/assets/players/gifs/tomato_chicken.gif" width=32 height=56>
+    </article>
+  </section>
+
+  <!-- submit and error message -->
+  <section>
+    <article>
+      <span id="error">{{ errorMsg }}</span>
+    </article>
+    <input type="submit" value="Start!">
+  </section>
+</form>
+{% endblock %}
+
+{% block script %}
+<script src="/game/js/name.js"></script>
+{% endblock %}

@@ -112,17 +112,17 @@ const Map = {
     detectPoint: function(character,map)
     {
         let spawnPointID=character.spawn.id;
-        for(let i=spawnPointID; i<=Game.map.point.end;i++)
+        for(let i = spawnPointID; i <= Game.map.point.end; ++i)
         {
-            let newSpawnPoint={
+            let newSpawnPoint = {
                 x: Game.map.point.midpoint[i].x,
                 y: Game.map.point.midpoint[i].y,
-            }
+            };
             if(character.y >= newSpawnPoint.y && character.x >= newSpawnPoint.x)
             {
-                if(spawnPointID<Game.map.point.end)
+                if(spawnPointID < Game.map.point.end)
                 {
-                    character.spawn.id=i;
+                    character.spawn.id = i;
                     socket.emit(
                         'playerMidpoint',
                         {
@@ -131,7 +131,7 @@ const Map = {
                         }
                     );
                 }
-                if(spawnPointID==Game.map.point.end&&Game.map.point.isFinish==false)
+                if(spawnPointID == Game.map.point.end && Game.map.point.isFinish == false)
                 {
                     socket.emit(
                         'playerFinish',
@@ -139,6 +139,7 @@ const Map = {
                             name: character.name._text
                         }
                     );
+                    Game.map.point.isFinish = true;
                 }
             }
         }
@@ -244,7 +245,7 @@ const Map = {
             monster.animations.play('walkLeft');
         }
     }
-}
+};
 
 function MapSetup(structure, tileset, background, sound)
 {

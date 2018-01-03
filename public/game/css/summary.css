@@ -1,0 +1,42 @@
+section {
+  display: block;
+  margin: auto;
+  margin-top: 3rem;
+  width: 50%;
+  border: solid 1px #555555; }
+  section nav {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 0;
+    align: left;
+    justify-content: start;
+    background: #ffffff; }
+    section nav .tag {
+      height: auto;
+      width: auto;
+      padding: 5px 15px;
+      background: #ffffff;
+      color: black;
+      font-size: .75rem;
+      border-left: 3px solid #ff5555;
+      border-collapse: collapse; }
+    section nav .currentTag {
+      /*background: #ffaaaa;*/ }
+  section table {
+    border-collapse: collapse;
+    width: 100%;
+    height: auto;
+    font-size: .6rem; }
+    section table th, section table td {
+      height: auto;
+      width: auto;
+      text-align: left;
+      padding: 8px; }
+    section table tr {
+      display: grid;
+      grid-template-columns: 15% 35% 50%; }
+    section table tr:nth-child(even) {
+      background-color: #fff2f2; }
+    section table th {
+      background-color: #ff0f00;
+      color: white; }

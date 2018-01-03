@@ -1,41 +1,14 @@
-{% extends "home/base.html" %}
-
-{% block stylesheet %}
-<link rel="stylesheet" href="/home/css/base.css">
-{% endblock %}
-
-{% block content %}
-<!-- Title -->
-<div class="card">
-  <img class="card-img img-fluid opacity-8" src="/home/assets/images/products/super_marios.jpg" alt="SuperMarios">
-  <div class="card-img-overlay d-flex">
-    <div class="my-auto mx-auto text-center">
-      <h1 class="card-title font-weight-bold display-1">Super Marios</h1>
-      <h2 class="card-text">A web realtime MMOG</h2>
-    </div>
-  </div>
-</div>
-
-<!-- Content -->
-<div class="card">
-  <div class="card-header">
-	Super Marios
-  </div>
-  <div class="card-body">
-    <h1 class="card-title">What is Super Marios ?</h1>
-    <p class="card-text">
-    "Super Marios" is a web realtime MMOG (Massively Multiplayer Online Game)
-    Using Mario to take on an exciting adventure,
-    Other real world Marios will attack you from EVERYWHERE.
-    Also, there are monsters blocking your way!
-    No matter what comes to you, just remember,
-    Accessories will always be there to your assistence.
-    Strive for the one and only glory!
-	</p>
-    <a href="{{ game }}" class="btn btn-primary">Let's Play !</a>
-  </div>
-</div>
-{% endblock %}
-
-{% block script %}
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/home/css/index.css">
+</head>
+<body>
+  <!-- Content -->
+  <section>
+    <h1>Super Marios</h1>
+    <p>Many Marios Run Together</p>
+    <a href="{{ game }}"><button>Play</button></a>
+  </section>
+</body>
+</html>

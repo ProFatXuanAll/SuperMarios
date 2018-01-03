@@ -3,6 +3,8 @@ module.exports = function(server){
     const io = require('socket.io').listen(server);
 
     let playerList = {};
+    let gameResult = []; // for data collection
+    let summary = {}; // for sorting result, and client will render this
     let superUser = null;
     io.on('connection', function(socket){
         // new player tell server to join game
@@ -27,7 +29,8 @@ module.exports = function(server){
             // server store new player info
             playerList[playerData.name] = {
                 // socket between server and player
-                socket: socket
+                socket: socket,
+                getResult: false,
             };
 
             // server tell new player join finish
@@ -247,6 +250,63 @@ module.exports = function(server){
             );
         });
 
+        /*After game finished, all players should return their info
+        for rank sorting, include name, coin, kills, x-position*/
+        socket.on('collectData', function(playerData){
+            gameResult.push(playerData);
+            if(playerList[playerData.userName].getResult === false){
+                playerList[playerData.userName].getResult = true;
+            }
+            else{
+                return;
+            }
+            checkCollectData();
+        });
+
+        function checkCollectData(){
+            for(let player in playerList){
+                if(playerList[player].getResult === false){
+                    return;
+                }   
+            }
+            ranking('coin');
+            ranking('kill');
+            ranking('comp');
+            formating();
+            console.log(summary);
+            setTimeout(() => io.emit('gotoSummary'), 3000);
+        }
+
+        function ranking(achieve){
+            gameResult.sort(function(a, b){
+                return a[achieve] < b[achieve];
+            });
+
+            summary[achieve] = [];
+            for(let i=0; i<10; ++i){
+                if(gameResult[i])
+                {
+                    summary[achieve].push({
+                        user: gameResult[i].userName,
+                        achieve: gameResult[i][achieve], 
+                    });
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        function formating(){
+            for(let c in summary.comp){
+                // 9500 is the x position of end point
+                summary.comp[c].achieve /= 9500;
+                summary.comp[c].achieve *= 100;
+                summary.comp[c].achieve = summary.comp[c].achieve.toFixed(1);
+            }
+        }
+
         // existed player(s) tell server it kill monster
         socket.on('monsterDead', function(monsterData){
             // server tell everyone it kill monster
@@ -305,5 +365,7 @@ module.exports = function(server){
     });
 
     io.playerList = playerList;
+    io.summary = summary;
+
     return io;
 };

@@ -1,0 +1,60 @@
+section {
+  display: block;
+  margin: auto;
+  margin-top: 3rem;
+  width: 50%;
+  border: solid 1px #555555;
+
+  nav {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 0;
+    align: left;
+    justify-content: start;
+    background: #ffffff;
+
+    .tag {
+      height: auto;
+      width: auto;
+      padding: 5px 15px;
+      background: #ffffff;
+      color: black;
+      font-size: .75rem;
+      border-left: 3px solid #ff5555;
+      border-collapse: collapse;
+    }
+
+    .currentTag {
+      /*background: #ffaaaa;*/
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    height: auto;
+    font-size: .6rem;
+
+    th,td {
+      height: auto;
+      width: auto;
+      text-align: left;
+      padding: 8px;
+    }
+
+    tr {
+      display: grid;
+      grid-template-columns: 15% 35% 50%;
+    }
+ 
+    tr:nth-child(even){
+      background-color: #fff2f2;
+    }
+ 
+    th {
+        background-color: #ff0f00;
+        color: white;
+    }
+  }
+
+}
