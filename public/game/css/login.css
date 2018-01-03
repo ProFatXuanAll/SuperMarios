@@ -1,17 +1,24 @@
-header {
-  visibility: hidden; }
-
 .section-title {
   display: grid;
-  grid-template-areas: ". previous title next .";
+  grid-template-areas: ". . . . ." ". previous title next ." ". . . . .";
   grid-template-columns: auto 10% 20% 10% auto;
+  grid-template-rows: auto 10% 5%;
   justify-items: center;
-  align-items: center; }
+  align-items: center;
+  width: 100%;
+  height: 50%; }
   .section-title article {
     grid-area: title; }
+    .section-title article h1 {
+      /*&:not(:first-of-type) {
+        display: none;
+      }*/ }
+      .section-title article h1:not(:first-of-type) {
+        display: none; }
   .section-title .previous-btn {
     grid-area: previous;
     background: transparent;
+    border: none;
     outline: none;
     cursor: pointer; }
     .section-title .previous-btn img {
@@ -22,6 +29,7 @@ header {
   .section-title .next-btn {
     grid-area: next;
     background: transparent;
+    border: none;
     outline: none;
     cursor: pointer; }
     .section-title .next-btn img {
@@ -30,33 +38,47 @@ header {
       .section-title .next-btn img:hover {
         opacity: 1; }
 
-/*
 form {
   display: grid;
-  grid-template-columns: auto $name_form_item_column_width auto;
-  grid-template-rows: auto $name_form_item_row_width $name_form_item_row_width auto;
-  grid-template-areas: $name_form_template;
+  grid-template-columns: auto 40% auto;
+  grid-template-rows: 30% 5% 10% auto;
+  grid-template-areas: ". input ." ". . ." ". output ." ". . .";
   justify-items: center;
   align-items: center;
   width: 100%;
-  height: 100%;
-  border: 10px solid red; // test
-
-  section {
-    grid-area: section;
-    display: grid;
-    grid-template-columns: auto $name_section_item_column_width auto auto $name_section_item_column_width auto;
-    grid-template-areas: $name_section_template;
-    justify-items: center;
-    align-items: center;
+  height: 50%; }
+  form section[class*="input-"] {
+    grid-area: input;
+    width: 100%;
+    height: 100%; }
+    form section[class*="input-"]:not(:first-of-type) {
+      display: none; }
+  form .input-name {
+    width: 100%;
+    height: 100%; }
+    form .input-name input {
+      width: 100%;
+      height: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      border: 0.1rem solid #e59700;
+      text-align: center; }
+  form .input-character {
+    text-align: center; }
+    form .input-character img {
+      margin: 1rem;
+      border: .1rem solid white;
+      transition: border .5s; }
+      form .input-character img:hover {
+        border: .1rem solid darkblue; }
+    form .input-character input {
+      display: none; }
+  form .output {
+    grid-area: output;
     width: 100%;
     height: 100%;
-  }
-
-  input[type="submit"] {
-    grid-area: submit; 
-    width: 5rem;
-    height: 3rem;
-    font-size: 1rem;
-  }
-}*/
+    text-align: center; }
+    form .output #error {
+      font-size: 1rem; }
+    form .output input {
+      font-size: 1rem; }
