@@ -251,7 +251,87 @@ socket.on('11 spawnItem', function(itemData){
         itemData = JSON.parse(itemData.itemGroup);
         ItemSetup(Map.structure[0], itemData);
     }
+    socket.emit(
+        '12 requestSavepoint',
+        {
+            name: Config.currentUserName
+        }
+    );
+
 });
+
+// ask server to get savepoint list
+socket.on('13 getSavepointInfo', function(playerData){
+    // to do action
+    function toDo(){
+        // delay to do if state not reach yet
+        if(Config.state.current < Config.state.getSavepointInfo)
+        {
+            setTimeout(toDo, Config.delay);
+            return;
+        }
+
+        // stringify savepoint info
+        let dataString = '{';
+        for(let savepointType in Game.savepoints)
+        {
+            if(dataString.length > 1)
+                dataString += ',';
+
+            dataString += `"${savepointType}":[`;
+            
+            let children = Game.savepoints[savepointType].children;
+            for(let i = 0; i < children.length; ++i)
+            {
+                if(i != 0)
+                    dataString += ',';
+                dataString += '{';
+                dataString += '"x":'+children[i].position.x + ',';
+                dataString += '"y":'+children[i].position.y + ',';
+                dataString += '"sx":'+children[i].spawn.x + ',';
+                dataString += '"sy":'+children[i].spawn.y;
+                // dataString += 'bodyenable'
+                dataString += '}';
+            }
+            dataString += ']';
+        }
+        dataString += '}';
+        // return savepoint info
+        socket.emit(
+            '14 parseSavepointInfo',
+            {
+                requestName: playerData.name,
+                savepointGroup: dataString
+            }
+        );
+    }
+
+    // run to do
+    toDo();
+});
+
+//spawn savepoint in world
+socket.on('15 spawnSavepoint', function(savepointData){
+
+    // update state
+    Config.state.current = Config.state.spawnsavepoint;
+
+    // if you're superuser, init the list and emit to server
+    // let server has a savepoint list
+    if (savepointData.superUser)
+    {
+        // spawn savepoint from tileset
+        SavepointSetup(Map.structure[0]);
+    }
+    // if you're not superuser then ask savepoint list from server
+    else
+    {
+        // parse from savepoint list
+        savepointData = JSON.parse(savepointData.savepointGroup);
+        SavepointSetup(Map.structure[0], savepointData);
+    }
+});
+
 
 // someone press key
 socket.on('playerMove',function(playerData){
@@ -364,8 +444,9 @@ socket.on('playerRespawn',function(playerData){
 });
 
 socket.on('playerMidpoint',function(playerData){
-    Game.players.hash[playerData.name].spawn.x=Game.map.point.midpoint[playerData.id].x;
-    Game.players.hash[playerData.name].spawn.y=Game.map.point.midpoint[playerData.id].y;
+    console.log(playerData);
+    Game.players.hash[playerData.name].spawn.x=playerData.x;
+    Game.players.hash[playerData.name].spawn.y=playerData.y;
 });
 
 socket.on('playerFinish',function(playerData){
@@ -376,7 +457,7 @@ socket.on('playerFinish',function(playerData){
         Config.font.Bold
     );
     finishText.fixedToCamera = true;
-    Game.map.point.isFinish = true;
+    Game.map.isFinish = true;
 
     //collect data for ranking
     socket.emit('collectData',{

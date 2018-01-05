@@ -159,6 +159,58 @@ module.exports = function(server){
             }
         });
 
+        // new player tell server to get savepoint info
+        socket.on('12 requestSavepoint', function(playerData){
+            // new player be super user if super does not exist
+            if(superUser == null)
+            {
+                superUser = playerData.name;
+                // server tell new player to generate savepoint by itself
+                socket.emit(
+                    '15 spawnSavepoint',
+                    {
+                        superUser: true
+                    }
+                );
+            }
+            // new player is not super user
+            else if(superUser == socket.username)
+            {
+                // server tell new player to generate savepoint by itself
+                socket.emit(
+                    '15 spawnSavepoint',
+                    {
+                        superUser: true
+                    }
+                );
+            }
+            // new player is not super user
+            else
+            {
+                // server tell super user to return savepoint info
+                playerList[superUser].socket.emit(
+                    '13 getSavepointInfo',
+                    playerData
+                );
+            }
+        });
+
+        // super user tell server savepoint info
+        socket.on('14 parseSavepointInfo', function(savepointData){
+            // if new player not disconnect
+            if(playerList[savepointData.requestName])
+            {
+                // server tell new player to parse savepoint info
+                playerList[savepointData.requestName].socket.emit(
+                    '15 spawnSavepoint',
+                    {
+                        superUser: false,
+                        savepointGroup: savepointData.savepointGroup
+                    }
+                );
+            }
+        });
+
         // player disconnect
         socket.on('disconnect', function(){
             if(socket.username == superUser)

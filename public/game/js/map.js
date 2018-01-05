@@ -7,7 +7,7 @@ const Map = {
                 solid: 'solidLayer',
                 monster: 'monsterLayer',
                 event: 'eventLayer',
-                item: 'itemLayer',
+                item: 'itemLayer'
             },
             start: [
                 {
@@ -15,28 +15,11 @@ const Map = {
                     y:1096
                 }
             ],
-            point: {
-                midpoint: [
-                    {
-                        x: 5691,
-                        y: 1000,
-                        id: 0
-                    },
-                    {
-                        x:9500,
-                        y:0,
-                        id: 1
-                    }
-                ],
-                start: -1,
-                end: 1,
-                isFinish: false
-            },
+            isFinish: false,
             size: {
                 x:9600,
                 y:1280
             }
-            
         }
     ],
     background: [
@@ -261,8 +244,7 @@ function MapSetup(structure, tileset, background, sound)
     //give map size(use to detect collide worldbound or not)
     this.size = structure.size;
 
-    //give map midpoint
-    this.point= structure.point;
+    this.isFinish=structure.isFinish;
 
     // background camera fixed to center
     this.background.fixedToCamera = true;

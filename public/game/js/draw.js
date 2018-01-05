@@ -102,11 +102,33 @@ function preload()
             Item[itemType].picture.width,
             Item[itemType].picture.height
         );
-        Game.engine.load.audio(
-            Item[itemType].sound.get.name,
-            Item[itemType].sound.get.src
-        );
+        for(let soundType in Item[itemType].sound)
+        {
+            Game.engine.load.audio(
+                Item[itemType].sound[soundType].name,
+                Item[itemType].sound[soundType].src
+            );
+        }
     }
+    // load all savepoints
+    for(let savepointType in Savepoint)
+    {
+        console.log(savepointType);
+        Game.engine.load.spritesheet(
+            Savepoint[savepointType].spriteName,
+            Savepoint[savepointType].picture.src,
+            Savepoint[savepointType].picture.width,
+            Savepoint[savepointType].picture.height
+        );
+        for(let soundType in Savepoint[savepointType].sound)
+        {
+            Game.engine.load.audio(
+                Savepoint[savepointType].sound[soundType].name,
+                Savepoint[savepointType].sound[soundType].src
+            );
+        }
+    }
+
 }
 
 function create()
@@ -154,6 +176,9 @@ function create()
     // create items' container
     Game.items = {};
 
+    // create savepoints' container
+    Game.savepoints = {};
+
     // new player tell server to join game
     socket.emit(
         '00 playerJoin', 
@@ -170,7 +195,6 @@ function create()
         window.location.replace("/game/error");
     });
 }
-
 
 function update()
 {
@@ -237,6 +261,17 @@ function update()
             Game.players.current,
             itemGroup,
             Item[itemType].overlap
+        );
+    }
+    //character collide with savepoint
+    for(let savepointType in Game.savepoints)
+    {
+        let savepointGroup = Game.savepoints[savepointType];
+
+        Game.engine.physics.arcade.overlap(
+            Game.players.current,
+            savepointGroup,
+            Savepoint[savepointType].overlap
         );
     }
 

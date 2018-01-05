@@ -1,6 +1,38 @@
 const Savepoint = {
-    midPoint:{
+    finishPoint:{
         tileNumber: 67,
+        spriteName: 'finishPoint',
+        picture: {
+            src: '/game/assets/savepoints/images/finishPoint.png',
+            width: 32,
+            height: 32
+        },
+        sound: {
+            hit: {
+                name: 'finishPointHit',
+                src:'/game/assets/savepoints/sounds/hit.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Savepoint.finishPoint.sound.hit.name);
+                    return () => {
+                        sfx.play();
+                    }
+                }
+            }
+        },
+        overlap: function(character,savepoint){
+            if(Game.map.isFinish==false)
+            {
+                socket.emit(
+                    'playerFinish',
+                    {
+                        name: character.name._text
+                    }
+                );
+            }
+        }
+    },
+    midPoint:{
+        tileNumber: 68,
         spriteName: 'midPoint',
         picture: {
             src: '/game/assets/savepoints/images/midPoint.png',
@@ -19,52 +51,23 @@ const Savepoint = {
                 }
             }
         },
-    },
-    finishPoint:{
-        tileNumber: 66,
-        spriteName: 'finishPoint',
-        picture: {
-            src: '/game/assets/monsters/savepoints/finishPoint.png',
-            width: 32,
-            height: 32
-        },
-        sound: {
-            hit: {
-                name: 'finishPointHit',
-                src:'/game/assets/savepoints/sounds/hit.wav',
-                create: () => {
-                    let sfx = Game.engine.add.audio(Savepoint.finishPoint.sound.hit.name);
-                    return () => {
-                        sfx.play();
-                    }
-                }
-            }
-        },
-    },
-    detectPoint: function(character,savepoint){
-        socket.emit(
-            'playerMidpoint',
+        overlap: function(character,savepoint){
+            if(character.spawn.x!=savepoint.x&&character.spawn.y!=savepoint.x)
             {
-                name: character.name._text,
-                x: savepoint.x,
-                y: savepoint.y
+                socket.emit(
+                    'playerMidpoint',
+                    {
+                        name: character.name._text,
+                        x: savepoint.x,
+                        y: savepoint.y
+                    }
+                );
             }
-        );
-    },
-    detectFinish: function(character,savepoint){
-        if(Game.map.point.isFinish==false)
-        {
-            socket.emit(
-                'playerFinish',
-                {
-                    name: character.name._text
-                }
-            );
         }
     }
 }
 
-function savepointSetup(structure=null, savepointData=null)
+function SavepointSetup(structure=null, savepointData=null)
 {
     for(let savepointType in Savepoint)
     {
@@ -74,7 +77,6 @@ function savepointSetup(structure=null, savepointData=null)
         {
             Savepoint[savepointType].sound[soundType].play = Savepoint[savepointType].sound[soundType].create();
         }
-
         Game.map.tileMap.createFromTiles(
             Savepoint[savepointType].tileNumber,
             null,
@@ -103,10 +105,6 @@ function savepointSetup(structure=null, savepointData=null)
                     y: child.position.y
                 };
             }
-            Game.monsters[monsterType].setAll(
-                'body.gravity.y',
-                100
-            );
             //save point need to be unmoveable
             //so there may be a bool like point.movable=false;
         }
