@@ -197,6 +197,7 @@ function PlayerSetup(
         {
             character.status[itemType] = 0;
         }
+        character.status.kill=0;
     }
     else
     {
@@ -204,6 +205,22 @@ function PlayerSetup(
         {
             character.status[itemType] = status[itemType];
         }
+        character.status.kill=0;
     }
+
+    character.moneyText = Game.engine.add.text(
+        0,
+        30,
+        "Coin: "+character.status.coin,
+        Config.font.Stat
+    );
+    character.moneyText.fixedToCamera = true;
+    character.killText = Game.engine.add.text(
+        0,
+        80,
+        "Kill: "+character.status.kill,
+        Config.font.Stat
+    );
+    character.killText.fixedToCamera = true;
     return character;
 }

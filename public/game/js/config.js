@@ -13,6 +13,11 @@ const Config = {
             fill: "#000000",
             align: "center"
         },
+        Stat: {
+            font: "48px Arial",
+            fill: "#000000",
+            align: "center"
+        },
         Bold: {
             font: "64px Arial",
             fill: "#000000",
