@@ -458,12 +458,12 @@ socket.on('playerFinish',function(playerData){
     );
     finishText.fixedToCamera = true;
     Game.map.isFinish = true;
-
+    let character=Game.players.current;
     //collect data for ranking
     socket.emit('collectData',{
         userName: Config.currentUserName,
-        coin: 0, // should be replaced
-        kill: 0, //should be replaced
+        coin: character.status.coin, // should be replaced
+        kill: character.status.kill, //should be replaced
         comp: Game.players.current.x,
     });
 });
