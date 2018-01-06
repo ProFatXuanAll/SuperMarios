@@ -87,6 +87,11 @@ module.exports = function(app){
         res.render('game/summary', { summary: fakedata });
     });
 
+    router.post('/summary', UrlSetting, function(req, res, next){
+        req.session.destroy();
+        res.redirect('/game/login');
+    });
+
     router.get('/pedia', UrlSetting, function(req, res, next){
         res.render('game/pedia');
     });
