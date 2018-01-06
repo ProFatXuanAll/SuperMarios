@@ -28,12 +28,19 @@ header {visibility: hidden;}
 .section-title {
   display: grid;
   grid-template-areas: $login_section_title_template;
-  grid-template-columns: auto 10% 20% 10% auto;
+  grid-template-columns: auto 10% 25% 10% auto;
   justify-items: center;
   align-items: center;
 
   article {
     grid-area: title;
+    overflow: hidden;
+    justify-items: center;
+    align-items: center;
+
+    h1 {
+      width: auto;
+    }
   }
 
   .previous-btn {
