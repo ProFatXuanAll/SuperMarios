@@ -307,8 +307,11 @@ function update()
         name.x = Math.floor(all_players[player].position.x);
         name.y = Math.floor(all_players[player].position.y - all_players[player].height / 3);
 
-        character.moneyText.setText("Coin: "+character.status.coin);
-        character.killText.setText("Kill: "+character.status.kill);
+        if(character.name._text==Config.currentUserName)
+        {
+            character.moneyText.setText("Coin: "+character.status.coin);
+            character.killText.setText("Kill: "+character.status.kill);
+        }
         // stop moving to left or right
         if(!character.body.onFloor())
             //if player pick more than 1 feather, only 1 feather will effect(or it will be overpowered)
@@ -326,7 +329,7 @@ function update()
             if(!character.dieyet)
             {
                 facing = Config.status.left;
-                velocity.x = facing * (coin * Item.coin.effect + playerTypeVelocity.horizontal.move);
+                velocity.x = facing * (playerTypeVelocity.horizontal.move);
                 character.animations.play('left');
             }
         }
@@ -335,14 +338,14 @@ function update()
             if(!character.dieyet)
             {
                 facing = Config.status.right;
-                velocity.x = facing * (coin * 50 + playerTypeVelocity.horizontal.move);
+                velocity.x = facing * (playerTypeVelocity.horizontal.move);
                 character.animations.play('right');
 
             }
         }
         else if (cursor.down.isDown)
         {
-                    //temporary unusable for hacks
+            //temporary unusable
         }
         else
         {

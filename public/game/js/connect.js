@@ -409,6 +409,7 @@ socket.on('playerDead', function(playerData){
     if(playerData.playerKiller)
     {
         playerKiller.body.velocity.y = Player[playerKiller.key].velocity.vertical.bounce;
+        playerKiller.status.kill+=1;
     }
     // player die animation and player death sound
     let deadPlayer = Game.players.hash[playerData.name];
@@ -482,6 +483,7 @@ socket.on('monsterDead',function(monsterData){
 
     let monsterKiller=Game.players.hash[monsterData.monsterKiller];
     monsterKiller.body.velocity.y = Player[monsterKiller.key].velocity.vertical.bounce;
+    monsterKiller.status.kill+=1;
     // set monster's animation to die and play die sound
     let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
     Monster[monsterData.monsterType].destroy(deadMonster);

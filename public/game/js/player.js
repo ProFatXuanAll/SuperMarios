@@ -73,10 +73,12 @@ const Player = {
             character.body.enable = true;
             character.immovable = false;
             character.dieyet = false;
+            /*
             for(let itemType in Item)
             {
                 character.status[itemType] = 0;
             }
+            */
         },
         collide: function(otherCharacter, character){
             if (character.body.touching.up && otherCharacter.body.touching.down)
@@ -208,19 +210,22 @@ function PlayerSetup(
         character.status.kill=0;
     }
 
-    character.moneyText = Game.engine.add.text(
-        0,
-        30,
-        "Coin: "+character.status.coin,
-        Config.font.Stat
-    );
-    character.moneyText.fixedToCamera = true;
-    character.killText = Game.engine.add.text(
-        0,
-        80,
-        "Kill: "+character.status.kill,
-        Config.font.Stat
-    );
-    character.killText.fixedToCamera = true;
+    if(playerName==Config.currentUserName)
+    {
+        character.moneyText = Game.engine.add.text(
+            0,
+            30,
+            "Coin: "+character.status.coin,
+            Config.font.Stat
+        );
+        character.moneyText.fixedToCamera = true;
+        character.killText = Game.engine.add.text(
+            0,
+            80,
+            "Kill: "+character.status.kill,
+            Config.font.Stat
+        );
+        character.killText.fixedToCamera = true;
+    }
     return character;
 }

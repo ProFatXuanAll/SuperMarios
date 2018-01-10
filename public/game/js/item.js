@@ -51,7 +51,7 @@ const Item = {
         },
         respawn: function(item, character)
         {
-            character.status.coin -= 1;
+            //character.status.coin -= 1;
             item.visible = true;
 	        item.body.enable = true;
 	        item.position.x = item.spawn.x;
