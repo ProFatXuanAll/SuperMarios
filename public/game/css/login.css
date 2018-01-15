@@ -1,6 +1,6 @@
 .section-title {
   display: grid;
-  grid-template-areas: ". . . . ." ". previous title next ." ". . . . .";
+  grid-template-areas: ". . . . ." ". previous title next .";
   grid-template-columns: auto 10% 25% 10% auto;
   justify-items: center;
   align-items: center;
@@ -39,7 +39,7 @@
 form {
   display: grid;
   grid-template-columns: auto 40% auto;
-  grid-template-rows: 30% 5% 10% auto;
+  grid-template-rows: 30% 10% 10% auto;
   grid-template-areas: ". input ." ". . ." ". output ." ". . .";
   justify-items: center;
   align-items: center;
@@ -66,8 +66,11 @@ form {
     form .input-character img {
       margin: 1rem;
       border: .1rem solid white;
-      transition: border .5s; }
+      transition: border .3s;
+      cursor: pointer; }
       form .input-character img:hover {
+        border: .1rem solid lightblue; }
+      form .input-character img.choosed {
         border: .1rem solid darkblue; }
     form .input-character input {
       display: none; }
@@ -79,4 +82,6 @@ form {
     form .output #error {
       font-size: 1rem; }
     form .output input {
-      font-size: 1rem; }
+      font-size: 1rem;
+      cursor: pointer;
+      padding: .5rem; }

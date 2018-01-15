@@ -51,7 +51,7 @@ const Map = {
             name: 'field',
             src: ['/game/assets/maps/sounds/field.wav']
         },
-        {
+        /*{
             name: 'finalboss',
             src: ['/game/assets/maps/sounds/finalboss.wav']
         },
@@ -90,11 +90,11 @@ const Map = {
         {
             name: 'worldmap',
             src: ['/game/assets/maps/sounds/worldmap.wav']
-        }
+        }*/
     ],
     detectPoint: function(character,map)
     {
-        let spawnPointID=character.spawn.id;
+        let spawnPointID = character.spawn.id;
         for(let i = spawnPointID; i <= Game.map.point.end; ++i)
         {
             let newSpawnPoint = {

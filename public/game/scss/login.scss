@@ -2,8 +2,7 @@
 // grid template
 $login_section_title_template:
   ". . . . ."
-  ". previous title next ."
-  ". . . . .";
+  ". previous title next .";
 
 // button layout
 @mixin login_section_title_btn() {
@@ -67,7 +66,7 @@ $login_form_template:
 form {
   display: grid;
   grid-template-columns: auto 40% auto;
-  grid-template-rows: 30% 5% 10% auto;
+  grid-template-rows: 30% 10% 10% auto;
   grid-template-areas: $login_form_template;
   justify-items: center;
   align-items: center;
@@ -83,10 +82,6 @@ form {
       display: none;
     }
   }
-
-  //.input-name { // test
-  //  display: none;
-  //}
 
   .input-name {
     width: 100%;
@@ -108,9 +103,14 @@ form {
     img {
       margin: 1rem;
       border: .1rem solid white;
-      transition: border .5s;
+      transition: border .3s;
+      cursor: pointer;
 
       &:hover {
+        border: .1rem solid lightblue;
+      }
+
+      &.choosed {
         border: .1rem solid darkblue;
       }
     }
@@ -132,6 +132,8 @@ form {
 
     input {
       font-size: 1rem;
+      cursor: pointer;
+      padding: .5rem;
     }
   }
 }

@@ -31,15 +31,33 @@ $(document).ready(function(){
 
     function setStateTitle(){
         let stateTitle = document.getElementsByTagName("h1")[0];
-        if( state === 0 ) stateTitle.innerHTML = "What's your name?";
-        else if( state === 1 ) stateTitle.innerHTML = "Choose a character";
+        let inputNameSection = document.getElementsByClassName("input-name")[0];
+        let inputCharacterSection = document.getElementsByClassName("input-character")[0];
+        if( state === 0 ) {
+            stateTitle.innerHTML = "What's your name?";
+            inputNameSection.style.display = "block";
+            inputCharacterSection.style.display = "none";
+        }
+        else if( state === 1 ) {
+            stateTitle.innerHTML = "Choose a character";
+            inputNameSection.style.display = "none";
+            inputCharacterSection.style.display = "block";
+        }
     }
 
-    function setForm(){
-        let formContent = document.getElementsByTagName("form")[0].getElementsByTagName("section");
-        for(let i = 0; i < formContent.length; ++i){
-            formContent[i].style.display = "none";
-        }
-        formContent[state].style.display = "block";
+    // click to choose character
+    let characters = document.getElementsByClassName("character");
+    let choosed = document.getElementsByClassName("choosed")[0];
+    let characterName = document.getElementById("character");
+    for(let i = 0; i < characters.length; ++i) {
+        characters[i].addEventListener(
+            "click",
+            () => {
+                choosed.classList.remove("choosed");
+                choosed = characters[i];
+                choosed.classList.add("choosed");
+                characterName.value = characters[i].alt;
+            }
+        )
     }
 });

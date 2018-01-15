@@ -18,7 +18,12 @@ module.exports = function(app){
         }
         else
         {
-            res.render('game/index', { name: sess.userName });
+            res.render(
+                'game/index',
+                {
+                    userName: sess.userName,
+                    characterName: sess.characterName
+                });
         }
     });
         
@@ -40,7 +45,7 @@ module.exports = function(app){
         }
     });
 
-    router.post('/login', UrlSetting, function(req,res,next){
+    router.post('/login', UrlSetting, function(req, res, next){
         var sess = req.session;
         if(io.playerList[req.body.account])
         {
@@ -54,6 +59,7 @@ module.exports = function(app){
         else
         {
             sess.userName = req.body.account;
+            sess.characterName = req.body.character;
             res.redirect('/game');
         }
     });

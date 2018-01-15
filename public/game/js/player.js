@@ -105,6 +105,113 @@ const Player = {
                 //console.log(Config.currentUserName+"is touching right");
             }
         }
+    },
+    luigi: {
+        spriteName: 'luigi',
+        picture: {
+            width: 32,
+            height: 56,
+            src: '/game/assets/players/images/luigix32.png'
+        },
+        sound: {
+            die: {
+                name: 'luigiDie',
+                src: '/game/assets/players/sounds/die.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Player.luigi.sound.die.name);
+                    return () => {
+                        sfx.play();
+                    };
+                }
+            },
+            hit: {
+                name: 'luigiHit',
+                src: '/game/assets/players/sounds/hit.wav',
+                create: () => {
+                    let sfx = Game.engine.add.audio(Player.luigi.sound.hit.name);
+                    return () => {
+                        sfx.play();
+                    };
+                }
+            }
+        },
+        animation: {
+            left: [ 0, 1, 2, 3 ],
+            leftIdle: [ 0 ],
+            right: [ 4, 5, 6, 7 ],
+            rightIdle: [ 4 ],
+            die: [ 8 ],
+            frameRate: 10
+        },
+        velocity: {
+            horizontal: {
+                move: 200,
+                idle: 0.1
+            },
+            vertical: {
+                bounce: -200,
+                jump: -600,
+                gravity: 20   
+            }
+        },
+        width: 32,
+        height: 56,
+        destroy: function(character)
+        {
+            if(character.dieyet == false)
+            {
+                character.dieyet = true;
+                character.animations.stop();
+                character.animations.play('die');
+                character.body.enable = false;
+                character.immovable = true;
+            }
+        },
+        respawn: function(character)
+        {
+            if(character.name._text == Config.currentUserName)
+            {
+                Game.map.sound.loopFull();
+            }
+            character.body.velocity.x = 0;
+            character.body.velocity.y = 0;
+            character.x = character.spawn.x;
+            character.y = character.spawn.y;
+            character.body.enable = true;
+            character.immovable = false;
+            character.dieyet = false;
+            /*
+            for(let itemType in Item)
+            {
+                character.status[itemType] = 0;
+            }
+            */
+        },
+        collide: function(otherCharacter, character){
+            if (character.body.touching.up && otherCharacter.body.touching.down)
+            {
+                //console.log(Config.currentUserName+"is touching down");
+                socket.emit(
+                    'playerDead',
+                    {
+                        playerKiller: otherCharacter.name._text,
+                        name: character.name._text
+                    }
+                );
+            }
+            if(character.body.touching.left)
+            {
+                //console.log(Config.currentUserName+"is touching left");
+            }
+            if(character.body.touching.up)
+            {
+                //console.log(Config.currentUserName+"is touching up");
+            }
+            if(character.body.touching.right)
+            {
+                //console.log(Config.currentUserName+"is touching right");
+            }
+        }
     }
 };
 

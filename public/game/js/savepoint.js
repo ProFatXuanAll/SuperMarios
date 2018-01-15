@@ -20,7 +20,7 @@ const Savepoint = {
             }
         },
         overlap: function(character,savepoint){
-            if(Game.map.isFinish==false)
+            if(Game.map.isFinish == false)
             {
                 socket.emit(
                     'playerFinish',
@@ -52,7 +52,7 @@ const Savepoint = {
             }
         },
         overlap: function(character,savepoint){
-            if(character.spawn.x!=savepoint.x&&character.spawn.y!=savepoint.x)
+            if(character.spawn.x != savepoint.x && character.spawn.y != savepoint.x)
             {
                 socket.emit(
                     'playerMidpoint',
@@ -105,8 +105,8 @@ function SavepointSetup(structure=null, savepointData=null)
                     y: child.position.y
                 };
             }
-            //save point need to be unmoveable
-            //so there may be a bool like point.movable=false;
+            // save point need to be unmoveable
+            // so there may be a bool like point.movable=false;
         }
     }
 }

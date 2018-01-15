@@ -113,7 +113,6 @@ function preload()
     // load all savepoints
     for(let savepointType in Savepoint)
     {
-        console.log(savepointType);
         Game.engine.load.spritesheet(
             Savepoint[savepointType].spriteName,
             Savepoint[savepointType].picture.src,
@@ -155,7 +154,7 @@ function create()
     Game.players = {
         current: new PlayerSetup(
             Config.currentUserName,
-            Player.mario,
+            Player[Config.currentUserCharacterName],
             Map.structure[0].start[0].x,
             Map.structure[0].start[0].y,
             0,
@@ -184,13 +183,13 @@ function create()
         '00 playerJoin', 
         {
             name: Config.currentUserName,
-            typeName: Player.mario.spriteName,
+            typeName: Player[Config.currentUserCharacterName].spriteName,
             x: Game.players.current.position.x,
             y: Game.players.current.position.y
         }
     );
 
-    socket.on('multipleConnection',function(){
+    socket.on('multipleConnection', function(){
         socket.emit('disconnect');
         window.location.replace("/game/error");
     });
