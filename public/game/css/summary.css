@@ -1,9 +1,8 @@
 section {
   display: block;
   margin: auto;
-  margin-top: 3rem;
-  width: 50%;
-  border: solid 1px #555555; }
+  padding-top: 3rem;
+  width: 50%; }
   section nav {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -15,13 +14,13 @@ section {
       height: auto;
       width: auto;
       padding: 5px 15px;
+      margin: 0px 5px;
       background: #ffffff;
       color: black;
       font-size: .75rem;
-      border-left: 3px solid #ff5555;
-      border-collapse: collapse; }
+      border-top: 1.5px solid #ff0f00; }
     section nav .currentTag {
-      /*background: #ffaaaa;*/ }
+      border-top: 3.5px solid #ff0f00; }
   section table {
     border-collapse: collapse;
     width: 100%;
@@ -32,11 +31,26 @@ section {
       width: auto;
       text-align: left;
       padding: 8px; }
+    section table th {
+      background-color: #ff0f00;
+      color: white; }
     section table tr {
       display: grid;
       grid-template-columns: 15% 35% 50%; }
     section table tr:nth-child(even) {
-      background-color: #fff2f2; }
-    section table th {
-      background-color: #ff0f00;
-      color: white; }
+      background-color: #ffafa8; }
+
+.redirect {
+  display: block;
+  margin: 1rem auto;
+  padding: .5rem 1rem;
+  border: 2px solid #ff0f00;
+  border-radius: .8rem;
+  background: #ffffff;
+  color: #ff0f00;
+  font-size: .5rem; }
+
+.redirect:hover {
+  /*background: $base_color;*/
+  background: linear-gradient(to bottom, #ff0f00, #ff493d);
+  color: #ffffff; }

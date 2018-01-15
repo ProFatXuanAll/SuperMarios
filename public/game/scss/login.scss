@@ -26,8 +26,7 @@ $login_section_title_template:
 .section-title {
   display: grid;
   grid-template-areas: $login_section_title_template;
-  grid-template-columns: auto 10% 20% 10% auto;
-  grid-template-rows: auto 10% 5%;
+  grid-template-columns: auto 10% 25% 10% auto;
   justify-items: center;
   align-items: center;
   width: 100%;
@@ -35,15 +34,12 @@ $login_section_title_template:
 
   article {
     grid-area: title;
+    overflow: hidden;
+    justify-items: center;
+    align-items: center;
 
     h1 {
-      /*&:not(:first-of-type) {
-        display: none;
-      }*/
-      
-      &:not(:first-of-type) { // test
-        display: none;
-      } 
+      width: auto;
     }
   }
 
