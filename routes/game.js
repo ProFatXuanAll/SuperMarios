@@ -4,10 +4,10 @@ module.exports = function(app){
     const io = require("./socket")(app.server);
     const router = express.Router();
 
-    app.use('/game',session({
-      secret: 'dkwqhnfqwohfwnfuqha',
-      resave: false,
-      saveUninitialized : true,
+    app.use('/game', session({
+        secret: 'dkwqhnfqwohfwnfuqha',
+        resave: false,
+        saveUninitialized: true,
     }));
 
     router.get('/', UrlSetting, function(req, res, next){

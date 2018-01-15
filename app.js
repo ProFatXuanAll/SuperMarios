@@ -9,7 +9,6 @@ const nunjucks = require('nunjucks');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
@@ -17,16 +16,8 @@ const path = require('path');
 const config = require('./config');
 const port = config.port;
 
-// setting server SSL
-/*const SERVER_CONFIG = {
-    key:  fs.readFileSync('ssl/private.key'),
-    cert: fs.readFileSync('ssl/certificate.crt')
-};*/
-
 // starting server
 app.server = app.listen(port);
-/*app.server = https.createServer(SERVER_CONFIG, app)
-  .listen(port,function(){console.log("https done.");} );*/
 
 // loading URL routing module
 const home = require('./routes/home');
