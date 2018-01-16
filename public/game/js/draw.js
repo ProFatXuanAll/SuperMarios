@@ -188,11 +188,6 @@ function create()
             y: Game.players.current.position.y
         }
     );
-
-    socket.on('multipleConnection', function(){
-        socket.emit('disconnect');
-        window.location.replace("/game/error");
-    });
 }
 
 function update()
@@ -262,7 +257,8 @@ function update()
             Item[itemType].overlap
         );
     }
-    //character collide with savepoint
+
+    // character collide with savepoint
     for(let savepointType in Game.savepoints)
     {
         let savepointGroup = Game.savepoints[savepointType];
@@ -274,8 +270,8 @@ function update()
         );
     }
 
-    //detect player finish and fall out of the world
-    //only need to detect myself and emit
+    // detect player finish and fall out of the world
+    // current player only need to detect itself
     Map.detectPlayerWorldBound(Game.players.current);
 
     // player movement update
@@ -306,10 +302,10 @@ function update()
         name.x = Math.floor(all_players[player].position.x);
         name.y = Math.floor(all_players[player].position.y - all_players[player].height / 3);
 
-        if(character.name._text==Config.currentUserName)
+        if(character.name._text == Config.currentUserName)
         {
-            character.moneyText.setText("Coin: "+character.status.coin);
-            character.killText.setText("Kill: "+character.status.kill);
+            character.moneyText.setText("Coin: " + character.achieve.coin);
+            character.killText.setText("Kill: " + character.achieve.kill);
         }
         // stop moving to left or right
         if(!character.body.onFloor())
@@ -328,7 +324,7 @@ function update()
             if(!character.dieyet)
             {
                 facing = Config.status.left;
-                velocity.x = facing * (playerTypeVelocity.horizontal.move);
+                velocity.x = facing * (coin * Item.coin.effect + playerTypeVelocity.horizontal.move);
                 character.animations.play('left');
             }
         }
@@ -337,7 +333,7 @@ function update()
             if(!character.dieyet)
             {
                 facing = Config.status.right;
-                velocity.x = facing * (playerTypeVelocity.horizontal.move);
+                velocity.x = facing * (coin * Item.coin.effect + playerTypeVelocity.horizontal.move);
                 character.animations.play('right');
 
             }

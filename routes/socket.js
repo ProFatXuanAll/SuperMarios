@@ -6,6 +6,7 @@ module.exports = function(server){
     let gameResult = []; // for data collection
     let summary = {}; // for sorting result, and client will render this
     let superUser = null;
+
     io.on('connection', function(socket){
         // new player tell server to join game
         socket.on('00 playerJoin', function(playerData){
@@ -302,8 +303,8 @@ module.exports = function(server){
             );
         });
 
-        /*After game finished, all players should return their info
-        for rank sorting, include name, coin, kills, x-position*/
+        // After game finished, all players should return their info
+        // for rank sorting, include name, coin, kills, x-position
         socket.on('collectData', function(playerData){
             gameResult.push(playerData);
             if(playerList[playerData.userName].getResult === false){

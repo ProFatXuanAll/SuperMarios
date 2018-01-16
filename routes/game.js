@@ -90,7 +90,8 @@ module.exports = function(app){
             ],
         }                                        
         // summary: io.summary
-        res.render('game/summary', { summary: fakedata });
+        // res.render('game/summary', { summary: fakedata });
+        res.render('game/summary', { summary: io.summary });
     });
 
     router.post('/summary', UrlSetting, function(req, res, next){

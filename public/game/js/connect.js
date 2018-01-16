@@ -4,7 +4,7 @@ let socket = io();
 socket.on('01 toExistPlayer', function(newPlayerData){
     // to do action
     function toDo(){
-        // delay to do if state not reach yet
+        // delay toDo if state not reach yet
         if(Config.state.current < Config.state.toExistPlayer)
         {
             setTimeout(toDo, Config.delay);
@@ -53,7 +53,7 @@ socket.on('01 toExistPlayer', function(newPlayerData){
 socket.on('02 toNewPlayer', function(playerData){
     // to do action
     function toDo(){
-        // delay to do if state not reach yet
+        // delay toDo if state not reach yet
         if(Config.state.current < Config.state.toNewPlayer)
         {
             setTimeout(toDo, Config.delay);
@@ -90,7 +90,7 @@ socket.on('03 playerJoinFinish', function(){
     // update state
     Config.state.current = Config.state.playerJoinFinish;
 
-    //ask superuser to get monster list
+    // ask superuser to get monster list
     socket.emit(
         '04 requestMonster',
         {
@@ -99,11 +99,11 @@ socket.on('03 playerJoinFinish', function(){
     );
 });
 
-//ask server to get monster list
+// server ask superuser to get monster list
 socket.on('05 getMonsterInfo', function(playerData){
     // to do action
     function toDo(){
-        // delay to do if state not reach yet
+        // delay toDo if state not reach yet
         if(Config.state.current < Config.state.getMonsterInfo)
         {
             setTimeout(toDo, Config.delay);
@@ -151,7 +151,7 @@ socket.on('05 getMonsterInfo', function(playerData){
     toDo();
 });
 
-// spawn monster in world
+// new user spawn monster in world
 socket.on('07 spawnMonster', function(monsterData){
 
     // update state
@@ -179,11 +179,11 @@ socket.on('07 spawnMonster', function(monsterData){
     );
 });
 
-// ask server to get item list
+// server ask superuser to get item list
 socket.on('09 getItemInfo', function(playerData){
     // to do action
     function toDo(){
-        // delay to do if state not reach yet
+        // delay toDo if state not reach yet
         if(Config.state.current < Config.state.getItemInfo)
         {
             setTimeout(toDo, Config.delay);
@@ -231,7 +231,7 @@ socket.on('09 getItemInfo', function(playerData){
     toDo();
 });
 
-//spawn item in world
+// new user spawn item in world
 socket.on('11 spawnItem', function(itemData){
 
     // update state
@@ -260,11 +260,11 @@ socket.on('11 spawnItem', function(itemData){
 
 });
 
-// ask server to get savepoint list
+// server ask superuser to get savepoint list
 socket.on('13 getSavepointInfo', function(playerData){
     // to do action
     function toDo(){
-        // delay to do if state not reach yet
+        // delay toDo if state not reach yet
         if(Config.state.current < Config.state.getSavepointInfo)
         {
             setTimeout(toDo, Config.delay);
@@ -286,10 +286,10 @@ socket.on('13 getSavepointInfo', function(playerData){
                 if(i != 0)
                     dataString += ',';
                 dataString += '{';
-                dataString += '"x":'+children[i].position.x + ',';
-                dataString += '"y":'+children[i].position.y + ',';
-                dataString += '"sx":'+children[i].spawn.x + ',';
-                dataString += '"sy":'+children[i].spawn.y;
+                dataString += '"x":' + children[i].position.x + ',';
+                dataString += '"y":' + children[i].position.y + ',';
+                dataString += '"sx":' + children[i].spawn.x + ',';
+                dataString += '"sy":' + children[i].spawn.y;
                 // dataString += 'bodyenable'
                 dataString += '}';
             }
@@ -310,7 +310,7 @@ socket.on('13 getSavepointInfo', function(playerData){
     toDo();
 });
 
-//spawn savepoint in world
+// new user spawn savepoint in world
 socket.on('15 spawnSavepoint', function(savepointData){
 
     // update state
@@ -332,6 +332,11 @@ socket.on('15 spawnSavepoint', function(savepointData){
     }
 });
 
+// player open multiple tabs to cheat
+socket.on('multipleConnection', function(){
+    socket.emit('disconnect');
+    window.location.replace("/game/error");
+});
 
 // someone press key
 socket.on('playerMove',function(playerData){
@@ -409,7 +414,7 @@ socket.on('playerDead', function(playerData){
     if(playerData.playerKiller)
     {
         playerKiller.body.velocity.y = Player[playerKiller.key].velocity.vertical.bounce;
-        playerKiller.status.kill+=1;
+        playerKiller.achieve.kill+=1;
     }
     // player die animation and player death sound
     let deadPlayer = Game.players.hash[playerData.name];
@@ -428,7 +433,7 @@ socket.on('playerDead', function(playerData){
     }
 });
 
-socket.on('playerRespawn',function(playerData){
+socket.on('playerRespawn', function(playerData){
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
     {
@@ -444,46 +449,48 @@ socket.on('playerRespawn',function(playerData){
     }
 });
 
-socket.on('playerMidpoint',function(playerData){
-    console.log(playerData);
-    Game.players.hash[playerData.name].spawn.x=playerData.x;
-    Game.players.hash[playerData.name].spawn.y=playerData.y;
+socket.on('playerMidpoint', function(playerData){
+    if(playerData.name in Game.players.hash)
+    {
+        Game.players.hash[playerData.name].spawn.x = playerData.x;
+        Game.players.hash[playerData.name].spawn.y = playerData.y;
+    }
 });
 
-socket.on('playerFinish',function(playerData){
+socket.on('playerFinish', function(playerData){
     let finishText = Game.engine.add.text(
-        $( window ).width()/3,
-        $( window ).height()/2-100,
+        $( window ).width() / 3,
+        $( window ).height() / 2 - 100,
         playerData.name + ' win!',
         Config.font.Bold
     );
     finishText.fixedToCamera = true;
     Game.map.isFinish = true;
-    let character=Game.players.current;
+    let character = Game.players.current;
     //collect data for ranking
     socket.emit('collectData',{
         userName: Config.currentUserName,
-        coin: character.status.coin, // should be replaced
-        kill: character.status.kill, //should be replaced
+        coin: character.achieve.coin, // should be replaced
+        kill: character.achieve.kill, //should be replaced
         comp: Game.players.current.x,
     });
 });
 
-socket.on('gotoSummary',function(){
+socket.on('gotoSummary', function(){
     window.location = "/game/summary";
 });
 
 // some monster died
-socket.on('monsterDead',function(monsterData){
+socket.on('monsterDead', function(monsterData){
     // if not in finish state,then don't do anything
     if(Config.state.current < Config.state.finish)
     {
         return;
     }
 
-    let monsterKiller=Game.players.hash[monsterData.monsterKiller];
+    let monsterKiller = Game.players.hash[monsterData.monsterKiller];
     monsterKiller.body.velocity.y = Player[monsterKiller.key].velocity.vertical.bounce;
-    monsterKiller.status.kill+=1;
+    //monsterKiller.achieve.kill += 1;
     // set monster's animation to die and play die sound
     let deadMonster = Game.monsters[monsterData.monsterType].children[monsterData.id];
     Monster[monsterData.monsterType].destroy(deadMonster);

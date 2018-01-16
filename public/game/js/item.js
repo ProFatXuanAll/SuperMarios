@@ -46,12 +46,13 @@ const Item = {
         destroy: function(item, character)
         {
             character.status.coin += 1;
+            character.achieve.coin += 1;
             item.body.enable = false;
             item.visible = false;
         },
         respawn: function(item, character)
         {
-            //character.status.coin -= 1;
+            character.status.coin -= 1;
             item.visible = true;
 	        item.body.enable = true;
 	        item.position.x = item.spawn.x;
@@ -104,7 +105,7 @@ const Item = {
         },
         respawn: function(item, character)
         {
-            item.body.velocity.y=0;
+            item.body.velocity.y = 0;
             character.status.feather -= 1;
             item.visible = true;
 	        item.body.enable = true;
@@ -122,55 +123,57 @@ const Item = {
 
 function ItemSetup(structure=null, itemData=null)
 {
-    //setup each item group
+    // setup each item group
     for(let itemType in Item)
     {
         Game.items[itemType] = Game.engine.add.group();
         Game.items[itemType].enableBody = true;
 
-        //set sound for eack kind of item
+        // set sound for eack kind of item
         for(let soundType in Item[itemType].sound)
         {
             Item[itemType].sound[soundType].play = Item[itemType].sound[soundType].create();
         }
 
-        //create item from tilemap
+        // create item from tilemap
         Game.map.tileMap.createFromTiles(
             Item[itemType].tileNumber,
             null,
             itemType,
             structure.layer.item,
-            Game.items[itemType]);
-            //assign id to each sprite in group
-            for(let i = 0;i<Game.items[itemType].length;i++)
-            {
-                let child = Game.items[itemType].children[i];
-                child.name = itemType;
-                child.id=i;
-                if(itemData)
-                {
-                    child.position.x = itemData[itemType][i].x;
-                    child.position.y = itemData[itemType][i].y;
-                    child.body.velocity.x = itemData[itemType][i].vx;
-                    child.body.velocity.y = itemData[itemType][i].vy;
-                    child.spawn = {
-                        x: itemData[itemType][i].sx,
-                        y: itemData[itemType][i].sy
-                    };
-                }
-                else
-                {
-                    child.body.velocity.x = Item[itemType].velocity.x;
-                    child.body.velocity.y = Item[itemType].velocity.y;
-                    child.spawn = {
-                        x: child.position.x,
-                        y: child.position.y
-                    };
-                }
-            }
+            Game.items[itemType]
+        );
 
-            Game.items[itemType].setAll('body.gravity.y', Item[itemType].gravity.y);
-            Game.items[itemType].setAll('body.bounce.x', Item[itemType].bounce.x);
-            Game.items[itemType].setAll('body.bounce.y', Item[itemType].bounce.y);
+        // assign id to each sprite in group
+        for(let i = 0; i < Game.items[itemType].length; ++i)
+        {
+            let child = Game.items[itemType].children[i];
+            child.name = itemType;
+            child.id = i;
+            if(itemData)
+            {
+                child.position.x = itemData[itemType][i].x;
+                child.position.y = itemData[itemType][i].y;
+                child.body.velocity.x = itemData[itemType][i].vx;
+                child.body.velocity.y = itemData[itemType][i].vy;
+                child.spawn = {
+                    x: itemData[itemType][i].sx,
+                    y: itemData[itemType][i].sy
+                };
+            }
+            else
+            {
+                child.body.velocity.x = Item[itemType].velocity.x;
+                child.body.velocity.y = Item[itemType].velocity.y;
+                child.spawn = {
+                    x: child.position.x,
+                    y: child.position.y
+                };
+            }
+        }
+
+        Game.items[itemType].setAll('body.gravity.y', Item[itemType].gravity.y);
+        Game.items[itemType].setAll('body.bounce.x', Item[itemType].bounce.x);
+        Game.items[itemType].setAll('body.bounce.y', Item[itemType].bounce.y);
     }
 }

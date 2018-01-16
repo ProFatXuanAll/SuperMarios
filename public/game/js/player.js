@@ -215,7 +215,8 @@ const Player = {
     }
 };
 
-function PlayerSetup(
+function PlayerSetup
+(
     playerName,
     playerType, 
     x=0, 
@@ -225,7 +226,8 @@ function PlayerSetup(
     sx=Map.structure[0].start[0].x,
     sy=Map.structure[0].start[0].y,
     status=null,
-    controlable=false)
+    controlable=false
+)
 {
     // uncontrolable character cursor simulator
     function SyncCursor()
@@ -264,7 +266,7 @@ function PlayerSetup(
     character.body.velocity.x = vx;
     character.body.velocity.y = vy;
     character.spawn = {
-        id : 0,
+        id: 0,
         x: sx,
         y: sy
     };
@@ -306,7 +308,7 @@ function PlayerSetup(
         {
             character.status[itemType] = 0;
         }
-        character.status.kill=0;
+        //character.status.kill=0;
     }
     else
     {
@@ -314,22 +316,27 @@ function PlayerSetup(
         {
             character.status[itemType] = status[itemType];
         }
-        character.status.kill=0;
+        //character.status.kill=0;
     }
 
-    if(playerName==Config.currentUserName)
+    character.achieve = {}
+    character.achieve.coin = 0;
+    character.achieve.kill = 0;
+    if(playerName == Config.currentUserName)
     {
         character.moneyText = Game.engine.add.text(
             0,
             30,
-            "Coin: "+character.status.coin,
+            // "Coin: " + character.status.coin,
+            "Coin: 0",
             Config.font.Stat
         );
         character.moneyText.fixedToCamera = true;
         character.killText = Game.engine.add.text(
             0,
             80,
-            "Kill: "+character.status.kill,
+            // "Kill: " + character.status.kill,
+            "Kill: 0",
             Config.font.Stat
         );
         character.killText.fixedToCamera = true;
